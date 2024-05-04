@@ -83,10 +83,10 @@ function sort_msg_rtn_arr($item_key_arr, $target_arr) {
 
 
 
-function check_alphanumeric_rtn_arr($item_name_arr, $target_arr) {
+function check_alphanumeric_rtn_arr($item_key_arr, $target_arr) {
     $val_arr = array();
 
-    foreach ($item_name_arr as $key => $val) {
+    foreach ($item_key_arr as $key => $val) {
         if (!preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$key])) {
             $val_arr[] = $val . 'に英数字以外が入力された';//TODO:定数化検討
         }

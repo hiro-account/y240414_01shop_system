@@ -9,11 +9,11 @@ $header = LOCATION . get_host_and_dir() . '/../cmn_err/err.php?from=' . STAFF_LO
 $posted_arr = convert_sp_chara_rtn_arr($_POST);
 
 // 未入力の項目のチェック
-$merged_msg_arr = check_unfilled_item_rtn_arr(array(STAFF_ID => 'スタッフID', STAFF_PASS => 'パスワード'), $posted_arr);
+$empty_msg_arr = check_unfilled_item_rtn_arr(array(STAFF_ID => 'スタッフID', STAFF_PASS => 'パスワード'), $posted_arr);
 
-if (count($merged_msg_arr) > 0) {
+if (count($empty_msg_arr) > 0) {
     // 未入力の項目がある場合、エラーページに遷移する
-    header($header . implode(DELIMITER, $merged_msg_arr));
+    header($header . implode(DELIMITER, $empty_msg_arr));
     exit();
 }
 

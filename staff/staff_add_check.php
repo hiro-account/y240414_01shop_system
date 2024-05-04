@@ -34,43 +34,54 @@ $posted_arr = convert_sp_chara_rtn_arr($_POST);
 // 未入力、未選択の項目のチェック
 // $checked_unfilled_msg_arr = check_unfilled_item_rtn_arr($item_txt_arr, $posted_arr);
 
-$merged_msg_arr = array_merge(check_unfilled_item_rtn_arr($item_txt_arr, $posted_arr),
+$empty_msg_arr = array_merge(check_unfilled_item_rtn_arr($item_txt_arr, $posted_arr),
     check_unselected_item_rtn_arr($item_slct_arr, $posted_arr));
 
-if (count($merged_msg_arr) > 0) {
+if (count($empty_msg_arr) > 0) {
     // 未入力、未選択の項目がある場合、エラーページに遷移する
-    header($header . implode(DELIMITER, sort_msg_rtn_arr($item_key_arr, $merged_msg_arr)));
+    header($header . implode(DELIMITER, sort_msg_rtn_arr($item_key_arr, $empty_msg_arr)));
     exit();
 }
+
+$invalid_msg_arr = array();
 
 // 生年月日の妥当性のチェック
 if (!checkdate(intval($posted_arr['birth_month']), intval($posted_arr['birth_day']), intval($posted_arr['birth_year']))) {
-    header($header . '生年月日が不正');
-    exit();
+//     header($header . '生年月日が不正');
+//     exit();
+    $invalid_msg_arr[] = '生年月日が不正';
 }
-
-
 
 // パスワードの文字種のチェック
-$checked_alphanumeric_msg_arr = check_alphanumeric_rtn_arr(array_slice($item_name_arr, 1), $posted_arr);
+$checked_alphanumeric_msg_arr = check_alphanumeric_rtn_arr(array_slice($item_txt_arr, 4), $posted_arr);
 
 if (count($checked_alphanumeric_msg_arr) > 0) {
-    // 英数字以外の項目がある場合、エラーページに遷移する
-    header($header . implode(DELIMITER, $checked_alphanumeric_msg_arr));
-    exit();
+//     // 英数字以外の項目がある場合、エラーページに遷移する
+//     header($header . implode(DELIMITER, $checked_alphanumeric_msg_arr));
+//     exit();
+    $invalid_msg_arr[] = implode(DELIMITER, $checked_alphanumeric_msg_arr);
 }
 
-$staff_pass = $posted_arr[STAFF_PASS];
+$password = $posted_arr['password_1'];
 
 // パスワードの一致のチェック
-if (strcmp($staff_pass, $posted_arr[STAFF_PASS2]) != 0) {
-    // パスワードとパスワード(確認)が一致しない場合、エラーページに遷移する
-    header($header . $item_name_arr[STAFF_PASS] . 'と' . $item_name_arr[STAFF_PASS2] . 'が一致しない');
+if (strcmp($password, $posted_arr['password_2']) != 0) {
+//     // パスワードとパスワード(確認)が一致しない場合、エラーページに遷移する
+//     header($header . $item_txt_arr['password_1'] . 'と' . $item_txt_arr['password_2'] . 'が一致しない');
+//     exit();
+    $invalid_msg_arr[] = $item_txt_arr['password_1'] . 'と' . $item_txt_arr['password_2'] . 'が一致しない';
+}
+
+if (count($invalid_msg_arr) > 0) {
+    header($header . implode(DELIMITER, $invalid_msg_arr));
     exit();
 }
 
+
+
+
 try {
-    executeSql('INSERT INTO mst_staff (name, password) VALUES (?, ?)', array($posted_arr[STAFF_NAME], md5($staff_pass)));
+    executeSql('INSERT INTO mst_staff (name, password) VALUES (?, ?)', array($posted_arr[STAFF_NAME], md5($password)));
 } catch (Exception $e) {
     header($header . 'システム障害発生中');
     exit();
