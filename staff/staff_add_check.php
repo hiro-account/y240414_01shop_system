@@ -60,15 +60,7 @@ if (count($checked_alphanumeric_msg_arr) > 0) {
 //     header($header . implode(DELIMITER, $checked_alphanumeric_msg_arr));
 //     exit();
     $invalid_msg_arr[] = implode(DELIMITER, $checked_alphanumeric_msg_arr);
-}
-
-$password = $posted_arr['password_1'];
-
-// パスワードの一致のチェック
-if (strcmp($password, $posted_arr['password_2']) != 0) {
-//     // パスワードとパスワード(確認)が一致しない場合、エラーページに遷移する
-//     header($header . $item_txt_arr['password_1'] . 'と' . $item_txt_arr['password_2'] . 'が一致しない');
-//     exit();
+} else if (strcmp($posted_arr['password_1'], $posted_arr['password_2']) != 0) {
     $invalid_msg_arr[] = $item_txt_arr['password_1'] . 'と' . $item_txt_arr['password_2'] . 'が一致しない';
 }
 
@@ -77,11 +69,19 @@ if (count($invalid_msg_arr) > 0) {
     exit();
 }
 
-
-
+$input_parameter_arr = array(trim($posted_arr['last_name']),
+    trim($posted_arr['first_name']),
+    trim($posted_arr['last_name_kana']),
+    trim($posted_arr['first_name_kana']),
+    intval($posted_arr['sex']),
+    $posted_arr['birth_year'] . sprintf('%02d', $posted_arr['birth_month']) . sprintf('%02d', $posted_arr['birth_day']),
+    md5($posted_arr['password_1']));
 
 try {
-    executeSql('INSERT INTO mst_staff (name, password) VALUES (?, ?)', array($posted_arr[STAFF_NAME], md5($password)));
+    execute_sql_rtn_PDOStatement('INSERT INTO mst_staff '
+        . ' (last_name, first_name, last_name_kana, first_name_kana, sex, birthday, password) '
+        . 'VALUES (?, ?, ?, ?, ?, ?, ?)',
+        $input_parameter_arr);
 } catch (Exception $e) {
     header($header . 'システム障害発生中');
     exit();

@@ -3,4 +3,8 @@
 4月21日,htmlからphpに拡張子の変更検討
 ,各リテラルの定数化検討
 ,ログアウトの動作の調査
-5月3日,"id, last_name, first_name, last_name_kana, first_name_kana, sex, birth_year, birth_month, birth_day, password_1, password_2"
+5月3日,"id, last_name, first_name, last_name_kana, first_name_kana, sex, birth_year, birth_month, birth_day, password, created_date, updated_date"
+5月5日,"・MySQLバックアップ
+コマンド：mysqldump --single-transaction -u root -p from240414_01 > ./from240414_01.dump
+位置：C:\pleiades-2021-12-php\xampp\mysql\bin
+参考：https://qiita.com/iika0220/items/01d4b8bde4c06cf13fec"
