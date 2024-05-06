@@ -1,5 +1,9 @@
 <?php
-require_once '../cmn/func.php';
+$to_cmn = dirname(__FILE__) . '/../cmn/';
+require_once($to_cmn . 'const.php');
+require_once($to_cmn . 'func.php');
+st_session();
+check_login($_SESSION);
 ?>
 <!DOCTYPE html>
 <html>
@@ -9,6 +13,8 @@ require_once '../cmn/func.php';
 <title></title>
 </head>
 <body>
+<div><?= get_staff_id_and_logout(); ?></div>
+<h4>ショップシステム</h4>
 <h2>スタッフ登録</h2>
 <form method="post" action="staff_add_check.php">
 <table>
@@ -51,7 +57,7 @@ require_once '../cmn/func.php';
 </tr>
 </table>
 <p><input type="submit" value="登録"></p>
-<p><a href="">ショップシステム管理メニューへ</a></p>
+<p><a href="./staff_top.php">スタッフ管理へ戻る</a></p>
 </form>
 </body>
 </html>
