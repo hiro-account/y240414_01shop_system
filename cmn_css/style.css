@@ -4,7 +4,7 @@
 
 .w-100 { width: 100px; }
 
-body { background-color:/*#666*/#f5deb3; }
+body { background-color:#666/*#f5deb3*/; }
 
 table.border, table.border th, table.border td { border: 1px solid #000; border-collapse: collapse; }
 

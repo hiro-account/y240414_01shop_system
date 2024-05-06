@@ -57,7 +57,7 @@ check_login($_SESSION);
 </tr>
 </table>
 <p><input type="submit" value="登録"></p>
-<p><a href="./staff_top.php">スタッフ管理へ戻る</a></p>
+<p><a href="./staff_top.php">戻る</a></p>
 </form>
 </body>
 </html>
