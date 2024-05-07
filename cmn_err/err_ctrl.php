@@ -22,11 +22,11 @@ function  get_content_arr($prm_get) {
             break;
     }
 
-    $content_arr['err_tmp'] = null;
+    $content_arr['err_msg'] = NULL;
     $err_msg_arr = explode(DELIMITER, $_GET['err_msg']);
 
     for ($i = 0; $i < count($err_msg_arr); $i++) {
-        $content_arr['err_tmp'] .= add_p($err_msg_arr[$i]) . LF;
+        $content_arr['err_msg'] .= add_p($err_msg_arr[$i]) . LF;
     }
 
     return $content_arr;

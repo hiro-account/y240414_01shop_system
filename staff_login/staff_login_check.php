@@ -2,9 +2,9 @@
 require_once '../cmn/const.php';
 require_once '../cmn/func.php';
 
-$header = ERR_HEADER . STAFF_LOGIN_CHECK . ERR_MSG;
+// $header = ERR_HEADER . STAFF_LOGIN_CHECK . ERR_MSG;
 
-$header = LOCATION . get_host_and_dir() . '/../cmn_err/err.php?from=' . STAFF_LOGIN_CHECK . ERR_MSG;
+$header = LOCATION . './staff_login_err.php?from=' . STAFF_LOGIN_CHECK . ERR_MSG;
 
 $posted_arr = convert_sp_chara_rtn_arr($_POST);
 

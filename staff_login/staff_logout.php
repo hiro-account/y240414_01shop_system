@@ -14,7 +14,6 @@ if (isset($_COOKIE[session_name()]) == true) {
 </head>
 <body>
 <h4>ショップシステム</h4>
-<h2>メインメニュー</h2>
 <p>ログアウトした</p>
 <a href="./staff_login.html">スタッフログインへ</a>
 </body>

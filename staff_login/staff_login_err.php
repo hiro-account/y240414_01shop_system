@@ -1,10 +1,6 @@
 <?php
-$to_cmn = dirname(__FILE__) . '/../cmn/';
-require_once($to_cmn . 'const.php');
-require_once($to_cmn . 'func.php');
-st_session();
-check_login($_SESSION);
-require_once('./err_ctrl.php');
+$to_cmn = dirname(__FILE__) . '/../cmn_err/';
+require_once($to_cmn . 'err_ctrl.php');
 $content_arr = get_content_arr($_GET);
 ?>
 <!DOCTYPE html>
@@ -15,9 +11,7 @@ $content_arr = get_content_arr($_GET);
 <title></title>
 </head>
 <body>
-<div><?= get_staff_id_and_logout(); ?></div>
 <h4>ショップシステム</h4>
-<h2><?= $content_arr[H2] ?></h2>
 <?= $content_arr['err_msg'] ?>
 <div><?= $content_arr[A] ?></div>
 </body>
