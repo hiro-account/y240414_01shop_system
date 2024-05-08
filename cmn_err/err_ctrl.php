@@ -23,7 +23,12 @@ function  get_content_arr($prm_get) {
     }
 
     $content_arr['err_msg'] = NULL;
-    $err_msg_arr = explode(DELIMITER, $_GET['err_msg']);
+//     $err_msg_arr = explode(DELIMITER, $_GET['err_msg']);
+
+    if (true);
+
+
+    $err_msg_arr = explode(DELIMITER, $prm_get['err_msg']);
 
     for ($i = 0; $i < count($err_msg_arr); $i++) {
         $content_arr['err_msg'] .= add_p($err_msg_arr[$i]) . LF;
@@ -31,4 +36,12 @@ function  get_content_arr($prm_get) {
 
     return $content_arr;
 }
+
+
+function dummy_func() {
+    return '<p>ダミー文字列</p>';
+}
+
+
+
 ?>

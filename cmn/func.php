@@ -8,14 +8,14 @@ function st_session() {
 
 function check_login($sess_arr) {
     if (!isset($sess_arr[LOGIN])) {
-        header(LOCATION . get_host_and_dir() . '/../cmn_err/err.php?from=' . SYSTEM_TOP . ERR_MSG . 'ログインしていない');
+//         header(LOCATION . get_host_and_dir() . '/../cmn_err/err.php?from=' . SYSTEM_TOP . ERR_MSG . 'ログインしていない');
+        header(LOCATION . get_host_and_dir() . '/../staff_login/staff_login_err.php?from=' . SYSTEM_TOP . ERR_MSG . 'ログインしていない');
     }
 }
 
 function get_staff_id_and_logout() {
     return '<span>ログイン中のスタッフID：' . $_SESSION[STAFF_ID] . '</span><a href="' . get_host_and_dir() .'/../staff_login/staff_logout.php" style="margin-left: 1em;">ログアウト</a>';
 }
-
 
 
 

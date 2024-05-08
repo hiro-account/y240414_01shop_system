@@ -13,6 +13,7 @@ $content_arr = get_content_arr($_GET);
 <body>
 <h4>ショップシステム</h4>
 <?= $content_arr['err_msg'] ?>
+<?= dummy_func(); ?>
 <div><?= $content_arr[A] ?></div>
 </body>
 </html>
