@@ -38,7 +38,22 @@ function  get_content_arr($prm_get) {
 }
 
 
-function dummy_func() {
+function dummy_func($prm_get) {
+    $content_arr = array();
+    $h2 = NULL;
+    
+    if (strcmp($prm_get[FROM], STAFF_LOGIN_CHECK) === I_0) {
+        $h2 = '<h2>スタッフログイン</h2>' . LF;
+    }
+    
+    if (isset($h2))
+    
+    
+    
+    $content_arr['H2_AND_ERR_MSG'] = '<h2>'
+    
+    
+    
     return '<p>ダミー文字列</p>';
 }
 
