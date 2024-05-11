@@ -1,9 +1,13 @@
 <?php
-$id = 2;
+for ($i = 1; $i < 3; $i++) {
 
-if (isset($_POST['id_' . $id])) {
-    print 'id_1がクリックされた';
+if (isset($_POST['id_' . $i])) {
+    print 'id_'. $i .'がクリックされた';
 }
+}
+
+
+
 
 
 

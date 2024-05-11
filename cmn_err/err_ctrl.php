@@ -38,23 +38,26 @@ function  get_content_arr($prm_get) {
 }
 
 
-function dummy_func($prm_get) {
+function get_content_arr_for_staff_login_err($prm_get) {
     $content_arr = array();
-    $h2 = NULL;
-    
+    $h2_and_err_msg = NULL;
+
     if (strcmp($prm_get[FROM], STAFF_LOGIN_CHECK) === I_0) {
-        $h2 = '<h2>スタッフログイン</h2>' . LF;
+        $h2_and_err_msg = '<h2>スタッフログイン</h2>' . LF . $h2_and_err_msg;
+        $content_arr[A] = A_HISTORY_BACK;
+    } else {
+        $content_arr[A] = A_STAFF_LOGIN;
     }
-    
-    if (isset($h2))
-    
-    
-    
-    $content_arr['H2_AND_ERR_MSG'] = '<h2>'
-    
-    
-    
-    return '<p>ダミー文字列</p>';
+
+    $err_msg_arr = explode(DELIMITER, $prm_get['err_msg']);
+
+    for ($i = 0; $i < count($err_msg_arr); $i++) {
+        $h2_and_err_msg .= add_p($err_msg_arr[$i]) . LF;
+    }
+
+    $content_arr['H2_AND_ERR_MSG'] = $h2_and_err_msg;
+
+    return $content_arr;
 }
 
 

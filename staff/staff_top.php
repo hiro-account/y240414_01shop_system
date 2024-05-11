@@ -18,10 +18,10 @@ check_login($_SESSION);
 <h4>ショップシステム</h4>
 <h2>スタッフ管理</h2>
 <div><a href="staff_add.php">スタッフ登録</a></div>
-<div class="m-t-05em">スタッフ一覧(スタッフ更新、スタッフ削除は詳細を表示)</div>
+<div class="m-t-05em">スタッフ一覧(スタッフ更新、スタッフ削除はスタッフ詳細を表示)</div>
 <form method="post" action="staff_detail.php">
 <table class="border">
-<tr><th>スタッフID</th><th>スタッフ名</th><th>詳細</th><tr>
+<tr><th>スタッフID</th><th>スタッフ名</th><th>スタッフ詳細</th><tr>
 <?= get_staff_list() ?>
 </table>
 </form>

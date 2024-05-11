@@ -10,7 +10,7 @@ function get_staff_list() {
     $id_str = NULL;
 
     try {
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM mst_staff ORDER BY id', NULL);
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM mst_staff WHERE delete_flag=FALSE ORDER BY id', NULL);
 
         while (TRUE) {
             $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,7 +21,7 @@ function get_staff_list() {
 
 //             $staff_list .= '<tr><td><a href="./staff_detail.php?staff_id=' . $mixed['id'] . '">' . $mixed['id'] . '</a></td><td>' . $mixed['name'] . '</td></tr>' . LF;
             $staff_list .= '<tr><td>' . $mixed['id'] . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td>'
-                . '<td><input type="submit" name="id_' . $mixed['id'] . '" value="表示"></td></tr>' . LF;
+                . '<td class="t-a-c"><input type="submit" name="id_' . $mixed['id'] . '" value="表示"></td></tr>' . LF;
             //             $hidden .= ''
                 $id_str .= $mixed['id'] . DELIMITER;
         }
