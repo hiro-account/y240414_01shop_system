@@ -3,11 +3,10 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 
-//TODO:関数名変更検討
-function get_staff_list() {
+function get_content_arr($prm_get) {
     $staff_list = NULL;
-//     $hidden = NULL;
-    $id_str = NULL;
+    $first_staff_id = NULL;
+    $last_staff_id = NULL;
 
     try {
         $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM mst_staff WHERE delete_flag=FALSE ORDER BY id', NULL);
@@ -15,32 +14,34 @@ function get_staff_list() {
         while (TRUE) {
             $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($mixed == FALSE) {
+            if (!$mixed) {
                 break;
             }
 
-//             $staff_list .= '<tr><td><a href="./staff_detail.php?staff_id=' . $mixed['id'] . '">' . $mixed['id'] . '</a></td><td>' . $mixed['name'] . '</td></tr>' . LF;
-            $staff_list .= '<tr><td>' . $mixed['id'] . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td>'
-                . '<td class="t-a-c"><input type="submit" name="id_' . $mixed['id'] . '" value="表示"></td></tr>' . LF;
-            //             $hidden .= ''
-                $id_str .= $mixed['id'] . DELIMITER;
+            $last_staff_id = $mixed['id'];
+            $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td>'
+                . '<td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
+
+                if (!isset($first_staff_id)) {
+                    $first_staff_id = $last_staff_id;
+                }
+
+//                 $last_staff_id = $staff_id;
         }
-
-
-
-
-
-
     } catch (Exception $e) {
 
     }
 
+    return array(
+        'STAFF_LIST' => $staff_list,
+        'FIRST_STAFF_ID' => $first_staff_id,
+        'LAST_STAFF_ID' => $last_staff_id
+    );
 
 
 
 
-
-    return $staff_list . '<input type="hidden" name="id_str" value="' . $id_str . '">' . LF;
+//     return $staff_list . '<input type="hidden" name="id_str" value="' . $id_str . '">' . LF;
 }
 
 
