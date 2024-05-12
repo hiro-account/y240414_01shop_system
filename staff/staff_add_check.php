@@ -74,12 +74,12 @@ $input_parameter_arr = array(trim($posted_arr['last_name']),
     trim($posted_arr['last_name_kana']),
     trim($posted_arr['first_name_kana']),
     intval($posted_arr['sex']),
-    $posted_arr['birth_year'] . sprintf('%02d', $posted_arr['birth_month']) . sprintf('%02d', $posted_arr['birth_day']),
+    $posted_arr['birth_year'] . '-' . sprintf('%02d', $posted_arr['birth_month']) . '-' . sprintf('%02d', $posted_arr['birth_day']),
     md5($posted_arr['password_1']));
 
 try {
     execute_sql_rtn_PDOStatement('INSERT INTO mst_staff '
-        . ' (last_name, first_name, last_name_kana, first_name_kana, sex, birthday, password) '
+        . '(last_name, first_name, last_name_kana, first_name_kana, sex, birthday, password) '
         . 'VALUES (?, ?, ?, ?, ?, ?, ?)',
         $input_parameter_arr);
 } catch (Exception $e) {
