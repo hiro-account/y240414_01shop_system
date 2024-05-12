@@ -6,7 +6,7 @@ require_once '../cmn/func.php';
 
 $header = LOCATION . './staff_login_err.php?from=' . STAFF_LOGIN_CHECK . ERR_MSG;
 
-$posted_arr = convert_sp_chara_rtn_arr($_POST);
+$posted_arr = convert_sp_char_and_trim_rtn_arr($_POST);
 
 // 未入力の項目のチェック
 $empty_msg_arr = check_unfilled_item_rtn_arr(array(STAFF_ID => 'スタッフID', STAFF_PASS => 'パスワード'), $posted_arr);

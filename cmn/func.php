@@ -21,11 +21,11 @@ function get_staff_id_and_logout() {
 
 //--------------------------------------------------------------------------------
 
-function convert_sp_chara_rtn_arr($target_arr) {
+function convert_sp_char_and_trim_rtn_arr($target_arr) {
     $converted_arr = array();
 
     foreach ($target_arr as $key => $val) {
-        $converted_arr[$key] = htmlspecialchars($val);
+        $converted_arr[$key] = trim(htmlspecialchars($val));
     }
 
     return $converted_arr;
@@ -40,7 +40,7 @@ function check_unfilled_item_rtn_arr($item_txt_arr, $target_arr) {
     $val_arr = array();
 
     foreach ($item_txt_arr as $key => $val) {
-        if (strlen(trim($target_arr[$key])) === 0) {
+        if (strlen($target_arr[$key]) === 0) {
             $val_arr[$key] = $val . NOT_ENTERED;
         }
     }

@@ -29,7 +29,7 @@ $item_slct_arr = array('sex' => '性別',
 );
 $header = ERR_HEADER . STAFF_ADD_CHECK . ERR_MSG;
 
-$posted_arr = convert_sp_chara_rtn_arr($_POST);
+$posted_arr = convert_sp_char_and_trim_rtn_arr($_POST);
 
 // 未入力、未選択の項目のチェック
 // $checked_unfilled_msg_arr = check_unfilled_item_rtn_arr($item_txt_arr, $posted_arr);
@@ -69,10 +69,10 @@ if (count($invalid_msg_arr) > 0) {
     exit();
 }
 
-$input_parameter_arr = array(trim($posted_arr['last_name']),
-    trim($posted_arr['first_name']),
-    trim($posted_arr['last_name_kana']),
-    trim($posted_arr['first_name_kana']),
+$input_parameter_arr = array($posted_arr['last_name'],
+    $posted_arr['first_name'],
+    $posted_arr['last_name_kana'],
+    $posted_arr['first_name_kana'],
     intval($posted_arr['sex']),
     $posted_arr['birth_year'] . '-' . sprintf('%02d', $posted_arr['birth_month']) . '-' . sprintf('%02d', $posted_arr['birth_day']),
     md5($posted_arr['password_1']));
