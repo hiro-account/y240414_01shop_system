@@ -60,7 +60,7 @@ if (count($checked_alphanumeric_msg_arr) > 0) {
 //     header($header . implode(DELIMITER, $checked_alphanumeric_msg_arr));
 //     exit();
     $invalid_msg_arr[] = implode(DELIMITER, $checked_alphanumeric_msg_arr);
-} else if (strcmp($posted_arr['password_1'], $posted_arr['password_2']) != 0) {
+} else if (strcmp($posted_arr['password_1'], $posted_arr['password_2']) !== 0) {
     $invalid_msg_arr[] = $item_txt_arr['password_1'] . 'と' . $item_txt_arr['password_2'] . 'が一致しない';
 }
 

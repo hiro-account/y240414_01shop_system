@@ -19,18 +19,23 @@ function get_staff_id_and_logout() {
 
 
 
-//--------------------------------------------------------------------------------
+//================================================================================
+//関数名、引数名のチェック済st
+//TODO:記載位置検討、定数化、
 
-function convert_sp_char_and_trim_rtn_arr($target_arr) {
+//TODO:全角スペース取り除き
+function convert_sp_char_and_trim_rtn_arr($prm_target_arr) {
     $converted_arr = array();
 
-    foreach ($target_arr as $key => $val) {
+    foreach ($prm_target_arr as $key => $val) {
         $converted_arr[$key] = trim(htmlspecialchars($val));
     }
 
     return $converted_arr;
 }
 
+//関数名、引数名のチェック済ed
+//================================================================================
 
 /**
  * 未入力の項目をチェックする
