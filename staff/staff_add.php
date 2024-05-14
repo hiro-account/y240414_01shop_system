@@ -16,7 +16,7 @@ check_login($_SESSION);
 <div><?= get_staff_id_and_logout(); ?></div>
 <h4>ショップシステム</h4>
 <h2>スタッフ登録</h2>
-<form method="post" action="staff_add_check.php">
+<form method="post" action="staff_create_confirm.php">
 <table>
 <!--<tr>
 <td>スタッフ名</td><td><input type="text" name="staff_name" class="w-100"></td>
