@@ -20,7 +20,7 @@ check_login($_SESSION);
 <h2>スタッフ詳細</h2>
 <form method="post" action="staff_detail.php">
 <table>
-<?= get_content_arr($_POST); ?>
+<?= get_content($_POST); ?>
 </table>
 </form>
 <p><a href="./staff_top.php">戻る</a></p>

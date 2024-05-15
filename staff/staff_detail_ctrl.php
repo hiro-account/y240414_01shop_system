@@ -4,7 +4,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'sortedFunc.php');
 
-function get_content_arr($prm_post) {
+function get_content($prm_post) {
     $staff_id = NULL;
 
     for ($i = intval($prm_post['first_staff_id']); $i <= intval($prm_post['last_staff_id']); $i++) {

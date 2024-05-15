@@ -3,7 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 
-function get_content_arr($prm_post) {
+function get_content($prm_post) {
     $item_key_arr = array('last_name',
         'first_name',
         'last_name_kana',
@@ -36,31 +36,52 @@ function get_content_arr($prm_post) {
         check_unselected_item_rtn_arr($item_slct_arr, $posted_arr));
 
     if (count($empty_msg_arr) > 0) {
-        // 未入力、未選択の項目がある場合、エラーページに遷移する
-//         var_dump(sort_msg_rtn_arr($item_key_arr, $empty_msg_arr));
+        // 未入力、未選択の項目がある場合、エラーメッセージを表示する
+        return build_err_content(sort_msg_rtn_arr($item_key_arr, $empty_msg_arr));
+    }
 
+    $invalid_msg_arr = array();
 
-        $content_arr = NULL;
-        //     $err_msg_arr = explode(DELIMITER, $_GET['err_msg']);
+    // 生年月日の妥当性のチェック
+    if (!checkdate(intval($posted_arr['birth_month']), intval($posted_arr['birth_day']), intval($posted_arr['birth_year']))) {
+        $invalid_msg_arr[] = '生年月日が不正';
+    }
 
+    // パスワードのチェック
+    // パスワードの文字種のチェック
+    $checked_alphanumeric_msg_arr = check_alphanumeric_rtn_arr(array_slice($item_txt_arr, 4), $posted_arr);
 
-        $err_msg_arr = sort_msg_rtn_arr($item_key_arr, $empty_msg_arr);
+    if (count($checked_alphanumeric_msg_arr) > 0) {
+        // パスワードの文字種に不備がある場合
+        $invalid_msg_arr[] = implode(DELIMITER, $checked_alphanumeric_msg_arr);
+    } else if (strcmp($posted_arr['password_1'], $posted_arr['password_2']) !== 0) {
+        // パスワードとパスワード（確認）が一致しない場合
+        $invalid_msg_arr[] = $item_txt_arr['password_1'] . 'と' . $item_txt_arr['password_2'] . 'が一致しない';
+    }
 
-        for ($i = 0; $i < count($err_msg_arr); $i++) {
-            $content_arr .= add_p($err_msg_arr[$i]) . LF;
-        }
-
-        return $content_arr;
-
-
-
-
-
+    if (count($invalid_msg_arr) > 0) {
+        // 生年月日とパスワードのどちらか、もしくは双方ともに不備がある場合、エラーメッセージを表示する
+        return build_err_content($invalid_msg_arr);
     }
 
 
-
 }
+
+function build_err_content($prm_err_msg_arr) {
+    $content = NULL;
+
+    for ($i = 0; $i < count($prm_err_msg_arr); $i++) {
+        $content .= add_p($prm_err_msg_arr[$i]) . LF;
+    }
+
+    return $content;
+}
+
+
+
+
+
+
 
 
 ?>

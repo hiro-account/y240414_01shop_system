@@ -5,7 +5,7 @@ require_once($to_cmn . 'func.php');
 require_once('./staff_top_ctrl.php');
 st_session();
 check_login($_SESSION);
-$content_arr = get_content_arr($_GET);
+$content_arr = get_content($_GET);
 ?>
 <!DOCTYPE html>
 <html>

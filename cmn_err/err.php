@@ -5,7 +5,7 @@ require_once($to_cmn . 'func.php');
 st_session();
 check_login($_SESSION);
 require_once('./err_ctrl.php');
-$content_arr = get_content_arr($_GET);
+$content_arr = get_content($_GET);
 ?>
 <!DOCTYPE html>
 <html>

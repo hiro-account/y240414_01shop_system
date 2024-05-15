@@ -2,7 +2,7 @@
 require_once('../cmn/const.php');
 require_once('../cmn/func.php');
 
-function  get_content_arr($prm_get) {
+function  get_content($prm_get) {
     $content_arr = array();
 
     switch ($prm_get[FROM]) {

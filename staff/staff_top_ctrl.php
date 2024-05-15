@@ -3,7 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 
-function get_content_arr($prm_get) {
+function get_content($prm_get) {
     $staff_list = NULL;
     $first_staff_id = NULL;
     $last_staff_id = NULL;

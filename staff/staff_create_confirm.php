@@ -15,7 +15,7 @@ check_login($_SESSION);
 <div><?= get_staff_id_and_logout(); ?></div>
 <h4>ショップシステム</h4>
 <h2>スタッフ登録</h2>
-<?= get_content_arr($_POST); ?>
-<p><a href="./staff_add.php">戻る</a></p>
+<?= get_content($_POST); ?>
+<p><a href="javascript: history.back();">戻る</a></p>
 </body>
 </html>
