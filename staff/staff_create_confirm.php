@@ -16,6 +16,6 @@ check_login($_SESSION);
 <h4>ショップシステム</h4>
 <h2>スタッフ登録</h2>
 <?= get_content($_POST); ?>
-<p><a href="javascript: history.back();">戻る</a></p>
+<div><a href="javascript: history.back();">戻る</a></div>
 </body>
 </html>

@@ -56,7 +56,7 @@ check_login($_SESSION);
 <td>パスワード（確認）</td><td><input type="password" name="password_2" class="w-100"></td>
 </tr>
 </table>
-<p><input type="submit" value="登録"></p>
+<p><input type="submit" value="確認"></p>
 <p><a href="./staff_top.php">戻る</a></p>
 </form>
 </body>

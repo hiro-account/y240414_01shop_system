@@ -64,6 +64,34 @@ function get_content($prm_post) {
         return build_err_content($invalid_msg_arr);
     }
 
+    return <<<EOC
+<p>下記の内容で問題なければ実行ボタンを押す</p>
+<table>
+<tr>
+<td>氏</td><td>{$posted_arr['']}</td>
+</tr>
+<tr>
+<td>名</td><td>{$posted_arr['']}</td>
+</tr>
+<tr>
+<td>氏（カナ）</td><td>{$posted_arr['']}</td>
+</tr>
+<tr>
+<td>名（カナ）</td><td>{$posted_arr['']}</td>
+</tr>
+<tr>
+<td>性別</td><td>{$posted_arr['']}</td>
+</tr>
+<tr>
+<td>生年月日</td><td>{$posted_arr['']}</td>
+</tr>
+
+</table>
+EOC;
+
+
+
+
 
 }
 
@@ -77,7 +105,15 @@ function build_err_content($prm_err_msg_arr) {
     return $content;
 }
 
+function tmp_func($prm_a, $prm_b) {
+    $tmp = NULL;
 
+    for ($i = 0; $i < count($prm_a); $i++) {
+        $tmp .= '<tr><td>' . $prm_a[$i] . '</td><td>' . $prm_b[$i] . '</td></tr>' . LF;
+    }
+
+    return $tmp;
+}
 
 
 
