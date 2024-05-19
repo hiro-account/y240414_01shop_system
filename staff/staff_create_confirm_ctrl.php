@@ -6,40 +6,42 @@ require_once($to_cmn . 'func.php');
 function get_content($prm_post) {
     //TODO:配列の要素、配置位置要整理
     $item_key_nm_arr = array(
-        'last_name' => '氏',                 // 0
-        'first_name' => '名',                // 1
-        'last_name_kana' => '氏（カナ）',    // 2
-        'first_name_kana' => '名（カナ）',   // 3
-        'sex' => '性別',                     // 4
-        'birth_year' => '生年月日の年',      // 5
-        'birth_month' => '生年月日の月',     // 6
-        'birth_day' => '生年月日の日',       // 7
-        'password_1' => 'パスワード',        // 8
-        'password_2' => 'パスワード（確認）' // 9
+        'txt_last_name' => '氏',                 // 0
+        'txt_first_name' => '名',                // 1
+        'txt_last_name_kana' => '氏（カナ）',    // 2
+        'txt_first_name_kana' => '名（カナ）',   // 3
+        'slct_sex' => '性別',                     // 4
+        'slct_birth_year' => '生年月日の年',      // 5
+        'slct_birth_month' => '生年月日の月',     // 6
+        'slct_birth_day' => '生年月日の日',       // 7
+        'txt_password_1' => 'パスワード',        // 8
+        'txt_password_2' => 'パスワード（確認）' // 9
     );
 
     // 入力値のサニタイズと空白文字の除去
     $item_val_arr = convert_sp_char_and_trim_rtn_arr($prm_post);
 
-    // 氏名のKeyとValue
-    $name_key_nm_arr = array_slice($item_key_nm_arr, I_0, 4);
-    // パスワードのKeyとValue
-    $pswd_key_nm_arr = array_slice($item_key_nm_arr, 8, I_2);
+//     // 氏名のKeyとValue
+//     $name_key_nm_arr = array_slice($item_key_nm_arr, I_0, 4);
+//     // パスワードのKeyとValue
+//     $pswd_key_nm_arr = array_slice($item_key_nm_arr, 8, I_2);
 
-    // 入力値、選択値のチェック：ST ----------
+//     // 入力値、選択値のチェック：ST ----------
 
-    // 未入力、未選択の項目のチェック
-    // テキスト入力項目（0, 1, 2, 3, 8, 9）
-    $txt_item_key_nm_arr = array_merge($name_key_nm_arr, $pswd_key_nm_arr);
-    // セレクト選択項目（4, 5, 6, 7）
-    $slct_item_key_nm_arr = array_slice($item_key_nm_arr, 4, 4);
+//     // 未入力、未選択の項目のチェック
+//     // テキスト入力項目（0, 1, 2, 3, 8, 9）
+//     $txt_item_key_nm_arr = array_merge($name_key_nm_arr, $pswd_key_nm_arr);
+//     // セレクト選択項目（4, 5, 6, 7）
+//     $slct_item_key_nm_arr = array_slice($item_key_nm_arr, 4, 4);
 
-    $empty_msg_arr = array_merge(check_unfilled_item_rtn_arr($txt_item_key_nm_arr, $item_val_arr),
-        check_unselected_item_rtn_arr($slct_item_key_nm_arr, $item_val_arr));
+//     $empty_msg_arr = array_merge(check_unfilled_item_rtn_arr($txt_item_key_nm_arr, $item_val_arr),
+//         check_unselected_item_rtn_arr($slct_item_key_nm_arr, $item_val_arr));
+
+    $empty_msg_arr = chk_unent_unslct_item_rtn_arr($item_key_nm_arr, $item_val_arr);
 
     if (count($empty_msg_arr) > 0) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
-        return build_err_content(sort_msg_rtn_arr($item_key_nm_arr, $empty_msg_arr));
+        return build_err_content($empty_msg_arr);
     }
 
     $invalid_msg_arr = array();
@@ -85,7 +87,7 @@ function get_content($prm_post) {
     $table_element = build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'), $hidden_arr);
 //     $tmp_arr =
 
-    $content_arr = array_slice($item_val_arr, I_0, )
+    $content_arr = array_slice($item_val_arr, I_0, );
 
 
 
@@ -112,8 +114,11 @@ EOS;
 function build_err_content($prm_err_msg_arr) {
     $content = NULL;
 
-    for ($i = 0; $i < count($prm_err_msg_arr); $i++) {
-        $content .= add_p($prm_err_msg_arr[$i]) . LF;
+//     for ($i = 0; $i < count($prm_err_msg_arr); $i++) {
+//         $content .= add_p($prm_err_msg_arr[$i]) . LF;
+//     }
+    foreach ($prm_err_msg_arr as $value) {
+        $content .= add_p($value);
     }
 
     return $content;

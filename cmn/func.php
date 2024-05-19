@@ -37,6 +37,28 @@ function convert_sp_char_and_trim_rtn_arr($prm_target_arr) {
 //関数名、引数名のチェック済ed
 //================================================================================
 
+function chk_unent_unslct_item_rtn_arr($prm_item_key_nm_arr, $prm_target_arr) {
+    $err_msg_arr = array();
+
+    foreach ($prm_item_key_nm_arr as $key => $val) {
+//         $tmp = trim(htmlspecialchars($val));
+
+        if (strpos($key, 'txt_') === I_0 && strlen($prm_target_arr[$key]) === I_0) {
+            $err_msg_arr[$key] = $val . NOT_ENTERED;
+        } else if (strpos($key, 'slct_') === I_0 && intval($prm_target_arr[$key]) === I_0) {
+            $err_msg_arr[$key] = $val . 'が未選択';
+        }
+    }
+
+    return $err_msg_arr;
+}
+
+
+
+
+
+
+
 /**
  * 未入力の項目をチェックする
  *
