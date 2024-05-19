@@ -76,9 +76,9 @@ function check_unselected_item_rtn_arr($item_slct_arr, $target_arr) {
 function sort_msg_rtn_arr($item_key_arr, $target_arr) {
     $val_arr = array();
 
-    foreach ($item_key_arr as $val) {
-        if (array_key_exists($val, $target_arr)) {
-            $val_arr[] = $target_arr[$val];
+    foreach ($item_key_arr as $key => $val) {
+        if (array_key_exists($key, $target_arr)) {
+            $val_arr[] = $target_arr[$key];
         }
     }
 
