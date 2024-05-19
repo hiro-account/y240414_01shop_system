@@ -37,20 +37,18 @@ function convert_sp_char_and_trim_rtn_arr($prm_target_arr) {
 //関数名、引数名のチェック済ed
 //================================================================================
 
-function chk_unent_unslct_item_rtn_arr($prm_item_key_nm_arr, $prm_target_arr) {
-    $err_msg_arr = array();
+function check_unenter_unslct_item($prm_item_key_nm_arr, $prm_target_arr) {
+    $err_msg = NULL;
 
     foreach ($prm_item_key_nm_arr as $key => $val) {
-//         $tmp = trim(htmlspecialchars($val));
-
         if (strpos($key, 'txt_') === I_0 && strlen($prm_target_arr[$key]) === I_0) {
-            $err_msg_arr[$key] = $val . NOT_ENTERED;
+            $err_msg .= add_p($val . NOT_ENTERED) . LF;
         } else if (strpos($key, 'slct_') === I_0 && intval($prm_target_arr[$key]) === I_0) {
-            $err_msg_arr[$key] = $val . 'が未選択';
+            $err_msg .= add_p($val . 'が未選択') . LF;
         }
     }
 
-    return $err_msg_arr;
+    return $err_msg;
 }
 
 
@@ -110,17 +108,16 @@ function sort_msg_rtn_arr($item_key_arr, $target_arr) {
 
 
 
-function check_alphanumeric_rtn_arr($item_key_arr, $target_arr) {
-    $val_arr = array();
+function check_alphanumeric($item_key_arr, $target_arr) {
+    $err_msg = NULL;
 
     foreach ($item_key_arr as $key => $val) {
         if (!preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$key])) {
-            $val_arr[] = $val . 'に英数字以外が入力された';//TODO:定数化検討
+            $err_msg .= add_p($val . 'に英数字以外が入力された') . LF;//TODO:定数化検討
         }
     }
 
-    return $val_arr;
-
+    return $err_msg;
 }
 
 

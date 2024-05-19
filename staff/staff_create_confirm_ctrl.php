@@ -10,10 +10,10 @@ function get_content($prm_post) {
         'txt_first_name' => '名',                // 1
         'txt_last_name_kana' => '氏（カナ）',    // 2
         'txt_first_name_kana' => '名（カナ）',   // 3
-        'slct_sex' => '性別',                     // 4
-        'slct_birth_year' => '生年月日の年',      // 5
-        'slct_birth_month' => '生年月日の月',     // 6
-        'slct_birth_day' => '生年月日の日',       // 7
+        'slct_sex' => '性別',                    // 4
+        'slct_birth_year' => '生年月日の年',     // 5
+        'slct_birth_month' => '生年月日の月',    // 6
+        'slct_birth_day' => '生年月日の日',      // 7
         'txt_password_1' => 'パスワード',        // 8
         'txt_password_2' => 'パスワード（確認）' // 9
     );
@@ -21,56 +21,42 @@ function get_content($prm_post) {
     // 入力値のサニタイズと空白文字の除去
     $item_val_arr = convert_sp_char_and_trim_rtn_arr($prm_post);
 
-//     // 氏名のKeyとValue
-//     $name_key_nm_arr = array_slice($item_key_nm_arr, I_0, 4);
-//     // パスワードのKeyとValue
-//     $pswd_key_nm_arr = array_slice($item_key_nm_arr, 8, I_2);
+    // 入力値、選択値のチェック：ST ----------
 
-//     // 入力値、選択値のチェック：ST ----------
+    // 未入力、未選択の項目のチェック
+    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr);
 
-//     // 未入力、未選択の項目のチェック
-//     // テキスト入力項目（0, 1, 2, 3, 8, 9）
-//     $txt_item_key_nm_arr = array_merge($name_key_nm_arr, $pswd_key_nm_arr);
-//     // セレクト選択項目（4, 5, 6, 7）
-//     $slct_item_key_nm_arr = array_slice($item_key_nm_arr, 4, 4);
-
-//     $empty_msg_arr = array_merge(check_unfilled_item_rtn_arr($txt_item_key_nm_arr, $item_val_arr),
-//         check_unselected_item_rtn_arr($slct_item_key_nm_arr, $item_val_arr));
-
-    $empty_msg_arr = chk_unent_unslct_item_rtn_arr($item_key_nm_arr, $item_val_arr);
-
-    if (count($empty_msg_arr) > 0) {
+    if (isset($empty_msg)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
-        return build_err_content($empty_msg_arr);
+        return $empty_msg;
     }
 
-    $invalid_msg_arr = array();
+    $invalid_msg = NULL;
 
     // 生年月日の妥当性のチェック
-    if (!checkdate(intval($item_val_arr['birth_month']), intval($item_val_arr['birth_day']), intval($item_val_arr['birth_year']))) {
-        $invalid_msg_arr[] = '生年月日が不正';
+    if (!checkdate(intval($item_val_arr['slct_birth_month']), intval($item_val_arr['slct_birth_day']), intval($item_val_arr['slct_birth_year']))) {
+        $invalid_msg .= add_p('生年月日が不正') . LF;
     }
 
     // パスワードのチェック
     // パスワードの文字種のチェック
     //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
-    $checked_alphanumeric_msg_arr = check_alphanumeric_rtn_arr($pswd_key_nm_arr, $item_val_arr);
+    $checked_alphanumeric_msg_arr = check_alphanumeric(array_slice($item_key_nm_arr, 8), $item_val_arr);
 
-    if (count($checked_alphanumeric_msg_arr) > 0) {
+    if (isset($checked_alphanumeric_msg_arr)) {
         // パスワードの文字種に不備がある場合
-//         $invalid_msg_arr = array_merge($invalid_msg_arr, $checked_alphanumeric_msg_arr);
-        foreach ($checked_alphanumeric_msg_arr as $val) {
-            $invalid_msg_arr[] = $val;
-        }
-    } else if (strcmp($item_val_arr['password_1'], $item_val_arr['password_2']) !== 0) {
+        $invalid_msg .= $checked_alphanumeric_msg_arr;
+    } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== 0) {
         // パスワードとパスワード（確認）が一致しない場合
-        $invalid_msg_arr[] = $item_key_nm_arr['password_1'] . 'と' . $item_key_nm_arr['password_2'] . 'が一致しない';
+        $invalid_msg .= add_p($item_key_nm_arr['txt_password_1'] . 'と' . $item_key_nm_arr['txt_password_2'] . 'が一致しない') . LF;
     }
 
-    if (count($invalid_msg_arr) > 0) {
+    if (isset($invalid_msg)) {
         // 生年月日とパスワードのどちらか、もしくは双方ともに不備がある場合、エラーメッセージを表示する
-        return build_err_content($invalid_msg_arr);
+        return $invalid_msg;
     }
+
+
 
     // 入力値、選択値のチェック：ED ----------
 
@@ -83,12 +69,18 @@ function get_content($prm_post) {
         '********');
 
     $sex_arr = array('-', '男', '女', '未選択');
-    $birth_date = $item_val_arr['birth_year'] . '年' . $item_val_arr['birth_month'] . '月' . $item_val_arr['birth_day'] . '日';
+    $birth_date = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
+
+
+
+
+
+
     $table_element = build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'), $hidden_arr);
 //     $tmp_arr =
 
-    $content_arr = array_slice($item_val_arr, I_0, );
-
+    $content_arr = array_merge(array_slice($item_val_arr, I_0, 4), array($sex_arr[intval($item_val_arr['slct_sex'])], $birth_date));
+    //TODO:24/05/20朝ここまで
 
 
 

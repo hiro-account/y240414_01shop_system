@@ -53,7 +53,7 @@ if (!checkdate(intval($posted_arr['birth_month']), intval($posted_arr['birth_day
 }
 
 // パスワードの文字種のチェック
-$checked_alphanumeric_msg_arr = check_alphanumeric_rtn_arr(array_slice($item_txt_arr, 4), $posted_arr);
+$checked_alphanumeric_msg_arr = check_alphanumeric(array_slice($item_txt_arr, 4), $posted_arr);
 
 if (count($checked_alphanumeric_msg_arr) > 0) {
 //     // 英数字以外の項目がある場合、エラーページに遷移する
