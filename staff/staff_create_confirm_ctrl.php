@@ -41,7 +41,8 @@ function get_content($prm_post) {
     // パスワードのチェック
     // パスワードの文字種のチェック
     //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
-    $checked_alphanumeric_msg_arr = check_alphanumeric(array_slice($item_key_nm_arr, 8), $item_val_arr);
+    $offset = 8;
+    $checked_alphanumeric_msg_arr = check_alphanumeric(array_slice($item_key_nm_arr, $offset), array_slice($item_val_arr, $offset));
 
     if (isset($checked_alphanumeric_msg_arr)) {
         // パスワードの文字種に不備がある場合
@@ -60,13 +61,13 @@ function get_content($prm_post) {
 
     // 入力値、選択値のチェック：ED ----------
 
-    $hidden_arr = array($item_val_arr['last_name'],
-        $item_val_arr['first_name'],
-        $item_val_arr['last_name_kana'],
-        $item_val_arr['first_name_kana'],
-        $sex_arr[intval($item_val_arr['sex'])],
-        $birth_date,
-        '********');
+//     $hidden_arr = array($item_val_arr['last_name'],
+//         $item_val_arr['first_name'],
+//         $item_val_arr['last_name_kana'],
+//         $item_val_arr['first_name_kana'],
+//         $sex_arr[intval($item_val_arr['sex'])],
+//         $birth_date,
+//         '********');
 
     $sex_arr = array('-', '男', '女', '未選択');
     $birth_date = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
@@ -76,22 +77,28 @@ function get_content($prm_post) {
 
 
 
-    $table_element = build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'), $hidden_arr);
+//     $table_element = build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'), $hidden_arr);
 //     $tmp_arr =
 
-    $content_arr = array_merge(array_slice($item_val_arr, I_0, 4), array($sex_arr[intval($item_val_arr['slct_sex'])], $birth_date));
-    //TODO:24/05/20朝ここまで
+    $heading_arr = array_merge(array_slice($item_key_nm_arr, I_0, 5), array('birth_date' => '生年月日', 'password' => $item_key_nm_arr['txt_password_1']));
+    $content_arr = array_merge(array_slice($item_val_arr, I_0, 4),
+        array('slct_sex' => $sex_arr[intval($item_val_arr['slct_sex'])], 'birth_date' => $birth_date, 'password' => '********'));
+    $tbl_elem = build_tbl_elem($heading_arr, $content_arr);
+
+    $hidden_arr =
 
 
 
-    return <<<EOS
+
+
+    return <<<EOE
 <p>下記の内容で問題なければ実行ボタンを押す</p>
-{$table_element}
+{$tbl_elem}
 <form method="post" action="./staff_create_done.php">
-<input type="submit" value="実行">
+<p><input type="submit" value="実行"></p>
 </form>
 
-EOS;
+EOE;
 
 //     return '<p>下記の内容で問題なければ実行ボタンを押す</p>' . LF .
 //         build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'),
@@ -116,6 +123,21 @@ function build_err_content($prm_err_msg_arr) {
     return $content;
 }
 
+function build_tbl_elem($prm_heading_arr, $prm_value_arr) {
+    $table_element = '<table>' . LF;
+
+    foreach ($prm_heading_arr as $key => $val) {
+        $table_element .= '<tr><td>' . $val . '</td><td>：' . $prm_value_arr[$key] . '</td></tr>' . LF;
+    }
+
+    $table_element .= '</table>';
+
+    return $table_element;
+}
+
+
+
+
 function build_table_element($prm_heading_arr, $prm_value_arr) {
     $table_element = '<table>' . LF;
 
@@ -127,10 +149,4 @@ function build_table_element($prm_heading_arr, $prm_value_arr) {
 
     return $table_element;
 }
-
-
-
-
-
-
 ?>
