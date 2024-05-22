@@ -24,7 +24,7 @@ function get_content($prm_post) {
     // 入力値、選択値のチェック：ST ----------
 
     // 未入力、未選択の項目のチェック
-    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr);
+    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex'));
 
     if (isset($empty_msg)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
@@ -42,11 +42,11 @@ function get_content($prm_post) {
     // パスワードの文字種のチェック
     //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
     $offset = 8;
-    $checked_alphanumeric_msg_arr = check_alphanumeric(array_slice($item_key_nm_arr, $offset), array_slice($item_val_arr, $offset));
+    $checked_alphanumeric_msg = check_alphanumeric(array_slice($item_key_nm_arr, $offset), array_slice($item_val_arr, $offset));
 
-    if (isset($checked_alphanumeric_msg_arr)) {
+    if (isset($checked_alphanumeric_msg)) {
         // パスワードの文字種に不備がある場合
-        $invalid_msg .= $checked_alphanumeric_msg_arr;
+        $invalid_msg .= $checked_alphanumeric_msg;
     } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== 0) {
         // パスワードとパスワード（確認）が一致しない場合
         $invalid_msg .= add_p($item_key_nm_arr['txt_password_1'] . 'と' . $item_key_nm_arr['txt_password_2'] . 'が一致しない') . LF;
@@ -57,35 +57,19 @@ function get_content($prm_post) {
         return $invalid_msg;
     }
 
-
-
     // 入力値、選択値のチェック：ED ----------
 
-//     $hidden_arr = array($item_val_arr['last_name'],
-//         $item_val_arr['first_name'],
-//         $item_val_arr['last_name_kana'],
-//         $item_val_arr['first_name_kana'],
-//         $sex_arr[intval($item_val_arr['sex'])],
-//         $birth_date,
-//         '********');
+    //24/05/23：次回関数にcontinueするキーを渡す方法検討から
 
+    //
     $sex_arr = array('-', '男', '女', '未選択');
     $birth_date = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
-
-
-
-
-
-
-//     $table_element = build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'), $hidden_arr);
-//     $tmp_arr =
-
     $heading_arr = array_merge(array_slice($item_key_nm_arr, I_0, 5), array('birth_date' => '生年月日', 'password' => $item_key_nm_arr['txt_password_1']));
     $content_arr = array_merge(array_slice($item_val_arr, I_0, 4),
-        array('slct_sex' => $sex_arr[intval($item_val_arr['slct_sex'])], 'birth_date' => $birth_date, 'password' => '********'));
+        array('slct_sex' => $sex_arr[intval($item_val_arr['slct_sex'])], 'birth_date' => $birth_date, 'password' => '非表示'));
     $tbl_elem = build_tbl_elem($heading_arr, $content_arr);
 
-    $hidden_arr =
+    $hdn_elem = build_hdn_elem(array_merge(array_slice($item_val_arr, I_0, 8), array('password' => password_hash($item_val_arr['txt_password_1'], PASSWORD_BCRYPT))));
 
 
 
@@ -95,7 +79,7 @@ function get_content($prm_post) {
 <p>下記の内容で問題なければ実行ボタンを押す</p>
 {$tbl_elem}
 <form method="post" action="./staff_create_done.php">
-<p><input type="submit" value="実行"></p>
+{$hdn_elem}<p><input type="submit" value="実行"></p>
 </form>
 
 EOE;
@@ -135,7 +119,15 @@ function build_tbl_elem($prm_heading_arr, $prm_value_arr) {
     return $table_element;
 }
 
+function build_hdn_elem($prm_target_arr) {
+    $hdn_elem = NULL;
 
+    foreach ($prm_target_arr as $key => $val) {
+        $hdn_elem .= '<input type="hidden" name="' . $key . '" value="' . $val . '">' . LF;
+    }
+
+    return $hdn_elem;
+}
 
 
 function build_table_element($prm_heading_arr, $prm_value_arr) {
