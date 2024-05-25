@@ -22,53 +22,14 @@ function get_content($prm_post) {
         'password' => PASSWORD,                     // 12
     );
 
-    $item_key_arr = array (
-        'txt_last_name',        // 0
-        'txt_first_name',       // 1
-        'txt_last_name_kana',   // 2
-        'txt_first_name_kana',  // 3
-        'slct_sex',             // 4
-        'sex',                  // 5
-        'slct_birth_year',      // 6
-        'slct_birth_month',     // 7
-        'slct_birth_day',       // 8
-        'birth_date',           // 9
-        'txt_password_1',       // 10
-        'txt_password_2',       // 11
-        'password'              // 12
-    );
-
-    $item_name_arr = array(
-        LAST_NAME,          // 0
-        FIRST_NAME,         // 1
-        LAST_NAME . KANA,   // 2
-        FIRST_NAME . KANA,  // 3
-        SEX,                // 4
-        SEX,                // 5
-        BIRTH_DATE . YEAR,  // 6
-        BIRTH_DATE . MONTH, // 7
-        BIRTH_DATE . DAY,   // 8
-        BIRTH_DATE,         // 9
-        PASSWORD,           // 10
-        PASSWORD . CONFIRM, // 11
-        PASSWORD            // 12
-    );
-
     $sex_arr = array('-', '男', '女');
-
 
     // 入力値のサニタイズと空白文字の除去
     $item_val_arr = convert_sp_char_and_trim_rtn_arr($prm_post);
 
     // 入力値、選択値のチェック：ST ----------
-
     // 未入力、未選択の項目のチェック
-//     $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex'));
-//     $empty_msg = check_unenter_unslct_item_($item_key_arr, $item_name_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date', 'password'));
     $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date', 'password'));
-
-
-
 
     if (isset($empty_msg)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
@@ -85,15 +46,12 @@ function get_content($prm_post) {
     // パスワードのチェック
     // パスワードの文字種のチェック
     //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
-    $offset = 10;
-    $length = I_2;
-//     $checked_alphanumeric_msg = check_alphanumeric(array_slice($item_key_arr, $offset, $length), array_slice($item_name_arr, $offset, $length), array_slice($item_val_arr, 8));
-    $checked_alphanumeric_msg = chk_alphanumeric(array_slice($item_key_nm_arr, $offset, $length), array_slice($item_val_arr, 8));
+    $checked_alphanumeric_msg = chk_alphanumeric(array_slice($item_key_nm_arr, 10, I_2), array_slice($item_val_arr, 8));
 
     if (isset($checked_alphanumeric_msg)) {
         // パスワードの文字種に不備がある場合
         $invalid_msg .= $checked_alphanumeric_msg;
-    } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== 0) {
+    } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== I_0) {
         // パスワードとパスワード（確認）が一致しない場合
         $invalid_msg .= add_p(PASSWORD . 'と' . PASSWORD . CONFIRM . 'が一致しない') . LF;
     }
@@ -103,26 +61,19 @@ function get_content($prm_post) {
         return $invalid_msg;
     }
 
-    // 入力値、選択値のチェック：ED ----------
+    // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
-    //24/05/23：次回関数にcontinueするキーを渡す方法検討から
+    // 画面表示項目
+    $cont_arr = array_slice($item_val_arr, I_0, 4);
+    $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
+    $cont_arr['birth_date'] = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
+    $cont_arr['password'] = '非表示';
+    $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day', 'txt_password_1', 'txt_password_2'));
 
-    //
-
-
-    $content_arr = array_slice($item_val_arr, I_0, 4);
-    $content_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
-    $content_arr['birth_date'] = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
-    $content_arr['password'] = '非表示';
-
-//     $tbl_elem = build_tbl_elem($heading_arr, $content_arr);
-//     $tbl_elem = bld_tbl_elem($item_key_arr, $item_name_arr, $content_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day', 'txt_password_1', 'txt_password_2'));
-    $tbl_elem = build_tbl_elem($item_key_nm_arr, $content_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day', 'txt_password_1', 'txt_password_2'));
-    $hdn_elem = build_hdn_elem(array_merge(array_slice($item_val_arr, I_0, 8), array('password' => password_hash($item_val_arr['txt_password_1'], PASSWORD_BCRYPT))));
-
-
-
-
+    // hidden項目
+    $tmptmp =array_slice($item_val_arr, I_0, 8);
+    $tmptmp['password'] = password_hash($item_val_arr['txt_password_1'], PASSWORD_BCRYPT);
+    $hdn_elem = build_hdn_elem($tmptmp);
 
     return <<<EOE
 <p>下記の内容で問題なければ実行ボタンを押す</p>
@@ -132,23 +83,11 @@ function get_content($prm_post) {
 </form>
 
 EOE;
-
-//     return '<p>下記の内容で問題なければ実行ボタンを押す</p>' . LF .
-//         build_table_element(array('氏', '名', '氏（カナ）', '名（カナ）', '性別', '生年月日', 'パスワード'),
-//             array($posted_arr['last_name'],
-//                 $posted_arr['first_name'],
-//                 $posted_arr['last_name_kana'],
-//                 $posted_arr['first_name_kana'],
-//                 $sex_arr[intval($posted_arr['sex'])],
-//                 $birth_date, '********'));
 }
 
 function build_err_content($prm_err_msg_arr) {
     $content = NULL;
 
-//     for ($i = 0; $i < count($prm_err_msg_arr); $i++) {
-//         $content .= add_p($prm_err_msg_arr[$i]) . LF;
-//     }
     foreach ($prm_err_msg_arr as $value) {
         $content .= add_p($value);
     }
@@ -156,62 +95,30 @@ function build_err_content($prm_err_msg_arr) {
     return $content;
 }
 
-function bld_tbl_elem($prm_item_key_arr, $prm_item_name_arr, $prm_target_arr, $prm_unchk_key_nm_arr = NULL) {
-    $table_element = '<table>' . LF;
+function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_key_arr = NULL) {
+    $tbl_elem = '<table>' . LF;
 
-    for ($i = 0; $i < count($prm_item_key_arr); $i++) {
-        $key = $prm_item_key_arr[$i];
-
-        if (isset($prm_unchk_key_nm_arr) && in_array($key, $prm_unchk_key_nm_arr)) {
+    foreach ($prm_item_key_name_arr as $key => $val) {
+        if (isset($prm_continue_key_arr) && in_array($key, $prm_continue_key_arr)) {
             continue;
         }
 
-        $table_element .= '<tr><td>' . $prm_item_name_arr[$i] . '</td><td>：' . $prm_target_arr[$key] . '</td></tr>' . LF;
+        $tbl_elem .= '<tr><td>' . $val . '</td><td>：' . $prm_content_arr[$key] . '</td></tr>' . LF;
     }
 
-    $table_element .= '</table>';
+   $tbl_elem .= '</table>';
 
-    return $table_element;
+    return $tbl_elem;
 }
 
-
-
-function build_tbl_elem($prm_heading_arr, $prm_value_arr, $prm_unchk_key_nm_arr = NULL) {
-    $table_element = '<table>' . LF;
-
-    foreach ($prm_heading_arr as $key => $val) {
-        if (isset($prm_unchk_key_nm_arr) && in_array($key, $prm_unchk_key_nm_arr)) {
-            continue;
-        }
-
-        $table_element .= '<tr><td>' . $val . '</td><td>：' . $prm_value_arr[$key] . '</td></tr>' . LF;
-    }
-
-    $table_element .= '</table>';
-
-    return $table_element;
-}
-
-function build_hdn_elem($prm_target_arr) {
+function build_hdn_elem($prm_content_arr) {
     $hdn_elem = NULL;
 
-    foreach ($prm_target_arr as $key => $val) {
+    foreach ($prm_content_arr as $key => $val) {
         $hdn_elem .= '<input type="hidden" name="' . $key . '" value="' . $val . '">' . LF;
     }
 
     return $hdn_elem;
 }
 
-
-function build_table_element($prm_heading_arr, $prm_value_arr) {
-    $table_element = '<table>' . LF;
-
-    for ($i = 0; $i < count($prm_heading_arr); $i++) {
-        $table_element .= '<tr><td>' . $prm_heading_arr[$i] . '</td><td>：' . $prm_value_arr[$i] . '</td></tr>' . LF;
-    }
-
-    $table_element .= '</table>' . LF;
-
-    return $table_element;
-}
 ?>
