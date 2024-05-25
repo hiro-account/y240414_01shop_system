@@ -53,8 +53,50 @@ function check_unenter_unslct_item($prm_item_key_nm_arr, $prm_target_arr, $prm_u
     return $err_msg;
 }
 
+function check_unenter_unslct_item_($prm_item_key_arr, $prm_item_name_arr, $prm_target_arr, $prm_unchk_key_nm_arr = NULL) {
+    $err_msg = NULL;
 
+    for ($i = 0; $i < count($prm_item_key_arr); $i++) {
+        $key = $prm_item_key_arr[$i];
 
+        if (isset($prm_unchk_key_nm_arr) && in_array($key, $prm_unchk_key_nm_arr)) {
+            continue;
+        }
+
+        $target = $prm_target_arr[$key];
+        $name = $prm_item_name_arr[$i];
+
+        if (strpos($key, 'txt_') === I_0 && strlen($target) === I_0) {
+            $err_msg .= add_p($name . NOT_ENTERED) . LF;
+        } else if (strpos($key, 'slct_') === I_0 && intval($target) === I_0) {
+            $err_msg .= add_p($name . 'が未選択') . LF;
+        }
+    }
+
+    return $err_msg;
+}
+
+// function check_unenter_unslct_item_($prm_item_key_arr, $prm_item_name_arr, $prm_target_arr, $prm_unchk_key_nm_arr = NULL) {
+//     $err_msg = NULL;
+
+//     for ($i = 0; $i < count($prm_item_key_arr); $i++) {
+//         if (isset($prm_unchk_key_nm_arr) && in_array($i, $prm_unchk_key_nm_arr)) {
+//             continue;
+//         }
+
+//         $key = $prm_item_key_arr[$i];
+//         $target = $prm_target_arr[$key];
+//         $name = $prm_item_name_arr[$i];
+
+//         if (strpos($key, 'txt_') === I_0 && strlen($target) === I_0) {
+//             $err_msg .= add_p($name . NOT_ENTERED) . LF;
+//         } else if (strpos($key, 'slct_') === I_0 && intval($target) === I_0) {
+//             $err_msg .= add_p($name . 'が未選択') . LF;
+//         }
+//     }
+
+//     return $err_msg;
+// }
 
 
 
@@ -110,14 +152,40 @@ function sort_msg_rtn_arr($item_key_arr, $target_arr) {
 
 
 
-function check_alphanumeric($item_key_arr, $target_arr) {
+
+function chk_alphanumeric($item_key_nm_arr, $target_arr) {
     $err_msg = NULL;
 
-    foreach ($item_key_arr as $key => $val) {
-        if (!preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$key])) {
-            $err_msg .= add_p($val . 'に英数字以外が入力された') . LF;//TODO:定数化検討
+    foreach ($item_key_nm_arr as $key => $val) {
+        if (! preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$key])) {
+            $err_msg .= add_p($val . 'に英数字以外が入力された') . LF; // TODO:定数化検討
         }
     }
+
+    return $err_msg;
+}
+
+
+
+
+
+
+function check_alphanumeric($item_key_arr, $item_name_arr, $target_arr) {
+    $err_msg = NULL;
+
+//     foreach ($item_key_arr as $key => $val) {
+//         if (!preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$key])) {
+//             $err_msg .= add_p($val . 'に英数字以外が入力された') . LF;//TODO:定数化検討
+//         }
+//     }
+
+    for ($i = 0; $i < count($item_key_arr); $i++) {
+        if (!preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$item_key_arr[$i]])) {
+            $err_msg .= add_p($item_name_arr[$i] . 'に英数字以外が入力された') . LF;//TODO:定数化検討
+        }
+    }
+
+
 
     return $err_msg;
 }
