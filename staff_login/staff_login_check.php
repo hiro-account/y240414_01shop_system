@@ -18,11 +18,11 @@ if (count($empty_msg_arr) > 0) {
 }
 
 try {
-    $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id FROM mst_staff WHERE id=? AND password=?',
-        array($posted_arr[STAFF_ID], md5($posted_arr[STAFF_PASS])));
+    $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, password FROM mst_staff WHERE id=?',
+        array($posted_arr[STAFF_ID]));
     $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$mixed) {
+    if (!$mixed || !password_verify($posted_arr[STAFF_PASS], $mixed['password'])) {
         header($header . 'スタッフIDとパスワードのどちらか、もしくは双方とも不正');
         exit();
     }

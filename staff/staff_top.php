@@ -18,8 +18,8 @@ $content_arr = get_content($_GET);
 <div><?= get_staff_id_and_logout(); ?></div>
 <h4>ショップシステム</h4>
 <h2>スタッフ管理</h2>
-<div><a href="staff_add.php">スタッフ登録</a></div>
-<div class="m-t-05em">スタッフ一覧(スタッフ更新、スタッフ削除はスタッフ詳細を表示)</div>
+<div><a href="staff_create.php">スタッフ登録</a></div>
+<div class="m-t-05em">スタッフ一覧（スタッフ更新、スタッフ削除はスタッフ詳細を表示）</div>
 <form method="post" action="staff_detail.php">
 <table class="border">
 <tr><th>スタッフID</th><th>スタッフ名</th><th>スタッフ詳細</th><tr>
@@ -28,6 +28,6 @@ $content_arr = get_content($_GET);
 <input type="hidden" name="first_staff_id" value="<?= $content_arr['FIRST_STAFF_ID'] ?>">
 <input type="hidden" name="last_staff_id" value="<?= $content_arr['LAST_STAFF_ID'] ?>">
 </form>
-<p><a href="../system/system_top.php">戻る</a></p>
+<div class="m-t-1em"><a href="../system/system_top.php">戻る</a></div>
 </body>
 </html>

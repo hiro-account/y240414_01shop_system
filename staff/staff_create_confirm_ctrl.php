@@ -72,7 +72,7 @@ function get_content($prm_post) {
 
     // hidden項目
     $tmptmp =array_slice($item_val_arr, I_0, 8);
-    $tmptmp['password'] = password_hash($item_val_arr['txt_password_1'], PASSWORD_BCRYPT);
+    $tmptmp['password'] = password_hash($item_val_arr['txt_password_1'], PASSWORD_DEFAULT);
     $hdn_elem = build_hdn_elem($tmptmp);
 
     return <<<EOE
