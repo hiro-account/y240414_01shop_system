@@ -37,6 +37,18 @@ function convert_sp_char_and_trim_rtn_arr($prm_target_arr) {
 //関数名、引数名のチェック済ed
 //================================================================================
 
+function check_unenter_item($prm_item_key_nm_arr, $prm_target_arr) {
+    $err_msg = NULL;
+
+    foreach ($prm_item_key_nm_arr as $key => $val) {
+        if (strlen($prm_target_arr[$key]) === I_0) {
+            $err_msg .= add_p($val . NOT_ENTERED) . LF;
+        }
+    }
+
+    return $err_msg;
+}
+
 function check_unenter_unslct_item($prm_item_key_nm_arr, $prm_target_arr, $prm_unchk_key_nm_arr = NULL) {
     $err_msg = NULL;
 
