@@ -28,6 +28,8 @@ $content_arr = get_content($_GET);
 <input type="hidden" name="first_staff_id" value="<?= $content_arr['FIRST_STAFF_ID'] ?>">
 <input type="hidden" name="last_staff_id" value="<?= $content_arr['LAST_STAFF_ID'] ?>">
 </form>
-<div class="m-t-1em"><a href="../system/system_top.php">メインメニューへ</a></div>
+<ul class="lowlnk">
+<li><a href="../system/system_top.php">メインメニューへ</a></li>
+</ul>
 </body>
 </html>

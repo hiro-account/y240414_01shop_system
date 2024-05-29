@@ -58,6 +58,8 @@ check_login($_SESSION);
 </table>
 <div class="m-t-1em"><input type="submit" value="確認"></div>
 </form>
-<div class="m-t-1em"><a href="./staff_top.php">スタッフ管理へ</a></div>
+<ul class="lowlnk">
+<li><a href="./staff_top.php">スタッフ管理へ</a></li>
+</ul>
 </body>
 </html>
