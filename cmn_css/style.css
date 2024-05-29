@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+.lowlnk { list-style: none; padding-left: 0; }
+
 .t-a-c { text-align: center; }
 
 .m-t-05em { margin-top: 0.5em; }

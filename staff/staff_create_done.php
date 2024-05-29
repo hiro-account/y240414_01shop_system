@@ -16,7 +16,9 @@ check_login($_SESSION);
 <h4>ショップシステム</h4>
 <h2>スタッフ登録</h2>
 <?= get_content($_POST); ?>
-<div><a href="./staff_create.php">スタッフ登録へ</a></div>
-<div class="m-t-1em"><a href="./staff_top.php">スタッフ管理へ</a></div>
+<ul class="lowlnk">
+<li><a href="./staff_create.php">スタッフ登録へ</a></li>
+<li><a href="./staff_top.php">スタッフ管理へ</a></li>
+</ul>
 </body>
 </html>
