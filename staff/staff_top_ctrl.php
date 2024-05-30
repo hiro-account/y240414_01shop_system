@@ -3,7 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 
-function get_content($prm_get) {
+function get_content() {
     $staff_list = NULL;
     $first_staff_id = NULL;
     $last_staff_id = NULL;
@@ -32,11 +32,13 @@ function get_content($prm_get) {
 
     }
 
-    return array(
-        'STAFF_LIST' => $staff_list,
-        'FIRST_STAFF_ID' => $first_staff_id,
-        'LAST_STAFF_ID' => $last_staff_id
-    );
+//     return array(
+//         'STAFF_LIST' => $staff_list,
+//         'FIRST_STAFF_ID' => $first_staff_id,
+//         'LAST_STAFF_ID' => $last_staff_id
+//     );
+    return FOR_STAFF_TOP . $staff_list . '</table>' . LF . '<input type="hidden" name="first_staff_id" value="' . $first_staff_id . '">' . LF .
+        '<input type="hidden" name="last_staff_id" value="' . $last_staff_id . '">' . LF . '</form>';
 
 
 

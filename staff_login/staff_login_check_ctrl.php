@@ -20,7 +20,7 @@ function get_content($prm_post) {
             return add_p('スタッフIDとパスワードのどちらか、もしくは双方とも不正');
         }
     } catch (Exception $e) {
-        return add_p('登録失敗（システム障害発生）');
+        return add_p('ログイン失敗（システム障害発生）');
     }
 
     session_start();
