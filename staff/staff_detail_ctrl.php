@@ -48,11 +48,11 @@ function get_content($prm_post) {
                 break;
 
             case 'birthday':
-//                 $mV = $mixed[$value];
-//                 $processedValue = substr($mV, 0, 4) . '年' . substr($mV, 4, 2) . '月' . substr($mV, 6, 2) . '日';
-//                 $split_arr = split_str_rtn_arr($mixed[$value], array(4, 2));
                 $split_arr = explode('-', $mixed[$value]);
-                $processedValue = $split_arr[0] . '年' . process_month_and_day($split_arr[1]) . '月' . process_month_and_day($split_arr[2]) . '日';
+                $processedValue = $split_arr[0] . '年'
+                    . process_month_and_day($split_arr[1]) . '月'
+                    . process_month_and_day($split_arr[2]) . '日（'
+                    . get_age(str_replace('-', '', $mixed[$value])) . '歳）';
                 break;
 
             case 'created_date':

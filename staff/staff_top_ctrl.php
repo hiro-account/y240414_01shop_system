@@ -3,6 +3,11 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 
+//TODO:定数移動
+const A_STAFF_CREATE = '<div><a href="staff_create.php">スタッフ登録</a></div>' . LF;
+const INPUT_HIDDEN = '<input type="hidden" name="';
+const VALUE = '" value="';
+
 function get_content() {
     $staff_list = NULL;
     $first_staff_id = NULL;
@@ -10,7 +15,7 @@ function get_content() {
 
     try {
         $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM mst_staff WHERE delete_flag=FALSE ORDER BY id', NULL);
-
+// throw new Exception();
         while (TRUE) {
             $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -25,26 +30,19 @@ function get_content() {
                 if (!isset($first_staff_id)) {
                     $first_staff_id = $last_staff_id;
                 }
-
-//                 $last_staff_id = $staff_id;
         }
     } catch (Exception $e) {
-
+        return add_p('スタッフ一覧読み出し失敗（システム障害発生）') . LF;
     }
 
-//     return array(
-//         'STAFF_LIST' => $staff_list,
-//         'FIRST_STAFF_ID' => $first_staff_id,
-//         'LAST_STAFF_ID' => $last_staff_id
-//     );
-    return FOR_STAFF_TOP . $staff_list . '</table>' . LF . '<input type="hidden" name="first_staff_id" value="' . $first_staff_id . '">' . LF .
-        '<input type="hidden" name="last_staff_id" value="' . $last_staff_id . '">' . LF . '</form>';
+    if (!isset($staff_list)) {
+        return A_STAFF_CREATE;
+    }
 
 
-
-
-//     return $staff_list . '<input type="hidden" name="id_str" value="' . $id_str . '">' . LF;
+    return A_STAFF_CREATE . FOR_STAFF_TOP . $staff_list . '</table>' . LF
+        . INPUT_HIDDEN . 'first_staff_id' . VALUE . $first_staff_id . '">' . LF
+        . INPUT_HIDDEN . 'last_staff_id' . VALUE . $last_staff_id . '">' . LF
+        . '</form>' . LF;
 }
-
-
 ?>

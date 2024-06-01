@@ -55,7 +55,6 @@ const FROM = 'from';
 
 
 const FOR_STAFF_TOP = <<<EOT
-<div><a href="staff_create.php">スタッフ登録</a></div>
 <div class="m-t-05em">スタッフ一覧（スタッフ更新、スタッフ削除はスタッフ詳細を表示）</div>
 <form method="post" action="staff_detail.php">
 <table class="border">

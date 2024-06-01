@@ -202,6 +202,12 @@ function check_alphanumeric($item_key_arr, $item_name_arr, $target_arr) {
     return $err_msg;
 }
 
+//----------------------------------------
+function get_age($prm_birth_date) {
+    return floor((date('Ymd') - $prm_birth_date) / 10000);
+}
+
+
 
 
 //----------------------------------------
