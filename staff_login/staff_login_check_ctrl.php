@@ -12,7 +12,7 @@ function get_content($prm_post) {
     }
 
     try {
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, password FROM mst_staff WHERE id=?',
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, password FROM mst_staff_for_dev WHERE id=?',
             array($prm_post[STAFF_ID]));
         $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
 

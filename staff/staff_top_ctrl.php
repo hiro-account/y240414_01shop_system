@@ -14,7 +14,7 @@ function get_content() {
     $last_staff_id = NULL;
 
     try {
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM mst_staff WHERE delete_flag=FALSE ORDER BY id', NULL);
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM mst_staff_for_dev WHERE delete_flag=FALSE ORDER BY id', NULL);
 // throw new Exception();
         while (TRUE) {
             $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);

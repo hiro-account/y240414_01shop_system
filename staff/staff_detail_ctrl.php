@@ -28,7 +28,7 @@ function get_content($prm_post) {
     $mixed = NULL;
 
     try {
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT ' . implode(', ', $column_arr) . ' FROM mst_staff WHERE id=?', array($staff_id));
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT ' . implode(', ', $column_arr) . ' FROM mst_staff_for_dev WHERE id=?', array($staff_id));
         $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
 // throw new Exception();
     } catch (Exception $e) {
@@ -71,7 +71,7 @@ function get_content($prm_post) {
     }
 
     return <<<EOC
-<form method="post" action="staff_detail.php">
+<form method="post" action="staff_update_or_delete.php">
 <table>
 {$row}</table>
 <div class="m-t-1em sbmt"><input type="submit" name="staff_update" value="更新"><input type="submit" name="staff_delete" value="削除"></div>

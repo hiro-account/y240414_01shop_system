@@ -15,7 +15,7 @@ function get_content($prm_post) {
     );
 
     try {
-        execute_sql_rtn_PDOStatement('INSERT INTO mst_staff_empty '
+        execute_sql_rtn_PDOStatement('INSERT INTO mst_staff_for_dev '
             . '(last_name, first_name, last_name_kana, first_name_kana, sex, birthday, password) '
             . 'VALUES (?, ?, ?, ?, ?, ?, ?)',
             $input_parameter_arr);
