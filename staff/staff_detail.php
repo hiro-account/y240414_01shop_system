@@ -18,11 +18,9 @@ check_login($_SESSION);
 <div><?= get_staff_id_and_logout(); ?></div>
 <h4>ショップシステム</h4>
 <h2>スタッフ詳細</h2>
-<form method="post" action="staff_detail.php">
-<table>
 <?= get_content($_POST); ?>
-</table>
-</form>
-<p><a href="./staff_top.php">戻る</a></p>
+<ul class="lowlnk">
+<li><a href="./staff_top.php">スタッフ管理へ</a></li>
+</ul>
 </body>
 </html>

@@ -10,6 +10,10 @@
 .w-50 { width: 50px; }
 .w-100 { width: 100px; }
 
+.sbmt > :nth-child(2) { margin-left: 10px; }
+
+
+
 body { background-color:#666/*#f5deb3*/; }
 
 table.border, table.border th, table.border td { border: 1px solid #000; border-collapse: collapse; }
