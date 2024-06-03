@@ -71,10 +71,10 @@ function get_content($prm_post) {
     }
 
     return <<<EOC
-<form method="post" action="staff_update_or_delete.php">
+<form method="post" action="staff_update_or_delete.php" onSubmit="return confirmDelete()">
 <table>
 {$row}</table>
-<div class="m-t-1em sbmt"><input type="submit" name="staff_update" value="更新"><input type="submit" name="staff_delete" value="削除"></div>
+<div class="m-t-1em sbmt"><input type="submit" name="staff_update" value="更新" onClick="sbmt_nm='staff_update'"><input type="submit" name="staff_delete" value="削除" onClick="sbmt_nm='staff_delete'"></div>
 <input type="hidden" name="staff_id" value="{$staff_id}">
 </form>
 

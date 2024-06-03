@@ -12,6 +12,7 @@ check_login($_SESSION);
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="../cmn_css/style.css">
+<script src="../cmn_js/cmn.js"></script>
 <title></title>
 </head>
 <body>
