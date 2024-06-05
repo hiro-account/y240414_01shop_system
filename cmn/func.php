@@ -212,35 +212,89 @@ function get_age($prm_birth_date) {
 
 //----------------------------------------
 
-function build_opt_sex() {
-    $opt_arr = array('-', '男', '女', '未選択');
+// function build_opt_sex_01() {
+//     $opt_arr = array('-', '男', '女', '未選択');
 
-    $opt_gender = build_opt_elem_with_selected(I_0, $opt_arr[I_0]);
+//     $opt_gender = build_opt_elem_with_selected(I_0, $opt_arr[I_0]);
 
-    for ($i = I_1; $i < count($opt_arr); $i++) {
-        $opt_gender .= build_opt_elem($i, $opt_arr[$i]);
+//     for ($i = I_1; $i < count($opt_arr); $i++) {
+//         $opt_gender .= build_opt_elem($i, $opt_arr[$i]);
+//     }
+
+//     return $opt_gender;
+// }
+
+function build_opt_sex($prm_slct_idx) {
+    $opt_arr = array('-', '男', '女');
+
+    $opt_gender = NULL;
+
+    for ($i = I_0; $i < count($opt_arr); $i++) {
+        if ($i == intval($prm_slct_idx)) {
+            $opt_gender .= build_opt_elem_with_selected($i, $opt_arr[$i]);
+        } else {
+            $opt_gender .= build_opt_elem($i, $opt_arr[$i]);
+        }
     }
 
     return $opt_gender;
 }
 
-function build_opt_year() {
-    $opt_year = build_opt_elem_with_selected(I_0, '-');
+// function build_opt_year() {
+//     $opt_year = build_opt_elem_with_selected(I_0, '-');
+//     $int_y = intval(date('Y'));
+
+//     for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
+//         $str_i = strval($i);
+//         $opt_year .= build_opt_elem($str_i, $str_i);
+//     }
+
+//     return $opt_year;
+// }
+
+function build_opt_year($prm_slct_y) {
     $int_y = intval(date('Y'));
+//     $slct_y
+
+
+    $opt_year = NULL;
+
+    if (!isset($prm_slct_y)) {
+        $opt_year = build_opt_elem_with_selected(I_0, '-');
+    } else {
+        $opt_year = build_opt_elem(I_0, '-');
+    }
 
     for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
-        $str_i = strval($i);
-        $opt_year .= build_opt_elem($str_i, $str_i);
+        if (isset($prm_slct_y) && $i == intval($prm_slct_y)) {
+            $opt_year .= build_opt_elem_with_selected(strval($i), strval($i));
+        } else {
+            $opt_year .= build_opt_elem(strval($i), strval($i));
+        }
     }
 
     return $opt_year;
 }
 
-function build_opt_month_day($from, $to) {
-    $opt_month_day = build_opt_elem_with_selected(I_0, '-');
+function build_opt_month_day($prm_to, $prm_slct_m_or_d) {
+    $opt_month_day = NULL;
 
-    for ($i = $from; $i <= $to; $i++) {
-        $opt_month_day .= build_opt_elem($i, $i);
+    if (isset($prm_slct_m_or_d)) {
+        $opt_month_day = build_opt_elem(I_0, '-');
+
+        for ($i = I_1; $i <= $prm_to; $i++) {
+            if ($i == intval($prm_slct_m_or_d)) {
+                $opt_month_day .= build_opt_elem_with_selected($i, $i);
+            } else {
+                $opt_month_day .= build_opt_elem($i, $i);
+            }
+        }
+    } else {
+        $opt_month_day = build_opt_elem_with_selected(I_0, '-');
+
+        for ($i = I_1; $i <= $prm_to; $i++) {
+            $opt_month_day .= build_opt_elem($i, $i);
+        }
     }
 
     return $opt_month_day;
