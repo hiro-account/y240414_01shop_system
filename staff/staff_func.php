@@ -38,19 +38,15 @@ function get_tbl_elem($prm_staff_data_arr) {
 </tr>
 <tr>
 <td>性別</td><td><select name="slct_sex">
-{$opt_sex}
-</select></td>
+{$opt_sex}</select></td>
 </tr>
 <tr>
 <td>生年月日</td><td><select name="slct_birth_year">
-{$opt_year}
-</select>年
+{$opt_year}</select>年
 <select name="slct_birth_month">
-{$opt_month}
-</select>月
+{$opt_month}</select>月
 <select name="slct_birth_day">
-{$opt_day}
-</select>日</td>
+{$opt_day}</select>日</td>
 </tr>
 <tr>
 <td>パスワード</td><td><input type="password" name="txt_password_1" class="w-100"></td>

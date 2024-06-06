@@ -1,6 +1,12 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
+require_once($to_cmn . 'const.php');
+require_once './staff_func.php';
+
+const BIRTH_YEAR = I_0;
+const BIRTH_MONTH = I_1;
+const BIRTH_DATE = I_2;
 
 
 
@@ -17,8 +23,39 @@ function get_content($prm_post) {
 }
 
 function updt_staff($prm_post) {
+//     return get_tbl_elem(NULL);
 
+
+    try {
+//         throw new Exception();
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name, last_name_kana, first_name_kana, sex, birthday FROM mst_staff_for_dev WHERE id=?', array($prm_post['staff_id']));
+        $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+
+    }
+
+    $birthday = explode('-', $mixed['birthday']);
+    $staff_data_arr = array('last_name' => $mixed['last_name'], 'first_name' => $mixed['first_name'], 'last_name_kana' => $mixed['last_name_kana'], 'first_name_kana' => $mixed['first_name_kana']
+        , 'sex' => $mixed['sex'], 'birth_year' => $birthday[BIRTH_YEAR], 'birth_month' => $birthday[BIRTH_MONTH], 'birth_date' => $birthday[BIRTH_DATE]);
+
+    return get_content_for_updt(get_tbl_elem($staff_data_arr));
 }
+
+function get_content_for_updt($prm_message) {
+    $a_history_back = A_HISTORY_BACK;
+    return <<<EOC
+<h2>スタッフ更新</h2>
+<form method="post" action="./staff_create_confirm.php">
+{$prm_message}
+<div class="m-t-1em"><input type="submit" value="確認"></div>
+</form>
+<ul class="lowlnk">
+<li><a href="./staff_top.php">スタッフ管理へ</a></li>
+</ul>
+
+EOC;
+}
+
 
 
 

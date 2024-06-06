@@ -253,22 +253,23 @@ function build_opt_sex($prm_slct_idx) {
 // }
 
 function build_opt_year($prm_slct_y) {
-    $int_y = intval(date('Y'));
-//     $slct_y
-
-
     $opt_year = NULL;
+    $int_y = intval(date('Y'));
 
-    if (!isset($prm_slct_y)) {
-        $opt_year = build_opt_elem_with_selected(I_0, '-');
-    } else {
+    if (isset($prm_slct_y)) {
         $opt_year = build_opt_elem(I_0, '-');
-    }
-
-    for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
-        if (isset($prm_slct_y) && $i == intval($prm_slct_y)) {
-            $opt_year .= build_opt_elem_with_selected(strval($i), strval($i));
-        } else {
+        
+        for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
+            if ($i == intval($prm_slct_y)) {
+                $opt_year .= build_opt_elem_with_selected(strval($i), strval($i));
+            } else {
+                $opt_year .= build_opt_elem(strval($i), strval($i));
+            }
+        }
+    } else {
+        $opt_year = build_opt_elem_with_selected(I_0, '-');
+        
+        for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
             $opt_year .= build_opt_elem(strval($i), strval($i));
         }
     }
