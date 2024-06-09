@@ -28,7 +28,7 @@ function updt_staff($prm_post) {
 
     try {
 //         throw new Exception();
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name, last_name_kana, first_name_kana, sex, birthday FROM mst_staff_for_dev WHERE id=?', array($prm_post['staff_id']));
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name, last_name_kana, first_name_kana, sex, birthday FROM m_staff WHERE id=?', array($prm_post['staff_id']));
         $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
 
@@ -66,7 +66,7 @@ function del_staff($prm_staff_id) {
 
     try {
 //         throw new Exception();
-        execute_sql_rtn_PDOStatement('UPDATE mst_staff_for_dev SET delete_flag=1 WHERE id=?', array($prm_staff_id));
+        execute_sql_rtn_PDOStatement('UPDATE m_staff SET delete_flag=1 WHERE id=?', array($prm_staff_id));
         $msg = '削除完了';
     } catch (Exception $e) {
         $msg = '削除失敗（システム障害発生）';

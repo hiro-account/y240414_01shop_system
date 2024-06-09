@@ -48,12 +48,6 @@ function get_tbl_elem($prm_staff_data_arr) {
 <select name="slct_birth_day">
 {$opt_day}</select>日</td>
 </tr>
-<tr>
-<td>パスワード</td><td><input type="password" name="txt_password_1" class="w-100"></td>
-</tr>
-<tr>
-<td>パスワード（確認）</td><td><input type="password" name="txt_password_2" class="w-100"></td>
-</tr>
 </table>
 
 EOC;

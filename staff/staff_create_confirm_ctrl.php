@@ -16,10 +16,10 @@ function get_content($prm_post) {
         'slct_birth_year' => BIRTH_DATE . YEAR,     // 6
         'slct_birth_month' => BIRTH_DATE . MONTH,   // 7
         'slct_birth_day' => BIRTH_DATE . DAY,       // 8
-        'birth_date' => BIRTH_DATE,                 // 9
+        'birth_date' => BIRTH_DATE/*,                 // 9
         'txt_password_1' => PASSWORD,               // 10
         'txt_password_2' => PASSWORD . CONFIRM,     // 11
-        'password' => PASSWORD,                     // 12
+        'password' => PASSWORD,*/                     // 12
     );
 
     $sex_arr = array('-', '男', '女');
@@ -29,13 +29,14 @@ function get_content($prm_post) {
 
     // 入力値、選択値のチェック：ST ----------
     // 未入力、未選択の項目のチェック
-    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date', 'password'));
+    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date'/*, 'password'*/));
 
     if (isset($empty_msg)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
         return $empty_msg;
     }
 
+    //TODO:パスコードのチェックを削除し生年月日のチェックだけとなったため、エラーメッセージ表示の処理の更新を検討
     $invalid_msg = NULL;
 
     // 生年月日の妥当性のチェック
@@ -43,18 +44,18 @@ function get_content($prm_post) {
         $invalid_msg .= add_p(BIRTH_DATE . 'が不正') . LF;
     }
 
-    // パスワードのチェック
-    // パスワードの文字種のチェック
-    //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
-    $checked_alphanumeric_msg = chk_alphanumeric(array_slice($item_key_nm_arr, 10, I_2), array_slice($item_val_arr, 8));
+//     // パスワードのチェック
+//     // パスワードの文字種のチェック
+//     //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
+//     $checked_alphanumeric_msg = chk_alphanumeric(array_slice($item_key_nm_arr, 10, I_2), array_slice($item_val_arr, 8));
 
-    if (isset($checked_alphanumeric_msg)) {
-        // パスワードの文字種に不備がある場合
-        $invalid_msg .= $checked_alphanumeric_msg;
-    } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== I_0) {
-        // パスワードとパスワード（確認）が一致しない場合
-        $invalid_msg .= add_p(PASSWORD . 'と' . PASSWORD . CONFIRM . 'が一致しない') . LF;
-    }
+//     if (isset($checked_alphanumeric_msg)) {
+//         // パスワードの文字種に不備がある場合
+//         $invalid_msg .= $checked_alphanumeric_msg;
+//     } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== I_0) {
+//         // パスワードとパスワード（確認）が一致しない場合
+//         $invalid_msg .= add_p(PASSWORD . 'と' . PASSWORD . CONFIRM . 'が一致しない') . LF;
+//     }
 
     if (isset($invalid_msg)) {
         // 生年月日とパスワードのどちらか、もしくは双方ともに不備がある場合、エラーメッセージを表示する
@@ -67,12 +68,12 @@ function get_content($prm_post) {
     $cont_arr = array_slice($item_val_arr, I_0, 4);
     $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
     $cont_arr['birth_date'] = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
-    $cont_arr['password'] = '非表示';
-    $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day', 'txt_password_1', 'txt_password_2'));
+//     $cont_arr['password'] = '非表示';
+    $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
 
     // hidden項目
     $tmptmp =array_slice($item_val_arr, I_0, 8);
-    $tmptmp['password'] = password_hash($item_val_arr['txt_password_1'], PASSWORD_DEFAULT);
+//     $tmptmp['password'] = password_hash($item_val_arr['txt_password_1'], PASSWORD_DEFAULT);
     $hdn_elem = build_hdn_elem($tmptmp);
 
     return <<<EOE

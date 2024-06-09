@@ -28,7 +28,7 @@ function get_content($prm_post) {
     $mixed = NULL;
 
     try {
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT ' . implode(', ', $column_arr) . ' FROM mst_staff_for_dev WHERE id=?', array($staff_id));
+        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT ' . implode(', ', $column_arr) . ' FROM m_staff WHERE id=?', array($staff_id));
         $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
 // throw new Exception();
     } catch (Exception $e) {

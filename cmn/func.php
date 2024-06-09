@@ -258,7 +258,7 @@ function build_opt_year($prm_slct_y) {
 
     if (isset($prm_slct_y)) {
         $opt_year = build_opt_elem(I_0, '-');
-        
+
         for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
             if ($i == intval($prm_slct_y)) {
                 $opt_year .= build_opt_elem_with_selected(strval($i), strval($i));
@@ -268,7 +268,7 @@ function build_opt_year($prm_slct_y) {
         }
     } else {
         $opt_year = build_opt_elem_with_selected(I_0, '-');
-        
+
         for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
             $opt_year .= build_opt_elem(strval($i), strval($i));
         }
@@ -310,7 +310,7 @@ function add_p($target_param) {
 
 //TODO:関数内で例外を補足せず、関数の使用側で補足する方向で
 function execute_sql_rtn_PDOStatement($statement, $input_parameter_arr) {
-    $dbh = new PDO('mysql:dbname=from240414_01;host=localhost', 'root', '');
+    $dbh = new PDO('mysql:dbname=y240608_01;host=localhost', 'root', '');
     $dbh->query('SET NAMES utf8');
     $pdo_stmt = $dbh->prepare($statement);
 
