@@ -16,7 +16,7 @@ function get_content($prm_post) {
         if ($mysqli->connect_error) {
             return CREATE_FAILED;
         } else {
-            $mysqli->set_charset("utf8");
+            $mysqli->set_charset('utf8');
         }
 
         // スタッフの登録前のスタッフマスタのidの最大値を読み出し

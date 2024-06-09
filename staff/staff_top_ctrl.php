@@ -4,27 +4,49 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 
 //TODO:定数移動
+const READ_FAILED = '<p>スタッフ一覧読み出し失敗（システム障害発生）</p>';
 const A_STAFF_CREATE = '<div><a href="staff_create.php">スタッフ登録</a></div>' . LF;
 const INPUT_HIDDEN = '<input type="hidden" name="';
 const VALUE = '" value="';
 
 function get_content() {
+    // mysqliのコンストラクタの例外用設定
+    mysqli_report(MYSQLI_REPORT_STRICT);
+
+    $mysqli = NULL;
+    $result = NULL;
+
     $staff_list = NULL;
     $first_staff_id = NULL;
     $last_staff_id = NULL;
 
     try {
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name FROM m_staff WHERE delete_flag=FALSE ORDER BY id', NULL);
-// throw new Exception();
-        while (TRUE) {
-            $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
+        $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
 
-            if (!$mixed) {
+        if ($mysqli->connect_error) {
+            return READ_FAILED;
+        } else {
+            $mysqli->set_charset('utf8');
+        }
+
+        $query =<<< EOQ
+SELECT m.id AS id , m.last_name AS last_name, m.first_name AS first_name
+FROM m_staff_for_dev AS m INNER JOIN t_logical_delete_for_dev AS d ON m.id = d.id
+WHERE d.flag = FALSE
+ORDER BY m.id
+EOQ;
+
+        $result = $mysqli->query($query);
+
+        while (TRUE) {
+            $rslt_arr = $result->fetch_assoc();
+
+            if (!$rslt_arr) {
                 break;
             }
 
-            $last_staff_id = $mixed['id'];
-            $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td>'
+            $last_staff_id = $rslt_arr['id'];
+            $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $rslt_arr['last_name'] . $rslt_arr['first_name'] . '</td>'
                 . '<td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
 
                 if (!isset($first_staff_id)) {
@@ -32,7 +54,12 @@ function get_content() {
                 }
         }
     } catch (Exception $e) {
+        echo  'catchに入った';
         return add_p('スタッフ一覧読み出し失敗（システム障害発生）') . LF;
+    } finally {
+        echo 'finallyに入った';
+//         $result->close();
+        $mysqli->close();
     }
 
     if (!isset($staff_list)) {
