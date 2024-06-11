@@ -54,12 +54,16 @@ EOQ;
                 }
         }
     } catch (Exception $e) {
-        echo  'catchに入った';
-        return add_p('スタッフ一覧読み出し失敗（システム障害発生）') . LF;
+        return READ_FAILED . LF;
     } finally {
-        echo 'finallyに入った';
-//         $result->close();
-        $mysqli->close();
+        //TODO:クローズ処理は下記で可か確認
+        if (isset($result)) {
+            $result->close();
+        }
+        
+        if (isset($mysqli)) {
+            $mysqli->close();
+        }
     }
 
     if (!isset($staff_list)) {

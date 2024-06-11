@@ -16,3 +16,4 @@
 3	伊藤	二郎	イトウ	ジロウ	1	1942-02-02"
 6月5日,要素 (element) は、開始タグ (Start-tag)・内容 (Content)・終了タグ (End-tag) の3つから構成される
 ,初回ログイン→パスワード変更
+6月11日,○t_privilegeテーブルのデータの例 ・管理：A(Administrator) ・一般：O(Ordinary)※他にはGeneralも一般の意を持つ
