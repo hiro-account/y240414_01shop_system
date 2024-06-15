@@ -48,6 +48,11 @@ function get_tbl_elem($prm_staff_data_arr) {
 <select name="slct_birth_day">
 {$opt_day}</select>日</td>
 </tr>
+<tr>
+<td>権限</td><td><select name="">
+</select>
+</td>
+</tr>
 </table>
 
 EOC;
