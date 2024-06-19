@@ -28,7 +28,7 @@ function get_content($prm_post) {
         $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
 
         if ($mysqli->connect_error) {
-            return READ_FAILED . '1' . LF;
+            return READ_FAILED . LF;
         } else {
             $mysqli->set_charset('utf8');
         }
@@ -56,14 +56,13 @@ EOQ;
 
             $stmt->close();
 //             $mysqli->close();
-            echo  $id . '-' . $current . '-' . $temporary . '-' . $privilege;
         } else {
 //             $mysqli->close();
-            $err_msg_elem = READ_FAILED . '2';
+            $err_msg_elem = READ_FAILED;
         }
 
     } catch (Exception $e) {
-        $err_msg_elem = READ_FAILED . '3';
+        $err_msg_elem = READ_FAILED;
     }
 
     //TODO:下記finally内での処理を検討
@@ -75,8 +74,6 @@ EOQ;
         return $err_msg_elem . LF;
     }
 
-    echo '(' . $id . ')' . '(' . $current . ')' . '(' . $temporary . ')' . '(' . $privilege . ')';
-
     if (!isset($current) && isset($temporary) && strcmp($prm_post[STAFF_PASS], $temporary) === I_0) {
         header('Location: ./staff_first_login.php?staff_id=' . $staff_id);
     } else if(!password_verify($prm_post[STAFF_PASS], $current)) {
@@ -85,20 +82,8 @@ EOQ;
         session_start();
         $_SESSION[LOGIN] = LOGIN;
         $_SESSION[STAFF_ID] = $id;
+        $_SESSION['staff_privilege'] = $privilege;
         header('Location: ../system/system_top.php');
     }
-
-//     try {
-//         $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, password FROM m_staff WHERE id=?',
-//             array($prm_post[STAFF_ID]));
-//         $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
-
-//         if (!$mixed || !password_verify($prm_post[STAFF_PASS], $mixed['password'])) {
-//             return add_p('スタッフIDとパスワードのどちらか、もしくは双方とも不正');
-//         }
-//     } catch (Exception $e) {
-//         return add_p('ログイン失敗（システム障害発生）');
-//     }
-
 }
 ?>

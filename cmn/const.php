@@ -34,7 +34,7 @@ const H2 = 'h2';
 //TODO:パスワードがクリアされたりされなかったりは保留(24/04/19)
 const A_HISTORY_BACK = '<a href="javascript: history.back();">戻る</a>';
 // const A_HISTORY_BACK = '<input type="button" value="戻る" onclick="history.back();">';
-const A_STAFF_LOGIN = '<a href="../staff_login/staff_login.html">' . STAFF_LOGIN . 'ページへ</a>';
+const A_STAFF_LOGIN = '<a href="../staff_login/staff_login.html">' . STAFF_LOGIN . 'へ</a>';
 
 
 //--------------------------------------------------------------------------------

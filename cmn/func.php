@@ -57,7 +57,8 @@ function check_unenter_unslct_item($prm_item_key_nm_arr, $prm_target_arr, $prm_u
             continue;
         }else if (strpos($key, 'txt_') === I_0 && strlen($prm_target_arr[$key]) === I_0) {
             $err_msg .= add_p($val . NOT_ENTERED) . LF;
-        } else if (strpos($key, 'slct_') === I_0 && intval($prm_target_arr[$key]) === I_0) {
+        } else if (strpos($key, 'slct_') === I_0 && intval($prm_target_arr[$key]) === I_0
+            || strpos($key, 'rdo_') === I_0 && !isset($prm_target_arr[$key])) {
             $err_msg .= add_p($val . 'が未選択') . LF;
         }
     }
@@ -304,8 +305,12 @@ function build_opt_month_day($prm_to, $prm_slct_m_or_d) {
 
 //----------------------------------------
 
-function add_p($target_param) {
-    return '<p>' . $target_param . '</p>';
+function add_p($prm_content) {
+    return '<p>' . $prm_content . '</p>';
+}
+
+function add_div($prm_content) {
+    return '<div>' . $prm_content . '</div>';
 }
 
 //TODO:関数内で例外を補足せず、関数の使用側で補足する方向で

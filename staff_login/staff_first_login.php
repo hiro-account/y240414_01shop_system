@@ -24,7 +24,7 @@
 </tr>
 </table>
 <input type="hidden" name="staff_id" value="<?= $_GET['staff_id'] ?>">
-<input type="submit" value="変更">
+<input type="submit" value="変更" class="m-t-1em">
 </form>
 </body>
 </html>

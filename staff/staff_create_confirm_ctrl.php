@@ -4,6 +4,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'temp_const.php');
 
+//TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post) {
     //TODO:配列の要素、配置位置要整理
     $item_key_nm_arr = array(
@@ -16,27 +17,26 @@ function get_content($prm_post) {
         'slct_birth_year' => BIRTH_DATE . YEAR,     // 6
         'slct_birth_month' => BIRTH_DATE . MONTH,   // 7
         'slct_birth_day' => BIRTH_DATE . DAY,       // 8
-        'birth_date' => BIRTH_DATE/*,                 // 9
-        'txt_password_1' => PASSWORD,               // 10
-        'txt_password_2' => PASSWORD . CONFIRM,     // 11
-        'password' => PASSWORD,*/                     // 12
+        'birth_date' => BIRTH_DATE,                 // 9
+        'rdo_privilege' => '権限'                   // 10
     );
 
     $sex_arr = array('-', '男', '女');
+    $privilege_arr = array('O' => '一般', 'A' => '管理者');
 
     // 入力値のサニタイズと空白文字の除去
     $item_val_arr = convert_sp_char_and_trim_rtn_arr($prm_post);
 
     // 入力値、選択値のチェック：ST ----------
     // 未入力、未選択の項目のチェック
-    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date'/*, 'password'*/));
+    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date'));
 
     if (isset($empty_msg)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
         return $empty_msg;
     }
 
-    //TODO:パスコードのチェックを削除し生年月日のチェックだけとなったため、エラーメッセージ表示の処理の更新を検討
+    //TODO:パスワードのチェックを削除し生年月日のチェックだけとなったため、エラーメッセージ表示の処理の更新を検討
     $invalid_msg = NULL;
 
     // 生年月日の妥当性のチェック
@@ -68,13 +68,12 @@ function get_content($prm_post) {
     $cont_arr = array_slice($item_val_arr, I_0, 4);
     $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
     $cont_arr['birth_date'] = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
+    $cont_arr['rdo_privilege'] = $privilege_arr[$item_val_arr['rdo_privilege']];
 //     $cont_arr['password'] = '非表示';
     $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
 
     // hidden項目
-    $tmptmp =array_slice($item_val_arr, I_0, 8);
-//     $tmptmp['password'] = password_hash($item_val_arr['txt_password_1'], PASSWORD_DEFAULT);
-    $hdn_elem = build_hdn_elem($tmptmp);
+    $hdn_elem = build_hdn_elem($item_val_arr);
 
     return <<<EOE
 <p>下記の内容で問題なければ実行ボタンを押す</p>

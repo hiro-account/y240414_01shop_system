@@ -49,9 +49,8 @@ function get_tbl_elem($prm_staff_data_arr) {
 {$opt_day}</select>日</td>
 </tr>
 <tr>
-<td>権限</td><td><select name="">
-</select>
-</td>
+<td>権限</td><td><span><input type="radio" name="rdo_privilege" id="ordinary" value="O"><label for="ordinary">一般</label></span>
+<span class="m-l-10"><input type="radio" name="rdo_privilege" id="administrator" value="A"><label for="administrator">管理者</label></span></td>
 </tr>
 </table>
 

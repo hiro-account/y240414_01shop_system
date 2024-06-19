@@ -1,6 +1,7 @@
 <?php
 //TODO:requireの整理
 require_once '../cmn/func.php';
+require_once '../cmn/const.php';
 require_once '../cmn/temp_const.php';
 
 const NW = '新しい';
@@ -18,7 +19,7 @@ function get_content($prm_post) {
 
     if (isset($empty_msg)) {
         // 未入力の項目がある場合、エラーメッセージを表示する
-        return $empty_msg;
+        return $empty_msg . add_div(A_HISTORY_BACK) . LF;
     }
 
     $invalid_msg = NULL;
@@ -38,7 +39,7 @@ function get_content($prm_post) {
 
     if (isset($invalid_msg)) {
         // 新しいパスワードに不備がある場合、エラーメッセージを表示する
-        return $invalid_msg;
+        return $invalid_msg . add_div(A_HISTORY_BACK) . LF;
     }
 
     // mysqliのコンストラクタの例外用設定
@@ -53,21 +54,19 @@ function get_content($prm_post) {
             $mysqli->set_charset('utf8');
         }
 
-        $sql_for_m_staff = 'UPDATE t_password_for_dev SET current=?, temporary=NULL WHERE id=?';
+        $sql_for_m_staff = 'UPDATE t_password_for_dev SET current=?, temporary=NULL, updater_id=? WHERE id=?';
 
-                if ($stmt = $mysqli->prepare($sql_for_m_staff)) {
-                    $new_password = password_hash($item_val_arr['txt_new_password_1'], PASSWORD_DEFAULT);
-                    $stmt->bind_param('si', $new_password, $item_val_arr['staff_id']);
-                    $stmt->execute();
-                    $stmt->close();
-                }
-
+        if ($stmt = $mysqli->prepare($sql_for_m_staff)) {
+            $new_password = password_hash($item_val_arr['txt_new_password_1'], PASSWORD_DEFAULT);
+            $stmt->bind_param('sii', $new_password, $item_val_arr['staff_id'], $item_val_arr['staff_id']);
+            $stmt->execute();
+            $stmt->close();
+        }
     } catch (Exception $e) {
+    } finally {
+        $mysqli->close();
     }
 
-    return add_p(PASSWORD . 'を変更した') . LF;
+    return add_p(PASSWORD . 'を変更した') . LF . '<div class="m-t-1em"><a href="./staff_login.html">' . STAFF_LOGIN . 'へ</a></div>' . LF;
 }
-
-
-
 ?>

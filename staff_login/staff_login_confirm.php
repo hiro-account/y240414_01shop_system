@@ -1,5 +1,5 @@
 <?php
-require_once('./staff_login_check_ctrl.php');
+require_once('./staff_login_confirm_ctrl.php');
 // st_session();
 // check_login($_SESSION);
 // $content_arr = get_content_arr($_GET);

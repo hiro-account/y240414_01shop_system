@@ -15,6 +15,5 @@ require_once './staff_first_login_confirm_ctrl.php';
 <h4>ショップシステム</h4>
 <h2>初期ログインパスワード変更</h2>
 <?= get_content($_POST); ?>
-<div><a href="javascript: history.back();">戻る</a></div>
 </body>
 </html>
