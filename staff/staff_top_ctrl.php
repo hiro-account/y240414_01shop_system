@@ -2,7 +2,7 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
-require_once $to_cmn . 'MyDB.php';
+require_once $to_cmn . 'CmnMySqlI.php';
 
 //TODO:定数移動
 const READ_FAILED = '<p>スタッフ一覧読み出し失敗（システム障害発生）</p>';
@@ -54,10 +54,10 @@ function get_content() {
 //                     $first_staff_id = $last_staff_id;
 //                 }
 //         }
-        $db = new MyDB();
-        $tmp = $db->query($query);
+        $db = new CmnMySqlI();
+        $mixed = $db->query($query);
 
-        foreach ($tmp['result'] as $value) {
+        foreach ($mixed['array'] as $value) {
             $last_staff_id = $value['id'];
 //             $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $value['last_name'] . $value['first_name'] . '</td>' . '<td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
             $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $value['name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
