@@ -45,9 +45,7 @@ function get_content($prm_post) {
     $last_name_kana = NULL;
     $first_name_kana = NULL;
     $sex = -1;
-    $birth_year = NULL;
-    $birth_month = NULL;
-    $birth_day = NULL;
+    $birthday = NULL;
     $privilege = NULL;
     $creator_id = -1;
     $created_date = NULL;
@@ -58,13 +56,13 @@ function get_content($prm_post) {
     mysqli_report(MYSQLI_REPORT_STRICT);
 
     try {
-        $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
+//         $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
 
-        if ($mysqli->connect_error) {
-            return READ_FAILED . LF;
-        } else {
-            $mysqli->set_charset('utf8');
-        }
+//         if ($mysqli->connect_error) {
+//             return READ_FAILED . LF;
+//         } else {
+//             $mysqli->set_charset('utf8');
+//         }
 
         $query =<<<EOQ
 SELECT
@@ -74,9 +72,7 @@ SELECT
   , s.last_name_kana
   , s.first_name_kana
   , s.sex
-  , s.birth_year
-  , s.birth_month
-  , s.birth_day
+  , CONCAT(s.birth_year, '年', s.birth_month, '月', s.birth_day, '日') AS birthday
   , pr.privilege
   , s.creator_id
   , s.created_date
@@ -85,36 +81,35 @@ SELECT
 FROM
   m_staff_for_dev AS s INNER JOIN t_privilege_for_dev as pr on s.id=pr.id
 WHERE
-  s.id=?
+  s.id={$staff_id}
 EOQ;
 
-        if ($stmt = $mysqli->prepare($query)) {
-            $stmt->bind_param('i', $staff_id);
-            $stmt->execute();
-            $stmt->bind_result($id
-                , $last_name
-                , $first_name
-                , $last_name_kana
-                , $first_name_kana
-                , $sex
-                , $birth_year
-                , $birth_month
-                , $birth_day
-                , $privilege
-                , $creator_id
-                , $created_date
-                , $updater_id
-                , $updated_date);
+//         if ($stmt = $mysqli->prepare($query)) {
+//             $stmt->bind_param('i', $staff_id);
+//             $stmt->execute();
+//             $stmt->bind_result($id
+//                 , $last_name
+//                 , $first_name
+//                 , $last_name_kana
+//                 , $first_name_kana
+//                 , $sex
+//                 , $birthday
+//                 , $privilege
+//                 , $creator_id
+//                 , $created_date
+//                 , $updater_id
+//                 , $updated_date);
 
-            if (!$stmt->fetch()) {
-                //TODO:変数にエラーメッセージ詰める(staff_idは存在しているため基本的にエラーはおきないが)
-            }
+//             if (!$stmt->fetch()) {
+//                 //TODO:変数にエラーメッセージ詰める(staff_idは存在しているため基本的にエラーはおきないが)
+//             }
 
-            $stmt->close();
-        }
+//             $stmt->close();
+//         }
 
-
-
+        $mysqli = new CmnMySqlI();
+        $mixed = $mysqli->query($query);
+        
 
 
     } catch (Exception $e) {
@@ -123,37 +118,38 @@ EOQ;
     //TODO:選択肢と共通化
     $sex_arr = array('0' => '-', '1' => '男', '2' => '女', '3' => '未選択');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
-//     $row = NULL;
 
-//     foreach ($column_arr as $key => $value) {
-//         $processedValue = NULL;
+    $row = NULL;
 
-//         switch ($value) {
-//             case 'sex':
-//                 $processedValue = $sex_arr[$mixed[$value]];
-//                 break;
+    foreach ($column_arr as $key => $value) {
+        $processedValue = NULL;
 
-//             case 'birthday':
-//                 $split_arr = explode('-', $mixed[$value]);
-//                 $processedValue = $split_arr[0] . '年'
-//                     . process_month_and_day($split_arr[1]) . '月'
-//                     . process_month_and_day($split_arr[2]) . '日（'
-//                     . get_age(str_replace('-', '', $mixed[$value])) . '歳）';
-//                 break;
+        switch ($value) {
+            case 'sex':
+                $processedValue = $sex_arr[$mixed[$value]];
+                break;
 
-//             case 'created_date':
-//             case 'updated_date':
-//                 $processedValue = $mixed[$value];
-//                 break;
+            case 'birthday':
+                $split_arr = explode('-', $mixed[$value]);
+                $processedValue = $split_arr[0] . '年'
+                    . process_month_and_day($split_arr[1]) . '月'
+                    . process_month_and_day($split_arr[2]) . '日（'
+                    . get_age(str_replace('-', '', $mixed[$value])) . '歳）';
+                break;
 
-//             default:
-//                 $processedValue = $mixed[$value];
-//                 break;
-//         }
+            case 'created_date':
+            case 'updated_date':
+                $processedValue = $mixed[$value];
+                break;
+
+            default:
+                $processedValue = $mixed[$value];
+                break;
+        }
 
 
-//         $row .= '<tr><td>' . $key . '</td><td>：' . $processedValue . '</td></tr>' . LF;
-//     }
+        $row .= '<tr><td>' . $key . '</td><td>：' . $processedValue . '</td></tr>' . LF;
+    }
 
     return <<<EOC
 <form method="post" action="staff_update_or_delete.php" onSubmit="return confirmDelete()">
@@ -164,7 +160,7 @@ EOQ;
 <tr><td>氏（カナ）</td><td>{$last_name_kana}</td></tr>
 <tr><td>名（カナ）</td><td>{$first_name_kana}</td></tr>
 <tr><td>性別</td><td>{$sex_arr[$sex]}</td></tr>
-<tr><td>生年月日</td><td>{$birth_year}年{$birth_month}月{$birth_day}日</td></tr>
+<tr><td>生年月日</td><td>$birthday</td></tr>
 <tr><td>権限</td><td>{$privilege_arr[$privilege]}</td></tr>
 <tr><td>登録者ID</td><td>{$creator_id}</td></tr>
 <tr><td>登録日時</td><td>{$created_date}</td></tr>

@@ -32,8 +32,8 @@ function get_content() {
 
         $query =<<< EOQ
         SELECT m.id AS id , CONCAT(m.last_name, m.first_name) AS name
-        FROM m_staff_for_dev AS m INNER JOIN t_logical_delete_for_dev AS d ON m.id = d.id
-        WHERE d.flag = FALSE
+        FROM m_staff_for_dev AS m INNER JOIN t_logical_delete_for_dev AS d ON m.id=d.id
+        WHERE d.flag=FALSE
         ORDER BY m.id
         EOQ;
 
@@ -54,8 +54,8 @@ function get_content() {
 //                     $first_staff_id = $last_staff_id;
 //                 }
 //         }
-        $db = new CmnMySqlI();
-        $mixed = $db->query($query);
+        $mysqli = new CmnMySqlI();
+        $mixed = $mysqli->query($query);
 
         foreach ($mixed['array'] as $value) {
             $last_staff_id = $value['id'];
@@ -72,15 +72,15 @@ function get_content() {
 
     } catch (Exception $e) {
         return READ_FAILED . LF;
-    } finally {
-        //TODO:クローズ処理は下記で可か確認
-        if (isset($result)) {
-            $result->close();
-        }
+//     } finally {
+//         //TODO:クローズ処理は下記で可か確認
+//         if (isset($result)) {
+//             $result->close();
+//         }
 
-        if (isset($mysqli)) {
-            $mysqli->close();
-        }
+//         if (isset($mysqli)) {
+//             $mysqli->close();
+//         }
     }
 
     if (!isset($staff_list)) {

@@ -338,12 +338,12 @@ function get_host_and_dir() {
 }
 
 
-function build_opt_elem($prm_val, $prm_cntnt) {
-    return '<option value="' . $prm_val . '">' . $prm_cntnt . '</option>' . LF;
+function build_opt_elem($prm_val, $prm_content) {
+    return '<option value="' . $prm_val . '">' . $prm_content . '</option>' . LF;
 }
 
-function build_opt_elem_with_selected($prm_val, $prm_cntnt) {
-    return '<option value="' . $prm_val . '" selected="selected">' . $prm_cntnt . '</option>' . LF;
+function build_opt_elem_with_selected($prm_val, $prm_content) {
+    return '<option value="' . $prm_val . '" selected="selected">' . $prm_content . '</option>' . LF;
 }
 
 
