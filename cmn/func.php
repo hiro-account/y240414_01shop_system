@@ -205,7 +205,11 @@ function check_alphanumeric($item_key_arr, $item_name_arr, $target_arr) {
 
 //----------------------------------------
 function get_age($prm_birth_date) {
-    return floor((date('Ymd') - $prm_birth_date) / 10000);
+    date_default_timezone_set('Asia/Tokyo');
+    $current_date = intval(date('Ymd'));
+    $birth_date = intval($prm_birth_date);
+
+    return floor(($current_date - $birth_date) / 10000);
 }
 
 
@@ -339,11 +343,11 @@ function get_host_and_dir() {
 
 
 function build_opt_elem($prm_val, $prm_content) {
-    return '<option value="' . $prm_val . '">' . $prm_content . '</option>' . LF;
+    return '<option value="' . sprintf('%02d', $prm_val) . '">' . $prm_content . '</option>' . LF;
 }
 
 function build_opt_elem_with_selected($prm_val, $prm_content) {
-    return '<option value="' . $prm_val . '" selected="selected">' . $prm_content . '</option>' . LF;
+    return '<option value="' . sprintf('%02d', $prm_val) . '" selected="selected">' . $prm_content . '</option>' . LF;
 }
 
 

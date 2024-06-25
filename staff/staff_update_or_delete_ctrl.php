@@ -3,6 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'const.php');
 require_once './staff_func.php';
+require_once  $to_cmn . 'CmnMySqlI.php';
 
 const BIRTH_YEAR = I_0;
 const BIRTH_MONTH = I_1;
@@ -62,11 +63,20 @@ EOC;
 
 //TODO:都度値を返すか変数で値を保持しておいて最後に一度だけ返すか検討
 function del_staff($prm_staff_id) {
+    mysqli_report(MYSQLI_REPORT_STRICT);
+
     $msg = NULL;
 
     try {
 //         throw new Exception();
-        execute_sql_rtn_PDOStatement('UPDATE m_staff SET delete_flag=1 WHERE id=?', array($prm_staff_id));
+//         execute_sql_rtn_PDOStatement('UPDATE m_staff SET delete_flag=1 WHERE id=?', array($prm_staff_id));
+        $mysqli = new CmnMySqlI();
+        $mixed = $mysqli->query('UPDATE t_logical_delete_for_dev SET flag=1 WHERE id=' . $prm_staff_id);
+
+        if (!$mixed['rows'] === I_1) {
+            throw new Exception();
+        }
+
         $msg = '削除完了';
     } catch (Exception $e) {
         $msg = '削除失敗（システム障害発生）';

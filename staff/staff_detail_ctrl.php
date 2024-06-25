@@ -3,6 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'sortedFunc.php');
+require_once $to_cmn . 'CmnMySqlI.php';
 
 const READ_FAILED = '<p>スタッフ詳細読み出し失敗（システム障害発生）</p>';
 
@@ -19,15 +20,16 @@ function get_content($prm_post) {
         }
     }
 
-    $column_arr = array('スタッフID' => 'id',
-        '氏' => 'last_name',
-        '名' => 'first_name',
-        '氏（カナ）' => 'last_name_kana',
-        '名（カナ）' => 'first_name_kana',
-        '性別' => 'sex',
-        '生年月日' => 'birthday',
-        '登録日時' => 'created_date',
-        '更新日時' => 'updated_date');
+    $column_arr = array('スタッフID' => 'id'
+        , '氏' => 'last_name'
+        , '名' => 'first_name'
+        , '氏（カナ）' => 'last_name_kana'
+        , '名（カナ）' => 'first_name_kana'
+        , '性別' => 'sex'
+        , '生年月日' => 'birthday'
+        , '権限' => 'privilege'
+        , '登録日時' => 'created_date'
+        , '更新日時' => 'updated_date');
 
 //     $mixed = NULL;
 
@@ -52,6 +54,38 @@ function get_content($prm_post) {
     $updater_id = -1;
     $updated_date = NULL;
 
+    $query =<<<EOQ
+SELECT
+  s.id AS id
+  , s.last_name AS last_name
+  , s.first_name AS first_name
+  , s.last_name_kana AS last_name_kana
+  , s.first_name_kana AS first_name_kana
+  , s.sex AS sex
+  , s.birth_year AS birth_year
+  , s.birth_month AS birth_month
+  , s.birth_day AS birth_day
+  , pr.privilege AS privilege
+  , s.creator_id AS creator_id
+  , s.created_date AS created_date
+  , s.updater_id AS updater_id
+  , s.updated_date AS updated_date
+FROM
+  m_staff_for_dev AS s INNER JOIN t_privilege_for_dev as pr on s.id=pr.id
+WHERE
+  s.id={$staff_id}
+EOQ;
+
+
+
+
+
+
+    $elem = NULL;
+
+
+
+
     // mysqliのコンストラクタの例外用設定
     mysqli_report(MYSQLI_REPORT_STRICT);
 
@@ -64,25 +98,6 @@ function get_content($prm_post) {
 //             $mysqli->set_charset('utf8');
 //         }
 
-        $query =<<<EOQ
-SELECT
-  s.id AS id
-  , s.last_name
-  , s.first_name
-  , s.last_name_kana
-  , s.first_name_kana
-  , s.sex
-  , CONCAT(s.birth_year, '年', s.birth_month, '月', s.birth_day, '日') AS birthday
-  , pr.privilege
-  , s.creator_id
-  , s.created_date
-  , s.updater_id
-  , s.updated_date
-FROM
-  m_staff_for_dev AS s INNER JOIN t_privilege_for_dev as pr on s.id=pr.id
-WHERE
-  s.id={$staff_id}
-EOQ;
 
 //         if ($stmt = $mysqli->prepare($query)) {
 //             $stmt->bind_param('i', $staff_id);
@@ -109,8 +124,7 @@ EOQ;
 
         $mysqli = new CmnMySqlI();
         $mixed = $mysqli->query($query);
-        
-
+        $elem = $mixed['array'][0];
 
     } catch (Exception $e) {
     }
@@ -126,27 +140,24 @@ EOQ;
 
         switch ($value) {
             case 'sex':
-                $processedValue = $sex_arr[$mixed[$value]];
+                $processedValue = $sex_arr[$elem[$value]];
                 break;
 
             case 'birthday':
-                $split_arr = explode('-', $mixed[$value]);
-                $processedValue = $split_arr[0] . '年'
-                    . process_month_and_day($split_arr[1]) . '月'
-                    . process_month_and_day($split_arr[2]) . '日（'
-                    . get_age(str_replace('-', '', $mixed[$value])) . '歳）';
+                $processedValue = $elem['birth_year'] . '年'
+                    . process_month_and_day($elem['birth_month']) . '月'
+                    . process_month_and_day($elem['birth_day']) . '日（'
+                        . get_age($elem['birth_year'] . $elem['birth_month'] .$elem['birth_day']) . '歳）';
                 break;
 
-            case 'created_date':
-            case 'updated_date':
-                $processedValue = $mixed[$value];
+            case 'privilege':
+                $processedValue = $privilege_arr[$elem[$value]];
                 break;
 
             default:
-                $processedValue = $mixed[$value];
+                $processedValue = $elem[$value];
                 break;
         }
-
 
         $row .= '<tr><td>' . $key . '</td><td>：' . $processedValue . '</td></tr>' . LF;
     }
@@ -154,19 +165,7 @@ EOQ;
     return <<<EOC
 <form method="post" action="staff_update_or_delete.php" onSubmit="return confirmDelete()">
 <table>
-<tr><td>スタッフID</td><td>{$id}</td></tr>
-<tr><td>氏</td><td>{$last_name}</td></tr>
-<tr><td>名</td><td>{$first_name}</td></tr>
-<tr><td>氏（カナ）</td><td>{$last_name_kana}</td></tr>
-<tr><td>名（カナ）</td><td>{$first_name_kana}</td></tr>
-<tr><td>性別</td><td>{$sex_arr[$sex]}</td></tr>
-<tr><td>生年月日</td><td>$birthday</td></tr>
-<tr><td>権限</td><td>{$privilege_arr[$privilege]}</td></tr>
-<tr><td>登録者ID</td><td>{$creator_id}</td></tr>
-<tr><td>登録日時</td><td>{$created_date}</td></tr>
-<tr><td>更新者ID</td><td>{$updater_id}</td></tr>
-<tr><td>更新日時</td><td>{$updated_date}</td></tr>
-</table>
+{$row}</table>
 <div class="m-t-1em sbmt"><input type="submit" name="staff_update" value="更新" onClick="sbmt_nm='staff_update'"><input type="submit" name="staff_delete" value="削除" onClick="sbmt_nm='staff_delete'"></div>
 <input type="hidden" name="staff_id" value="{$id}">
 </form>

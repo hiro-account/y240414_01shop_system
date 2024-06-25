@@ -31,11 +31,11 @@ function get_content() {
 //         }
 
         $query =<<< EOQ
-        SELECT m.id AS id , CONCAT(m.last_name, m.first_name) AS name
-        FROM m_staff_for_dev AS m INNER JOIN t_logical_delete_for_dev AS d ON m.id=d.id
-        WHERE d.flag=FALSE
-        ORDER BY m.id
-        EOQ;
+SELECT m.id AS id , m.last_name AS last_name, m.first_name AS first_name
+FROM m_staff_for_dev AS m INNER JOIN t_logical_delete_for_dev AS d ON m.id=d.id
+WHERE d.flag=FALSE
+ORDER BY m.id
+EOQ;
 
 //         $result = $mysqli->query($query);
 
@@ -60,7 +60,7 @@ function get_content() {
         foreach ($mixed['array'] as $value) {
             $last_staff_id = $value['id'];
 //             $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $value['last_name'] . $value['first_name'] . '</td>' . '<td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
-            $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $value['name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
+            $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $value['last_name'] . $value['first_name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
 
             if (! isset($first_staff_id)) {
                 $first_staff_id = $last_staff_id;
