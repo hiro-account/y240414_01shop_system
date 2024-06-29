@@ -4,10 +4,9 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'sortedFunc.php');
 require_once $to_cmn . 'CmnMySqlI.php';
+require_once $to_cmn . 'query.php';
 
-const READ_FAILED = '<p>スタッフ詳細読み出し失敗（システム障害発生）</p>';
-
-
+const READ_FAILED = '<p>スタッフ詳細読み出し失敗（システム障害発生）</p>' . LF;
 
 function get_content($prm_post) {
     $staff_id = NULL;
@@ -31,29 +30,6 @@ function get_content($prm_post) {
         , '登録日時' => 'created_date'
         , '更新日時' => 'updated_date');
 
-//     $mixed = NULL;
-
-//     try {
-//         $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT ' . implode(', ', $column_arr) . ' FROM m_staff WHERE id=?', array($staff_id));
-//         $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
-// // throw new Exception();
-//     } catch (Exception $e) {
-//         return READ_FAILED . LF;
-//     }
-
-    $id = -1;
-    $last_name = NULL;
-    $first_name = NULL;
-    $last_name_kana = NULL;
-    $first_name_kana = NULL;
-    $sex = -1;
-    $birthday = NULL;
-    $privilege = NULL;
-    $creator_id = -1;
-    $created_date = NULL;
-    $updater_id = -1;
-    $updated_date = NULL;
-
     $query =<<<EOQ
 SELECT
   s.id AS id
@@ -76,58 +52,13 @@ WHERE
   s.id={$staff_id}
 EOQ;
 
+    $result_array = execute_query($query);
 
-
-
-
-
-    $elem = NULL;
-
-
-
-
-    // mysqliのコンストラクタの例外用設定
-    mysqli_report(MYSQLI_REPORT_STRICT);
-
-    try {
-//         $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
-
-//         if ($mysqli->connect_error) {
-//             return READ_FAILED . LF;
-//         } else {
-//             $mysqli->set_charset('utf8');
-//         }
-
-
-//         if ($stmt = $mysqli->prepare($query)) {
-//             $stmt->bind_param('i', $staff_id);
-//             $stmt->execute();
-//             $stmt->bind_result($id
-//                 , $last_name
-//                 , $first_name
-//                 , $last_name_kana
-//                 , $first_name_kana
-//                 , $sex
-//                 , $birthday
-//                 , $privilege
-//                 , $creator_id
-//                 , $created_date
-//                 , $updater_id
-//                 , $updated_date);
-
-//             if (!$stmt->fetch()) {
-//                 //TODO:変数にエラーメッセージ詰める(staff_idは存在しているため基本的にエラーはおきないが)
-//             }
-
-//             $stmt->close();
-//         }
-
-        $mysqli = new CmnMySqlI();
-        $mixed = $mysqli->query($query);
-        $elem = $mixed['array'][0];
-
-    } catch (Exception $e) {
+    if (isset($result_array[EXCEPTION])) {
+        return READ_FAILED;
     }
+
+    $select_result = $result_array[STMT]->fetch();
 
     //TODO:選択肢と共通化
     $sex_arr = array('0' => '-', '1' => '男', '2' => '女', '3' => '未選択');
@@ -140,22 +71,22 @@ EOQ;
 
         switch ($value) {
             case 'sex':
-                $processedValue = $sex_arr[$elem[$value]];
+                $processedValue = $sex_arr[$select_result[$value]];
                 break;
 
             case 'birthday':
-                $processedValue = $elem['birth_year'] . '年'
-                    . process_month_and_day($elem['birth_month']) . '月'
-                    . process_month_and_day($elem['birth_day']) . '日（'
-                        . get_age($elem['birth_year'] . $elem['birth_month'] .$elem['birth_day']) . '歳）';
+                $processedValue = $select_result['birth_year'] . '年'
+                    . process_month_and_day($select_result['birth_month']) . '月'
+                    . process_month_and_day($select_result['birth_day']) . '日（'
+                        . get_age($select_result['birth_year'] . $select_result['birth_month'] .$select_result['birth_day']) . '歳）';
                 break;
 
             case 'privilege':
-                $processedValue = $privilege_arr[$elem[$value]];
+                $processedValue = $privilege_arr[$select_result[$value]];
                 break;
 
             default:
-                $processedValue = $elem[$value];
+                $processedValue = $select_result[$value];
                 break;
         }
 
@@ -167,12 +98,9 @@ EOQ;
 <table>
 {$row}</table>
 <div class="m-t-1em sbmt"><input type="submit" name="staff_update" value="更新" onClick="sbmt_nm='staff_update'"><input type="submit" name="staff_delete" value="削除" onClick="sbmt_nm='staff_delete'"></div>
-<input type="hidden" name="staff_id" value="{$id}">
+<input type="hidden" name="staff_id" value="{$select_result['id']}">
 </form>
 
 EOC;
 }
-
-
-
 ?>

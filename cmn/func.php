@@ -334,6 +334,27 @@ function execute_sql_rtn_PDOStatement($statement, $input_parameter_arr) {
     return $pdo_stmt;
 }
 
+// 24/06/29以降に記載した関数 ST ----------------------------------------
+
+function is_bf_change_temp_pswd($prm_crnt_pswd, $prm_temp_pswd) {
+    return !isset($prm_crnt_pswd) && isset($prm_temp_pswd);
+}
+
+
+
+
+// 24/06/29以降に記載した関数 ED ----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 /*--------------------------------------------------------------------------------
 以下private関数
 --------------------------------------------------------------------------------*/
