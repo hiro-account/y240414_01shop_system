@@ -1,10 +1,13 @@
 <?php
+$to_cmn = dirname(__FILE__) . '/../cmn/';
 //TODO:requireの整理
 require_once '../cmn/func.php';
 require_once '../cmn/const.php';
 require_once '../cmn/temp_const.php';
+require_once $to_cmn . 'query.php';
 
 const NW = '新しい';
+const UPDATE_FAILED = '<p>パスワード変更失敗（システム障害発生）</p>' . LF;
 
 function get_content($prm_post) {
     // 入力値のサニタイズと空白文字の除去
@@ -42,29 +45,17 @@ function get_content($prm_post) {
         return $invalid_msg . add_div(A_HISTORY_BACK) . LF;
     }
 
-    // mysqliのコンストラクタの例外用設定
-    mysqli_report(MYSQLI_REPORT_STRICT);
+    $result_array = execute_query(
+        'UPDATE t_password_for_dev SET current=?, temporary=NULL, updater_id=? WHERE id=?'
+        , array(
+            password_hash($item_val_arr['txt_new_password_1'], PASSWORD_DEFAULT)
+            , $item_val_arr['staff_id']
+            , $item_val_arr['staff_id']
+        )
+    );
 
-    try {
-        $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
-
-        if ($mysqli->connect_error) {
-            return CREATE_FAILED;
-        } else {
-            $mysqli->set_charset('utf8');
-        }
-
-        $sql_for_m_staff = 'UPDATE t_password_for_dev SET current=?, temporary=NULL, updater_id=? WHERE id=?';
-
-        if ($stmt = $mysqli->prepare($sql_for_m_staff)) {
-            $new_password = password_hash($item_val_arr['txt_new_password_1'], PASSWORD_DEFAULT);
-            $stmt->bind_param('sii', $new_password, $item_val_arr['staff_id'], $item_val_arr['staff_id']);
-            $stmt->execute();
-            $stmt->close();
-        }
-    } catch (Exception $e) {
-    } finally {
-        $mysqli->close();
+    if (isset($result_array[EXCEPTION])) {
+        return UPDATE_FAILED . add_div('<a href="./staff_login.html">スタッフログインへ</a>') . LF;
     }
 
     return add_p(PASSWORD . 'を変更した') . LF . '<div class="m-t-1em"><a href="./staff_login.html">' . STAFF_LOGIN . 'へ</a></div>' . LF;

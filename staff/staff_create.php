@@ -18,7 +18,9 @@ check_login($_SESSION);
 <h4>ショップシステム</h4>
 <h2>スタッフ登録</h2>
 <form method="post" action="staff_create_confirm.php">
-<?= get_content() ?>
+<?= get_content(); ?>
+
+<div><input type="hidden" name="from" value="create"></div>
 <div class="m-t-1em"><input type="submit" value="確認"></div>
 </form>
 <ul class="lowlnk">

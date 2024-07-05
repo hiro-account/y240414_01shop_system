@@ -38,6 +38,7 @@ function get_content($prm_post) {
         return READ_FAILED;
     }
 
+    //TODO:下記不要か
     if (!isset($result_array[ROW_COUNT]) || !$result_array[ROW_COUNT] === I_1) {
         // 戻り値が一件以外の場合
         return WRONG_ID_OR_PASSWORD;

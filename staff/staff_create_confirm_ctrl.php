@@ -8,17 +8,17 @@ require_once($to_cmn . 'temp_const.php');
 function get_content($prm_post) {
     //TODO:配列の要素、配置位置要整理
     $item_key_nm_arr = array(
-        'txt_last_name' => LAST_NAME,               // 0
-        'txt_first_name' => FIRST_NAME,             // 1
-        'txt_last_name_kana' => LAST_NAME . KANA,   // 2
-        'txt_first_name_kana' => FIRST_NAME . KANA, // 3
-        'slct_sex' => SEX,                          // 4
-        'sex' => SEX,                               // 5
-        'slct_birth_year' => BIRTH_DATE . YEAR,     // 6
-        'slct_birth_month' => BIRTH_DATE . MONTH,   // 7
-        'slct_birth_day' => BIRTH_DATE . DAY,       // 8
-        'birth_date' => BIRTH_DATE,                 // 9
-        'rdo_privilege' => '権限'                   // 10
+        'txt_last_name' => LAST_NAME                    // 0
+        , 'txt_first_name' => FIRST_NAME                // 1
+        , 'txt_last_name_kana' => LAST_NAME . KANA      // 2
+        , 'txt_first_name_kana' => FIRST_NAME . KANA    // 3
+        , 'slct_sex' => SEX                             // 4
+        , 'sex' => SEX                                  // 5
+        , 'slct_birth_year' => BIRTH_DATE . YEAR        // 6
+        , 'slct_birth_month' => BIRTH_DATE . MONTH      // 7
+        , 'slct_birth_day' => BIRTH_DATE . DAY          // 8
+        , 'birth_date' => BIRTH_DATE                    // 9
+        , 'rdo_privilege' => '権限'                     // 10
     );
 
     $sex_arr = array('-', '男', '女');
@@ -43,19 +43,6 @@ function get_content($prm_post) {
     if (!checkdate(intval($item_val_arr['slct_birth_month']), intval($item_val_arr['slct_birth_day']), intval($item_val_arr['slct_birth_year']))) {
         $invalid_msg .= add_p(BIRTH_DATE . 'が不正') . LF;
     }
-
-//     // パスワードのチェック
-//     // パスワードの文字種のチェック
-//     //TODO:24年05月19日時点のパスワードの扱い：前後の半角スペースはチェック前に削除された状態
-//     $checked_alphanumeric_msg = chk_alphanumeric(array_slice($item_key_nm_arr, 10, I_2), array_slice($item_val_arr, 8));
-
-//     if (isset($checked_alphanumeric_msg)) {
-//         // パスワードの文字種に不備がある場合
-//         $invalid_msg .= $checked_alphanumeric_msg;
-//     } else if (strcmp($item_val_arr['txt_password_1'], $item_val_arr['txt_password_2']) !== I_0) {
-//         // パスワードとパスワード（確認）が一致しない場合
-//         $invalid_msg .= add_p(PASSWORD . 'と' . PASSWORD . CONFIRM . 'が一致しない') . LF;
-//     }
 
     if (isset($invalid_msg)) {
         // 生年月日とパスワードのどちらか、もしくは双方ともに不備がある場合、エラーメッセージを表示する
@@ -120,5 +107,4 @@ function build_hdn_elem($prm_content_arr) {
 
     return $hdn_elem;
 }
-
 ?>

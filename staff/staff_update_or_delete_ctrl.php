@@ -5,11 +5,23 @@ require_once($to_cmn . 'const.php');
 require_once './staff_func.php';
 require_once  $to_cmn . 'query.php';
 
-const BIRTH_YEAR = I_0;
-const BIRTH_MONTH = I_1;
-const BIRTH_DATE = I_2;
-
-
+const QUERY =<<<EOQ
+SELECT
+  m.id AS id
+  , m.last_name AS last_name
+  , m.first_name AS first_name
+  , m.last_name_kana AS last_name_kana
+  , m.first_name_kana AS first_name_kana
+  , m.sex AS sex
+  , m.birth_year AS birth_year
+  , m.birth_month AS birth_month
+  , m.birth_day AS birth_day
+  , pr.privilege AS privilege
+FROM
+  m_staff_for_dev AS m INNER JOIN t_privilege_for_dev AS pr ON m.id=pr.id
+WHERE
+  m.id=
+EOQ;
 
 function get_content($prm_post) {
     if (isset($prm_post['staff_update'])) {
@@ -17,37 +29,27 @@ function get_content($prm_post) {
     } else if (isset($prm_post['staff_delete'])) {
         return del_staff($prm_post['staff_id']);
     }
-
-
-
-
 }
 
 function updt_staff($prm_post) {
-//     return get_tbl_elem(NULL);
+    $result_array = execute_query(QUERY . $prm_post['staff_id']);
 
-
-    try {
-//         throw new Exception();
-        $pdo_stmt = execute_sql_rtn_PDOStatement('SELECT id, last_name, first_name, last_name_kana, first_name_kana, sex, birthday FROM m_staff WHERE id=?', array($prm_post['staff_id']));
-        $mixed = $pdo_stmt->fetch(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-
+    if (isset($result_array[EXCEPTION])) {
+        return '例外発生';
     }
 
-    $birthday = explode('-', $mixed['birthday']);
-    $staff_data_arr = array('last_name' => $mixed['last_name'], 'first_name' => $mixed['first_name'], 'last_name_kana' => $mixed['last_name_kana'], 'first_name_kana' => $mixed['first_name_kana']
-        , 'sex' => $mixed['sex'], 'birth_year' => $birthday[BIRTH_YEAR], 'birth_month' => $birthday[BIRTH_MONTH], 'birth_date' => $birthday[BIRTH_DATE]);
+    $fetched_arr = $result_array[STMT]->fetch();
 
-    return get_content_for_updt(get_tbl_elem($staff_data_arr));
+    return get_content_for_updt(get_tbl_elem($fetched_arr), implode(',', $fetched_arr));
 }
 
-function get_content_for_updt($prm_message) {
+function get_content_for_updt($prm_message, $prm_joined_str) {
     $a_history_back = A_HISTORY_BACK;
     return <<<EOC
 <h2>スタッフ更新</h2>
 <form method="post" action="./staff_create_confirm.php">
 {$prm_message}
+<div><input type="hidden" name="before" value="{$prm_joined_str}"></div>
 <div class="m-t-1em"><input type="submit" value="確認"></div>
 </form>
 <ul class="lowlnk">
@@ -81,7 +83,6 @@ function get_content_for_del($prm_message) {
 <h2>スタッフ削除</h2>
 <p>{$prm_message}</p>
 <ul class="lowlnk">
-<!--<li><a href="./staff_create.php">スタッフ登録へ</a></li>-->
 <li><a href="./staff_top.php">スタッフ管理へ</a></li>
 </ul>
 

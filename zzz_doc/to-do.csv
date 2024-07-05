@@ -17,3 +17,4 @@
 6月5日,要素 (element) は、開始タグ (Start-tag)・内容 (Content)・終了タグ (End-tag) の3つから構成される
 ,初回ログイン→パスワード変更
 6月11日,○t_privilegeテーブルのデータの例 ・管理：A(Administrator) ・一般：O(Ordinary)※他にはGeneralも一般の意を持つ
+7月2日,●共用に必要な変更 ○staff_create_confirm.php ・見出し ・更新確認から戻る際のフォーム再送信確認 javascript: history.back(); フォームを再送信しますか？

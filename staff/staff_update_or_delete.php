@@ -1,5 +1,6 @@
-<?php
+    <?php
 require_once('./staff_update_or_delete_ctrl.php');
+session_cache_limiter('private_no_expire');
 st_session();
 check_login($_SESSION);
 ?>

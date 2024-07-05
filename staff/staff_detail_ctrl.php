@@ -8,29 +8,11 @@ require_once $to_cmn . 'query.php';
 
 const READ_FAILED = '<p>スタッフ詳細読み出し失敗（システム障害発生）</p>' . LF;
 
-function get_content($prm_post) {
-    $staff_id = NULL;
+const HTML_TYPE_HIDDEN = '<input type="hidden" name="';
+const HTML_VALUE = '" value="';
+const HTML_CLOSE = '">';
 
-    for ($i = intval($prm_post['first_staff_id']); $i <= intval($prm_post['last_staff_id']); $i++) {
-        if (isset($prm_post['staff_id_' . $i])) {
-            $staff_id = $i;
-
-            break;
-        }
-    }
-
-    $column_arr = array('スタッフID' => 'id'
-        , '氏' => 'last_name'
-        , '名' => 'first_name'
-        , '氏（カナ）' => 'last_name_kana'
-        , '名（カナ）' => 'first_name_kana'
-        , '性別' => 'sex'
-        , '生年月日' => 'birthday'
-        , '権限' => 'privilege'
-        , '登録日時' => 'created_date'
-        , '更新日時' => 'updated_date');
-
-    $query =<<<EOQ
+const QUERY =<<<EOQ
 SELECT
   s.id AS id
   , s.last_name AS last_name
@@ -46,13 +28,25 @@ SELECT
   , s.created_date AS created_date
   , s.updater_id AS updater_id
   , s.updated_date AS updated_date
+  , pa.temporary AS temporary
 FROM
-  m_staff_for_dev AS s INNER JOIN t_privilege_for_dev as pr on s.id=pr.id
+  m_staff_for_dev AS s INNER JOIN t_privilege_for_dev AS pr ON s.id=pr.id INNER JOIN t_password_for_dev AS pa ON s.id=pa.id
 WHERE
-  s.id={$staff_id}
+  s.id=
 EOQ;
 
-    $result_array = execute_query($query);
+function get_content($prm_post) {
+    $staff_id = NULL;
+
+    for ($i = intval($prm_post['first_staff_id']); $i <= intval($prm_post['last_staff_id']); $i++) {
+        if (isset($prm_post['staff_id_' . $i])) {
+            $staff_id = $i;
+
+            break;
+        }
+    }
+
+    $result_array = execute_query(QUERY . $staff_id);
 
     if (isset($result_array[EXCEPTION])) {
         return READ_FAILED;
@@ -60,39 +54,91 @@ EOQ;
 
     $select_result = $result_array[STMT]->fetch();
 
+    $column_arr = array(
+        'id' => 'スタッフID'
+        , 'last_name' => '氏'
+        , 'first_name' => '名'
+        , 'last_name_kana' => '氏（カナ）'
+        , 'first_name_kana' => '名（カナ）'
+        , 'sex' => '性別'
+        , 'birthday' => '生年月日'
+        , 'privilege' => '権限'
+        , 'created_date' => '登録日時'
+        , 'updated_date' => '更新日時'
+        , 'temporary' => '備考'
+    );
+
     //TODO:選択肢と共通化
     $sex_arr = array('0' => '-', '1' => '男', '2' => '女', '3' => '未選択');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
 
     $row = NULL;
-
+$hidden = NULL;
     foreach ($column_arr as $key => $value) {
+//         $select_result_value = $select_result[$key];
         $processedValue = NULL;
+        $hidden_name = NULL;
+        $hidden_value = NULL;
 
-        switch ($value) {
+        $b_y = NULL;
+        $b_m = NULL;
+        $b_d = null;
+
+        switch ($key) {
             case 'sex':
-                $processedValue = $sex_arr[$select_result[$value]];
+                $processedValue = $sex_arr[$select_result[$key]];
+
+                $hidden_name = $key;
+                $hidden_value = $select_result[$key];
                 break;
 
             case 'birthday':
-                $processedValue = $select_result['birth_year'] . '年'
-                    . process_month_and_day($select_result['birth_month']) . '月'
-                    . process_month_and_day($select_result['birth_day']) . '日（'
-                        . get_age($select_result['birth_year'] . $select_result['birth_month'] .$select_result['birth_day']) . '歳）';
+                $b_y = $select_result['birth_year'];
+                $b_m = $select_result['birth_month'];
+                $b_d = $select_result['birth_day'];
+
+                $processedValue = $b_y . '年' . process_month_and_day($b_m) . '月' . process_month_and_day($b_d) . '日（'
+                    . get_age($b_y . $b_m . $b_d) . '歳）';
                 break;
 
             case 'privilege':
-                $processedValue = $privilege_arr[$select_result[$value]];
+                $processedValue = $privilege_arr[$select_result[$key]];
+
+                $hidden_name = $key;
+                $hidden_value = $select_result[$key];
+                break;
+
+            case 'temporary':
+                if (!isset($select_result[$key])) {
+                    continue 2;
+                }
+
+                $processedValue = '仮パスワード変更前';
                 break;
 
             default:
-                $processedValue = $select_result[$value];
+                $processedValue = $select_result[$key];
+
+                $hidden_name = $key;
+                $hidden_value = $select_result[$key];
                 break;
         }
 
-        $row .= '<tr><td>' . $key . '</td><td>：' . $processedValue . '</td></tr>' . LF;
-    }
+        $row .= '<tr><td>' . $value . '</td><td>：' . $processedValue . '</td></tr>' . LF;
+        $hidden .= '<input type="hidden" name="' . $hidden_name .
 
+
+        switch ($key) {
+            case 'birthday':
+                break;
+            case 'temporary':
+                break;
+            default:
+                $hidden .= HTML_TYPE_HIDDEN . $key . HTML_VALUE . $select_result[$key] . HTML_CLOSE . LF;
+                break;
+        }
+    }
+var_dump($hidden);
     return <<<EOC
 <form method="post" action="staff_update_or_delete.php" onSubmit="return confirmDelete()">
 <table>

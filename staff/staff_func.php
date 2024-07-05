@@ -4,7 +4,7 @@ require_once($to_cmn . 'func.php');
 
 
 
-
+const CHECKED = ' checked';
 
 function get_tbl_elem($prm_staff_data_arr) {
 
@@ -13,14 +13,43 @@ function get_tbl_elem($prm_staff_data_arr) {
     if (isset($prm_staff_data_arr)) {
         $staff_data_arr = $prm_staff_data_arr;
     } else {
-        $staff_data_arr = array('last_name' => "", 'first_name' => "", 'last_name_kana' => "", 'first_name_kana' => ""
-            , 'sex' => 0, 'birth_year' => NULL, 'birth_month' => NULL, 'birth_date' => NULL);
+        $staff_data_arr = array(
+            'last_name' => ""
+            , 'first_name' => ""
+            , 'last_name_kana' => ""
+            , 'first_name_kana' => ""
+            , 'sex' => 0
+            , 'birth_year' => NULL
+           , 'birth_month' => NULL
+           , 'birth_day' => NULL
+           , 'privilege' => NULL
+        );
     }
 
     $opt_sex = build_opt_sex($staff_data_arr['sex']);
     $opt_year = build_opt_year($staff_data_arr['birth_year']);
     $opt_month = build_opt_month_day(12, $staff_data_arr['birth_month']);
-    $opt_day = build_opt_month_day(31, $staff_data_arr['birth_date']);
+    $opt_day = build_opt_month_day(31, $staff_data_arr['birth_day']);
+
+    $privilege_checked_o = NULL;
+    $privilege_checked_a = NULL;
+
+    switch ($staff_data_arr['privilege']) {
+        case 'O':
+            $privilege_checked_o = CHECKED;
+            $privilege_checked_a = '';
+            break;
+
+        case 'A':
+            $privilege_checked_o = '';
+            $privilege_checked_a = CHECKED;
+            break;
+
+        default:
+            $privilege_checked_o = '';
+            $privilege_checked_a = '';
+            break;
+    }
 
     return <<<EOC
 <table>
@@ -49,18 +78,10 @@ function get_tbl_elem($prm_staff_data_arr) {
 {$opt_day}</select>日</td>
 </tr>
 <tr>
-<td>権限</td><td><span><input type="radio" name="rdo_privilege" id="ordinary" value="O"><label for="ordinary">一般</label></span>
-<span class="m-l-10"><input type="radio" name="rdo_privilege" id="administrator" value="A"><label for="administrator">管理者</label></span></td>
+<td>権限</td><td><span><input type="radio" name="rdo_privilege" id="ordinary" value="O"{$privilege_checked_o}><label for="ordinary">一般</label></span>
+<span class="m-l-10"><input type="radio" name="rdo_privilege" id="administrator" value="A"{$privilege_checked_a}><label for="administrator">管理者</label></span></td>
 </tr>
 </table>
-
 EOC;
-
-
 }
-
-
-
-
-
 ?>
