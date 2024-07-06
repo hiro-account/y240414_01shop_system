@@ -7,12 +7,19 @@ require_once($to_cmn . 'func.php');
 const CHECKED = ' checked';
 
 function get_tbl_elem($prm_staff_data_arr) {
-
+    $id_content = NULL;
     $staff_data_arr = NULL;
 
     if (isset($prm_staff_data_arr)) {
+        $id_content =<<<EOI
+
+<tr>
+<td>スタッフID</td><td class="p-l-5">{$prm_staff_data_arr['id']}</td>
+</tr>
+EOI;
         $staff_data_arr = $prm_staff_data_arr;
     } else {
+        $id_content = '';
         $staff_data_arr = array(
             'last_name' => ""
             , 'first_name' => ""
@@ -52,7 +59,7 @@ function get_tbl_elem($prm_staff_data_arr) {
     }
 
     return <<<EOC
-<table>
+<table>{$id_content}
 <tr>
 <td>氏</td><td><input type="text" name="txt_last_name" value="{$staff_data_arr['last_name']}" class="w-100"></td>
 </tr>

@@ -125,27 +125,19 @@ $hidden = NULL;
         }
 
         $row .= '<tr><td>' . $value . '</td><td>：' . $processedValue . '</td></tr>' . LF;
-        $hidden .= '<input type="hidden" name="' . $hidden_name .
-
-
-        switch ($key) {
-            case 'birthday':
-                break;
-            case 'temporary':
-                break;
-            default:
-                $hidden .= HTML_TYPE_HIDDEN . $key . HTML_VALUE . $select_result[$key] . HTML_CLOSE . LF;
-                break;
-        }
+        $hidden .= HTML_TYPE_HIDDEN . $hidden_name . HTML_VALUE . $hidden_value . HTML_CLOSE . LF;
     }
-var_dump($hidden);
+
+    foreach (array('birth_year', 'birth_month', 'birth_day') as $value) {
+        $hidden .= HTML_TYPE_HIDDEN . $value . HTML_VALUE . $select_result[$value] . HTML_CLOSE . LF;
+    }
+
     return <<<EOC
 <form method="post" action="staff_update_or_delete.php" onSubmit="return confirmDelete()">
 <table>
 {$row}</table>
 <div class="m-t-1em sbmt"><input type="submit" name="staff_update" value="更新" onClick="sbmt_nm='staff_update'"><input type="submit" name="staff_delete" value="削除" onClick="sbmt_nm='staff_delete'"></div>
-<input type="hidden" name="staff_id" value="{$select_result['id']}">
-</form>
+{$hidden}</form>
 
 EOC;
 }

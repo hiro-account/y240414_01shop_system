@@ -5,24 +5,6 @@ require_once($to_cmn . 'const.php');
 require_once './staff_func.php';
 require_once  $to_cmn . 'query.php';
 
-const QUERY =<<<EOQ
-SELECT
-  m.id AS id
-  , m.last_name AS last_name
-  , m.first_name AS first_name
-  , m.last_name_kana AS last_name_kana
-  , m.first_name_kana AS first_name_kana
-  , m.sex AS sex
-  , m.birth_year AS birth_year
-  , m.birth_month AS birth_month
-  , m.birth_day AS birth_day
-  , pr.privilege AS privilege
-FROM
-  m_staff_for_dev AS m INNER JOIN t_privilege_for_dev AS pr ON m.id=pr.id
-WHERE
-  m.id=
-EOQ;
-
 function get_content($prm_post) {
     if (isset($prm_post['staff_update'])) {
         return updt_staff($prm_post);
@@ -32,15 +14,24 @@ function get_content($prm_post) {
 }
 
 function updt_staff($prm_post) {
-    $result_array = execute_query(QUERY . $prm_post['staff_id']);
+    $staff_data_arr = build_key_value_arr_and_hidden($prm_post);
 
-    if (isset($result_array[EXCEPTION])) {
-        return '例外発生';
+    return get_content_for_updt(get_tbl_elem($staff_data_arr['key_value_arr']), $staff_data_arr['hidden']);
+}
+
+function build_key_value_arr_and_hidden($prm_value_arr) {
+    $key_arr = array('id', 'last_name', 'first_name', 'last_name_kana', 'first_name_kana', 'sex'
+        , 'birth_year', 'birth_month', 'birth_day', 'privilege');
+
+    $key_value_arr = array();
+    $hidden = NULL;
+
+    foreach ($key_arr as $value) {
+        $key_value_arr[$value] = $prm_value_arr[$value];
+        $hidden .= '<input type="hidden" name="' . $value . '" value="' . $prm_value_arr[$value] . '">' . LF;
     }
 
-    $fetched_arr = $result_array[STMT]->fetch();
-
-    return get_content_for_updt(get_tbl_elem($fetched_arr), implode(',', $fetched_arr));
+    return array('key_value_arr' => $key_value_arr, 'hidden' => $hidden);
 }
 
 function get_content_for_updt($prm_message, $prm_joined_str) {
@@ -49,8 +40,7 @@ function get_content_for_updt($prm_message, $prm_joined_str) {
 <h2>スタッフ更新</h2>
 <form method="post" action="./staff_create_confirm.php">
 {$prm_message}
-<div><input type="hidden" name="before" value="{$prm_joined_str}"></div>
-<div class="m-t-1em"><input type="submit" value="確認"></div>
+{$prm_joined_str}<div class="m-t-1em"><input type="submit" value="確認"></div>
 </form>
 <ul class="lowlnk">
 <li><a href="./staff_top.php">スタッフ管理へ</a></li>
@@ -58,10 +48,6 @@ function get_content_for_updt($prm_message, $prm_joined_str) {
 
 EOC;
 }
-
-
-
-
 
 //TODO:都度値を返すか変数で値を保持しておいて最後に一度だけ返すか検討
 function del_staff($prm_staff_id) {

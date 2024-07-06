@@ -23,7 +23,7 @@ function get_content($prm_post) {
 
     $sex_arr = array('-', '男', '女');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
-
+var_dump($prm_post);
     // 入力値のサニタイズと空白文字の除去
     $item_val_arr = convert_sp_char_and_trim_rtn_arr($prm_post);
 
@@ -61,6 +61,8 @@ function get_content($prm_post) {
 
     // hidden項目
     $hdn_elem = build_hdn_elem($item_val_arr);
+
+var_dump($prm_post['id']);
 
     return <<<EOE
 <p>下記の内容で問題なければ実行ボタンを押す</p>
