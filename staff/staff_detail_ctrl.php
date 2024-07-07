@@ -12,6 +12,8 @@ const HTML_TYPE_HIDDEN = '<input type="hidden" name="';
 const HTML_VALUE = '" value="';
 const HTML_CLOSE = '">';
 
+// const HIDDEN = 'hidden_';
+
 const QUERY =<<<EOQ
 SELECT
   s.id AS id
@@ -125,7 +127,10 @@ $hidden = NULL;
         }
 
         $row .= '<tr><td>' . $value . '</td><td>：' . $processedValue . '</td></tr>' . LF;
-        $hidden .= HTML_TYPE_HIDDEN . $hidden_name . HTML_VALUE . $hidden_value . HTML_CLOSE . LF;
+
+        if (isset($hidden_name) && isset($hidden_value)) {
+            $hidden .= HTML_TYPE_HIDDEN . $hidden_name . HTML_VALUE . $hidden_value . HTML_CLOSE . LF;
+        }
     }
 
     foreach (array('birth_year', 'birth_month', 'birth_day') as $value) {

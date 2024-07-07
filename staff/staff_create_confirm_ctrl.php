@@ -23,9 +23,11 @@ function get_content($prm_post) {
 
     $sex_arr = array('-', '男', '女');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
-var_dump($prm_post);
+    //
+    $separated_arr = separate_post_data($prm_post);
+    var_dump($separated_arr['input']);
     // 入力値のサニタイズと空白文字の除去
-    $item_val_arr = convert_sp_char_and_trim_rtn_arr($prm_post);
+    $item_val_arr = convert_sp_char_and_trim_rtn_arr($separated_arr['input']);
 
     // 入力値、選択値のチェック：ST ----------
     // 未入力、未選択の項目のチェック
@@ -74,15 +76,34 @@ var_dump($prm_post['id']);
 EOE;
 }
 
-function build_err_content($prm_err_msg_arr) {
-    $content = NULL;
+// function build_err_content($prm_err_msg_arr) {
+//     $content = NULL;
 
-    foreach ($prm_err_msg_arr as $value) {
-        $content .= add_p($value);
+//     foreach ($prm_err_msg_arr as $value) {
+//         $content .= add_p($value);
+//     }
+
+//     return $content;
+// }
+
+function separate_post_data($prm_post_data) {
+    $input_arr = array();
+    $hidden_arr = array();
+
+    foreach ($prm_post_data as $key => $value) {
+        if (strpos($key, 'hidden_') === I_0) {
+            $hidden_arr[$key] = $value;
+        } else {
+            $input_arr[$key] = $value;
+        }
     }
 
-    return $content;
+    return array('input' => $input_arr, 'hidden' => $hidden_arr);
 }
+
+
+
+
 
 function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_key_arr = NULL) {
     $tbl_elem = '<table>' . LF;
