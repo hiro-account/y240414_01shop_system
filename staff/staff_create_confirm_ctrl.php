@@ -51,6 +51,40 @@ function get_content($prm_post) {
         return $invalid_msg;
     }
 
+    if (count($separated_arr['hidden']) > 0) {
+        //
+        var_dump($prm_post);
+        
+        $removed_arr = array();
+        
+        foreach ($separated_arr['input'] as $key => $value) {
+            $pos = strpos($key, '_');
+//             $new_pos = I_0;
+            
+            if (!$pos) {
+                $removed_arr[$key] = $value;
+            } else {
+                $removed_arr[substr($key, $pos + I_1)] = $value;
+            }
+        }
+        
+        $cnt = I_0;
+        
+        foreach ($separated_arr['hidden'] as $key => $value) {
+            $pos = strpos($key, '_');
+            $removed_value = $removed_arr[substr($key, $pos + I_1)];
+            
+            if (strcmp($removed_value, $value) === I_0) {
+                    $cnt++;
+                }
+        }
+        
+        if (count($separated_arr['hidden']) === $cnt) {
+            return '未変更';
+        }
+        var_dump($cnt);
+    }
+    
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
     // 画面表示項目
