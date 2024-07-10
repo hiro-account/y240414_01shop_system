@@ -3,6 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'temp_const.php');
+require_once($to_cmn . 'sortedFunc.php');
 
 //TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post) {
@@ -102,7 +103,10 @@ function get_content($prm_post) {
     // 画面表示項目
     $cont_arr = array_slice($item_val_arr, I_0, 4);
     $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
-    $cont_arr['birth_date'] = $item_val_arr['slct_birth_year'] . '年' . $item_val_arr['slct_birth_month'] . '月' . $item_val_arr['slct_birth_day'] . '日';
+    $cont_arr['birth_date'] =
+        $item_val_arr['slct_birth_year'] . '年'
+        . process_month_and_day($item_val_arr['slct_birth_month']) . '月'
+        . process_month_and_day($item_val_arr['slct_birth_day']) . '日';
     $cont_arr['rdo_privilege'] = $privilege_arr[$item_val_arr['rdo_privilege']];
 //     $cont_arr['password'] = '非表示';
 //     $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
