@@ -236,9 +236,9 @@ function build_opt_sex($prm_slct_idx) {
 
     for ($i = I_0; $i < count($opt_arr); $i++) {
         if ($i == intval($prm_slct_idx)) {
-            $opt_gender .= build_opt_elem_with_selected($i, $opt_arr[$i]);
+            $opt_gender .= build_opt_elem_with_selected(I_1, $i, $opt_arr[$i]);
         } else {
-            $opt_gender .= build_opt_elem($i, $opt_arr[$i]);
+            $opt_gender .= build_opt_elem(I_1, $i, $opt_arr[$i]);
         }
     }
 
@@ -262,20 +262,20 @@ function build_opt_year($prm_slct_y) {
     $int_y = intval(date('Y'));
 
     if (isset($prm_slct_y)) {
-        $opt_year = build_opt_elem(I_0, '-');
+        $opt_year = build_opt_elem(4, I_0, '-');
 
         for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
             if ($i == intval($prm_slct_y)) {
-                $opt_year .= build_opt_elem_with_selected(strval($i), strval($i));
+                $opt_year .= build_opt_elem_with_selected(4, strval($i), strval($i));
             } else {
-                $opt_year .= build_opt_elem(strval($i), strval($i));
+                $opt_year .= build_opt_elem(4, strval($i), strval($i));
             }
         }
     } else {
-        $opt_year = build_opt_elem_with_selected(I_0, '-');
+        $opt_year = build_opt_elem_with_selected(4, I_0, '-');
 
         for ($i = $int_y - 16; $i >= $int_y - 90; $i--) {
-            $opt_year .= build_opt_elem(strval($i), strval($i));
+            $opt_year .= build_opt_elem(4, strval($i), strval($i));
         }
     }
 
@@ -286,20 +286,20 @@ function build_opt_month_day($prm_to, $prm_slct_m_or_d) {
     $opt_month_day = NULL;
 
     if (isset($prm_slct_m_or_d)) {
-        $opt_month_day = build_opt_elem(I_0, '-');
+        $opt_month_day = build_opt_elem(I_2, I_0, '-');
 
         for ($i = I_1; $i <= $prm_to; $i++) {
             if ($i == intval($prm_slct_m_or_d)) {
-                $opt_month_day .= build_opt_elem_with_selected($i, $i);
+                $opt_month_day .= build_opt_elem_with_selected(I_2, $i, $i);
             } else {
-                $opt_month_day .= build_opt_elem($i, $i);
+                $opt_month_day .= build_opt_elem(I_2, $i, $i);
             }
         }
     } else {
-        $opt_month_day = build_opt_elem_with_selected(I_0, '-');
+        $opt_month_day = build_opt_elem_with_selected(I_2, I_0, '-');
 
         for ($i = I_1; $i <= $prm_to; $i++) {
-            $opt_month_day .= build_opt_elem($i, $i);
+            $opt_month_day .= build_opt_elem(I_2, $i, $i);
         }
     }
 
@@ -363,12 +363,20 @@ function get_host_and_dir() {
 }
 
 
-function build_opt_elem($prm_val, $prm_content) {
-    return '<option value="' . sprintf('%02d', $prm_val) . '">' . $prm_content . '</option>' . LF;
+// function build_opt_elem($prm_val, $prm_content) {
+//     return '<option value="' . sprintf('%02d', $prm_val) . '">' . $prm_content . '</option>' . LF;
+// }
+
+// function build_opt_elem_with_selected($prm_val, $prm_content) {
+//     return '<option value="' . sprintf('%02d', $prm_val) . '" selected="selected">' . $prm_content . '</option>' . LF;
+// }
+
+function build_opt_elem($prm_format, $prm_val, $prm_content) {
+    return '<option value="' . sprintf('%0' . $prm_format . 'd', $prm_val) . '">' . $prm_content . '</option>' . LF;
 }
 
-function build_opt_elem_with_selected($prm_val, $prm_content) {
-    return '<option value="' . sprintf('%02d', $prm_val) . '" selected="selected">' . $prm_content . '</option>' . LF;
+function build_opt_elem_with_selected($prm_format, $prm_val, $prm_content) {
+    return '<option value="' . sprintf('%0' . $prm_format . 'd', $prm_val) . '" selected="selected">' . $prm_content . '</option>' . LF;
 }
 
 
