@@ -1,6 +1,5 @@
 <?php
-<?php
-require_once('./staff_update_done_ctrl.php');
+require_once './staff_update_done_ctrl.php';
 st_session();
 check_login($_SESSION);
 // $content_arr = get_content_arr($_GET);
