@@ -29,12 +29,11 @@ function get_content($prm_post)
         , 'first_name' => new ItemWithErr('first_name', FIRST_NAME, STR_EMPTY, NOT_ENTERED)               // 1
         , 'last_name_kana' => new ItemWithErr('last_name_kana', LAST_NAME . KANA, STR_EMPTY, NOT_ENTERED)           // 2
         , 'first_name_kana' => new ItemWithErr('first_name_kana', FIRST_NAME . KANA, STR_EMPTY, NOT_ENTERED)         // 3
-        , 'sex' => new ItemWithErr('sex', SEX, NULL, )                                   // 5
-        , 'birth_year' => new ItemWithErr('birth_year')  BIRTH_DATE . YEAR        // 6
-        , 'birth_month' => new ItemWithErr('birth_month') BIRTH_DATE . MONTH      // 7
-        , 'birth_day' => new ItemWithErr() BIRTH_DATE . DAY          // 8
-        , 'birth_date' => new ItemWithErr() BIRTH_DATE                    // 9
-        , 'privilege' => new ItemWithErr() '権限'                     // 10
+        , 'sex' => new ItemWithErr('sex', SEX, NULL, NULL)                                   // 5
+        , 'birth_year' => new ItemWithErr('birth_year', BIRTH_DATE . YEAR, '0000', UNSELECTED)          // 6
+        , 'birth_month' => new ItemWithErr('birth_month', BIRTH_DATE . MONTH, '00', UNSELECTED)       // 7
+        , 'birth_day' => new ItemWithErr('birth_day', BIRTH_DATE . DAY, '00', UNSELECTED)           // 8
+        , 'privilege' => new ItemWithErr('privilege', '権限', NULL, UNSELECTED)                      // 10
     );
 
 

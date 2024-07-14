@@ -11,6 +11,7 @@ const STAFF_ADD = 'スタッフ登録';
 
 const DELIMITER = '_';
 const NOT_ENTERED = 'が未入力';
+const UNSELECTED = 'が未選択';
 
 const KEY_ARR = 'key_arr';
 const VAL_ARR = 'val_arr';

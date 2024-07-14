@@ -61,32 +61,32 @@ EOI;
     return <<<EOC
 <table>{$id_content}
 <tr>
-<td>氏</td><td><input type="text" name="txt_last_name" value="{$staff_data_arr['last_name']}" class="w-100"></td>
+<td>氏</td><td><input type="text" name="last_name" value="{$staff_data_arr['last_name']}" class="w-100"></td>
 </tr>
 <tr>
-<td>名</td><td><input type="text" name="txt_first_name" value="{$staff_data_arr['first_name']}" class="w-100"></td>
+<td>名</td><td><input type="text" name="first_name" value="{$staff_data_arr['first_name']}" class="w-100"></td>
 </tr>
 <tr>
-<td>氏（カナ）</td><td><input type="text" name="txt_last_name_kana" value="{$staff_data_arr['last_name_kana']}" class="w-100"></td>
+<td>氏（カナ）</td><td><input type="text" name="last_name_kana" value="{$staff_data_arr['last_name_kana']}" class="w-100"></td>
 </tr>
 <tr>
-<td>名（カナ）</td><td><input type="text" name="txt_first_name_kana" value="{$staff_data_arr['first_name_kana']}" class="w-100"></td>
+<td>名（カナ）</td><td><input type="text" name="first_name_kana" value="{$staff_data_arr['first_name_kana']}" class="w-100"></td>
 </tr>
 <tr>
-<td>性別</td><td><select name="slct_sex">
+<td>性別</td><td><select name="sex">
 {$opt_sex}</select></td>
 </tr>
 <tr>
-<td>生年月日</td><td><select name="slct_birth_year">
+<td>生年月日</td><td><select name="birth_year">
 {$opt_year}</select>年
-<select name="slct_birth_month">
+<select name="birth_month">
 {$opt_month}</select>月
-<select name="slct_birth_day">
+<select name="birth_day">
 {$opt_day}</select>日</td>
 </tr>
 <tr>
-<td>権限</td><td><span><input type="radio" name="rdo_privilege" id="ordinary" value="O"{$privilege_checked_o}><label for="ordinary">一般</label></span>
-<span class="m-l-10"><input type="radio" name="rdo_privilege" id="administrator" value="A"{$privilege_checked_a}><label for="administrator">管理者</label></span></td>
+<td>権限</td><td><span><input type="radio" name="privilege" id="ordinary" value="O"{$privilege_checked_o}><label for="ordinary">一般</label></span>
+<span class="m-l-10"><input type="radio" name="privilege" id="administrator" value="A"{$privilege_checked_a}><label for="administrator">管理者</label></span></td>
 </tr>
 </table>
 EOC;
