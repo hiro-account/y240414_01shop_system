@@ -4,9 +4,11 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'temp_const.php');
 require_once($to_cmn . 'sortedFunc.php');
+require_once './ItemWithErr.php';
 
 //TODO:住所、電話番号、電子メールアドレスの追加
-function get_content($prm_post) {
+function get_content($prm_post)
+{
     //TODO:配列の要素、配置位置要整理
     $item_key_nm_arr = array(
         'txt_last_name' => LAST_NAME                    // 0
@@ -21,6 +23,24 @@ function get_content($prm_post) {
         , 'birth_date' => BIRTH_DATE                    // 9
         , 'rdo_privilege' => '権限'                     // 10
     );
+
+    $item_key_nm_arr_ = array(
+        'last_name' => new ItemWithErr('last_name', LAST_NAME, STR_EMPTY, NOT_ENTERED)                    // 0
+        , 'first_name' => new ItemWithErr('first_name', FIRST_NAME, STR_EMPTY, NOT_ENTERED)               // 1
+        , 'last_name_kana' => new ItemWithErr('last_name_kana', LAST_NAME . KANA, STR_EMPTY, NOT_ENTERED)           // 2
+        , 'first_name_kana' => new ItemWithErr('first_name_kana', FIRST_NAME . KANA, STR_EMPTY, NOT_ENTERED)         // 3
+        , 'sex' => new ItemWithErr('sex', SEX, NULL, )                                   // 5
+        , 'birth_year' => new ItemWithErr('birth_year')  BIRTH_DATE . YEAR        // 6
+        , 'birth_month' => new ItemWithErr('birth_month') BIRTH_DATE . MONTH      // 7
+        , 'birth_day' => new ItemWithErr() BIRTH_DATE . DAY          // 8
+        , 'birth_date' => new ItemWithErr() BIRTH_DATE                    // 9
+        , 'privilege' => new ItemWithErr() '権限'                     // 10
+    );
+
+
+
+
+
 
     $sex_arr = array('-', '男', '女');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
@@ -81,8 +101,8 @@ function get_content($prm_post) {
             $removed_value = $removed_arr[substr($key, $pos + I_1)];
 
             if (strcmp($removed_value, $value) === I_0) {
-                    $cnt++;
-                }
+                $cnt++;
+            }
         }
 
         if (count($separated_arr['hidden']) === $cnt) {
@@ -108,10 +128,10 @@ function get_content($prm_post) {
         . process_month_and_day($item_val_arr['slct_birth_month']) . '月'
         . process_month_and_day($item_val_arr['slct_birth_day']) . '日';
     $cont_arr['rdo_privilege'] = $privilege_arr[$item_val_arr['rdo_privilege']];
-//     $cont_arr['password'] = '非表示';
-//     $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
+    //     $cont_arr['password'] = '非表示';
+    //     $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
     $tbl_elem = '<table>' . $html_id
-        . build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'))
+        . build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year', 'slct_birth_month', 'slct_birth_day'))
         . '</table>';
 
 
@@ -141,7 +161,8 @@ EOE;
 //     return $content;
 // }
 
-function separate_post_data($prm_post_data) {
+function separate_post_data($prm_post_data)
+{
     $input_arr = array();
     $hidden_arr = array();
 
@@ -160,8 +181,9 @@ function separate_post_data($prm_post_data) {
 
 
 
-function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_key_arr = NULL) {
-//     $tbl_elem = '<table>' . LF;
+function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_key_arr = NULL)
+{
+    //     $tbl_elem = '<table>' . LF;
     $tbl_elem = LF;
 
     foreach ($prm_item_key_name_arr as $key => $val) {
@@ -172,12 +194,13 @@ function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_
         $tbl_elem .= '<tr><td>' . $val . '</td><td>：' . $prm_content_arr[$key] . '</td></tr>' . LF;
     }
 
-//    $tbl_elem .= '</table>';
+    //    $tbl_elem .= '</table>';
 
     return $tbl_elem;
 }
 
-function build_hdn_elem($prm_content_arr) {
+function build_hdn_elem($prm_content_arr)
+{
     $hdn_elem = NULL;
 
     foreach ($prm_content_arr as $key => $val) {
@@ -186,4 +209,3 @@ function build_hdn_elem($prm_content_arr) {
 
     return $hdn_elem;
 }
-?>

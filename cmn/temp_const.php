@@ -11,6 +11,10 @@ const DAY = 'の日';
 const PASSWORD = 'パスワード';
 const CONFIRM = '（確認）';
 
+//----------------------------------------
+
+const STR_EMPTY = '';
+
 
 
 ?>

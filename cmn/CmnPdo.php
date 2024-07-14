@@ -13,7 +13,7 @@ class CmnPdo {
     private $dbh;
     private $pdo_stmt;
 
-    private $result_array;
+    private $result_arr;
 
     function  __construct() {
         $this->result_arr = array(EXCEPTION => NULL, ROW_COUNT => NULL, STMT => NULL);
@@ -25,8 +25,8 @@ class CmnPdo {
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo_stmt = $this->dbh->prepare($prm_query);
         } catch (Exception $e) {
-            $this->result_array[EXCEPTION] = $e;
-            return $this->result_array;
+            $this->result_arr[EXCEPTION] = $e;
+            return $this->result_arr;
         }
     }
 
@@ -38,13 +38,13 @@ class CmnPdo {
                 $this->pdo_stmt->execute();
             }
 
-            $this->result_array[ROW_COUNT] = $this->pdo_stmt->rowCount();
-            $this->result_array[STMT] = $this->pdo_stmt;
+            $this->result_arr[ROW_COUNT] = $this->pdo_stmt->rowCount();
+            $this->result_arr[STMT] = $this->pdo_stmt;
         } catch (Exception $e) {
-            $this->result_array[EXCEPTION] = $e;
+            $this->result_arr[EXCEPTION] = $e;
         }
 
-        return $this->result_array;
+        return $this->result_arr;
     }
 
     function  __destruct() {
