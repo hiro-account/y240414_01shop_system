@@ -37,7 +37,7 @@ function get_content($prm_post) {
         $invalid_msg .= $checked_alphanumeric_msg;
     } else if (strcmp($item_val_arr['txt_new_password_1'], $item_val_arr['txt_new_password_2']) !== I_0) {
         // 新しいパスワードと新しいパスワード（確認）が一致しない場合
-        $invalid_msg .= add_p(NW . PASSWORD . 'と' . NW . PASSWORD . CONFIRM . 'が一致しない') . LF;
+        $invalid_msg .= add_p(NW . L_PASSWORD . 'と' . NW . L_PASSWORD . L_CONFIRM . 'が一致しない') . LF;
     }
 
     if (isset($invalid_msg)) {
@@ -58,6 +58,6 @@ function get_content($prm_post) {
         return UPDATE_FAILED . add_div('<a href="./staff_login.html">スタッフログインへ</a>') . LF;
     }
 
-    return add_p(PASSWORD . 'を変更した') . LF . '<div class="m-t-1em"><a href="./staff_login.html">' . STAFF_LOGIN . 'へ</a></div>' . LF;
+    return add_p(L_PASSWORD . 'を変更した') . LF . '<div class="m-t-1em"><a href="./staff_login.html">' . STAFF_LOGIN . 'へ</a></div>' . LF;
 }
 ?>

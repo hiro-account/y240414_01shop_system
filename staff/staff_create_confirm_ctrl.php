@@ -11,29 +11,29 @@ function get_content($prm_post)
 {
     //TODO:配列の要素、配置位置要整理
     $item_key_nm_arr = array(
-        'txt_last_name' => LAST_NAME                    // 0
-        , 'txt_first_name' => FIRST_NAME                // 1
-        , 'txt_last_name_kana' => LAST_NAME . KANA      // 2
-        , 'txt_first_name_kana' => FIRST_NAME . KANA    // 3
-        , 'slct_sex' => SEX                             // 4
-        , 'sex' => SEX                                  // 5
-        , 'slct_birth_year' => BIRTH_DATE . YEAR        // 6
-        , 'slct_birth_month' => BIRTH_DATE . MONTH      // 7
-        , 'slct_birth_day' => BIRTH_DATE . DAY          // 8
-        , 'birth_date' => BIRTH_DATE                    // 9
-        , 'rdo_privilege' => '権限'                     // 10
+        'txt_last_name' => L_LAST_NAME                    // 0
+        , 'txt_first_name' => L_FIRST_NAME                // 1
+        , 'txt_last_name_kana' => L_LAST_NAME . L_KANA      // 2
+        , 'txt_first_name_kana' => L_FIRST_NAME . L_KANA    // 3
+        , 'slct_sex' => L_SEX                             // 4
+        , 'sex' => L_SEX                                  // 5
+        , 'slct_birth_year' => L_BIRTH_DATE . L_YEAR        // 6
+        , 'slct_birth_month' => L_BIRTH_DATE . L_MONTH      // 7
+        , 'slct_birth_day' => L_BIRTH_DATE . L_DAY          // 8
+        , 'birth_date' => L_BIRTH_DATE                    // 9
+        , 'rdo_privilege' => L_PRIVILEGE                     // 10
     );
 
-    $item_key_nm_arr_ = array(
-        'last_name' => new ItemWithErr('last_name', LAST_NAME, STR_EMPTY, NOT_ENTERED)                    // 0
-        , 'first_name' => new ItemWithErr('first_name', FIRST_NAME, STR_EMPTY, NOT_ENTERED)               // 1
-        , 'last_name_kana' => new ItemWithErr('last_name_kana', LAST_NAME . KANA, STR_EMPTY, NOT_ENTERED)           // 2
-        , 'first_name_kana' => new ItemWithErr('first_name_kana', FIRST_NAME . KANA, STR_EMPTY, NOT_ENTERED)         // 3
-        , 'sex' => new ItemWithErr('sex', SEX, NULL, NULL)                                   // 5
-        , 'birth_year' => new ItemWithErr('birth_year', BIRTH_DATE . YEAR, '0000', UNSELECTED)          // 6
-        , 'birth_month' => new ItemWithErr('birth_month', BIRTH_DATE . MONTH, '00', UNSELECTED)       // 7
-        , 'birth_day' => new ItemWithErr('birth_day', BIRTH_DATE . DAY, '00', UNSELECTED)           // 8
-        , 'privilege' => new ItemWithErr('privilege', '権限', NULL, UNSELECTED)                      // 10
+    $item_arr = array(
+        new Item(N_LAST_NAME, L_LAST_NAME, $prm_post[N_LAST_NAME], STR_EMPTY, NOT_ENTERED)                    // 0
+        , new Item(N_FIRST_NAME, L_FIRST_NAME, $prm_post[N_FIRST_NAME], STR_EMPTY, NOT_ENTERED)               // 1
+        , new Item(N_LAST_NAME_KANA, L_LAST_NAME . L_KANA, $prm_post[N_LAST_NAME_KANA], STR_EMPTY, NOT_ENTERED)           // 2
+        , new Item(N_FIRST_NAME_KANA, L_FIRST_NAME . L_KANA, $prm_post[N_FIRST_NAME_KANA], STR_EMPTY, NOT_ENTERED)         // 3
+        , new Item(N_SEX, L_SEX, $prm_post[N_SEX], NULL, NULL)                                   // 5
+        , new Item(N_BIRTH_YEAR, L_BIRTH_DATE . L_YEAR, $prm_post[N_BIRTH_YEAR], '0000', UNSELECTED)          // 6
+        , new Item(N_BIRTH_MONTH, L_BIRTH_DATE . L_MONTH, $prm_post[N_BIRTH_MONTH], '00', UNSELECTED)       // 7
+        , new Item(N_BIRTH_DAY, L_BIRTH_DATE . L_DAY, $prm_post[N_BIRTH_DAY], '00', UNSELECTED)           // 8
+        , new Item(N_PRIVILEGE, L_PRIVILEGE, NULL, $prm_post[N_PRIVILEGE], UNSELECTED)                      // 10
     );
 
 
@@ -66,7 +66,7 @@ function get_content($prm_post)
 
     // 生年月日の妥当性のチェック
     if (!checkdate(intval($item_val_arr['slct_birth_month']), intval($item_val_arr['slct_birth_day']), intval($item_val_arr['slct_birth_year']))) {
-        $invalid_msg .= add_p(BIRTH_DATE . 'が不正') . LF;
+        $invalid_msg .= add_p(L_BIRTH_DATE . 'が不正') . LF;
     }
 
     if (isset($invalid_msg)) {

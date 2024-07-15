@@ -1,29 +1,46 @@
 <?php
 
-
-
 class Item {
-    private $physical_name;
-    private $value;
-    private $logical_name;
+    /** 物理名 */
+    private $name;
+    /** 論理名 */
+    private $label;
+    /** 初期値(チェック前の値) */
+    private $default_value;
+    /** エラー値 */
+    private $err_value;
+    /** エラーメッセージ */
+    private $err_msg;
+    /** 前回の値 */
+    private $prev_value;
+    /** サニタイズおよび空白文字の除去後の値 */
+    private $trimmed_value;
+    /** チェック済の値 */
+    private $verified_value;
 
-    function __construct($prm_physical_name, $prm_logical_name, $prm_value = NULL) {
-        $this->physical_name = $prm_physical_name;
-        $this->logical_name = $prm_logical_name;
-        $this->value = $prm_value;
+    function __construct($prm_name, $prm_label, $prm_default_value
+        , $prm_err_value, $prm_err_msg, $prm_prev_value = NULL) {
+
+        $this->name = $prm_name;
+        $this->label = $prm_label;
+        $this->default_value = $prm_default_value;
+        $this->err_value = $prm_err_value;
+        $this->err_msg = $prm_err_msg;
+        $this->prev_value = $prm_prev_value;
     }
 
     function get_physical_name() {
-        return $this->physical_name;
+        return $this->name;
     }
 
     function get_value() {
-        return $this->value;
+        return $this->default_value;
     }
 
-    function get_logical_name() {
-        return $this->logical_name;
+    function convert_sp_char_and_trim() {
+        $this->trimmed_value = trim(htmlspecialchars($this->default_value));
     }
+
 
 
 }
