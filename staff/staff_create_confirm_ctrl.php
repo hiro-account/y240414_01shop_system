@@ -4,7 +4,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'temp_const.php');
 require_once($to_cmn . 'sortedFunc.php');
-require_once './ItemWithErr.php';
+require_once './Item.php';
 
 //TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post)
@@ -36,7 +36,10 @@ function get_content($prm_post)
         , new Item(N_PRIVILEGE, L_PRIVILEGE, NULL, $prm_post[N_PRIVILEGE], UNSELECTED)                      // 10
     );
 
-
+    foreach ($item_arr as $value) {
+        $value->convert_sp_char_and_trim();
+        # code...
+    }
 
 
 
