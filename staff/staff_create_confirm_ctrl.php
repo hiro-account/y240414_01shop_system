@@ -24,6 +24,13 @@ function get_content($prm_post)
         , 'rdo_privilege' => L_PRIVILEGE                     // 10
     );
 
+
+    $post_privilege = NULL;
+
+    if (isset($prm_post[N_PRIVILEGE])) {
+        $post_privilege = $prm_post[N_PRIVILEGE];
+    }
+
     $item_arr = array(
         new Item(N_LAST_NAME, L_LAST_NAME, $prm_post[N_LAST_NAME], STR_EMPTY, NOT_ENTERED)                    // 0
         , new Item(N_FIRST_NAME, L_FIRST_NAME, $prm_post[N_FIRST_NAME], STR_EMPTY, NOT_ENTERED)               // 1
@@ -33,35 +40,42 @@ function get_content($prm_post)
         , new Item(N_BIRTH_YEAR, L_BIRTH_DATE . L_YEAR, $prm_post[N_BIRTH_YEAR], '0000', UNSELECTED)          // 6
         , new Item(N_BIRTH_MONTH, L_BIRTH_DATE . L_MONTH, $prm_post[N_BIRTH_MONTH], '00', UNSELECTED)       // 7
         , new Item(N_BIRTH_DAY, L_BIRTH_DATE . L_DAY, $prm_post[N_BIRTH_DAY], '00', UNSELECTED)           // 8
-        , new Item(N_PRIVILEGE, L_PRIVILEGE, NULL, $prm_post[N_PRIVILEGE], UNSELECTED)                      // 10
+        , new Item(N_PRIVILEGE, L_PRIVILEGE, NULL, $post_privilege, UNSELECTED)                      // 10
     );
+
+    $empty_msgs = NULL;
 
     foreach ($item_arr as $value) {
         $value->convert_sp_char_and_trim();
-        # code...
+        $err_msg = $value->check_unenter_unslct_value();
+
+        if (isset($err_msg)) {
+            $empty_msgs .= add_p($err_msg) . LF;
+        }
     }
 
-
+    // var_dump($empty_msgs);
 
 
     $sex_arr = array('-', '男', '女');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
     //
-    $separated_arr = separate_post_data($prm_post);
+    // $separated_arr = separate_post_data($prm_post);
 
-    $create_or_update = count($separated_arr['hidden']) > 0 ? '更新' : '登録';
-    $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
+    // $create_or_update = count($separated_arr['hidden']) > 0 ? '更新' : '登録';
+    // $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
+    $html_h2 = "<h2>スタッフ登録</h2>";
 
     // 入力値のサニタイズと空白文字の除去
-    $item_val_arr = convert_sp_char_and_trim_rtn_arr($separated_arr['input']);
+    // $item_val_arr = convert_sp_char_and_trim_rtn_arr($separated_arr['input']);
 
     // 入力値、選択値のチェック：ST ----------
     // 未入力、未選択の項目のチェック
-    $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date'));
+    // $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date'));
 
-    if (isset($empty_msg)) {
+    if (isset($empty_msgs)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
-        return $html_h2 . LF . $empty_msg;
+        return $html_h2 . LF . $empty_msgs;
     }
 
     //TODO:パスワードのチェックを削除し生年月日のチェックだけとなったため、エラーメッセージ表示の処理の更新を検討

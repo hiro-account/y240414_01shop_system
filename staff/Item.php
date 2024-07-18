@@ -41,7 +41,15 @@ class Item {
         $this->trimmed_value = trim(htmlspecialchars($this->default_value));
     }
 
+    function check_unenter_unslct_value() {
+        if (strcmp($this->trimmed_value, $this->err_value) === I_0) {
+            return $this->label . $this->err_msg;
+        } else {
+            $this->verified_value = $this->trimmed_value;
 
+            return NULL;
+        }
+    }
 
 }
 

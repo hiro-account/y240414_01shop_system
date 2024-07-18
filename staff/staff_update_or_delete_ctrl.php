@@ -5,7 +5,7 @@ require_once($to_cmn . 'const.php');
 require_once './staff_func.php';
 require_once  $to_cmn . 'query.php';
 
-const HIDDEN = 'hidden_';
+const PREV = 'prev_';
 
 
 function get_content($prm_post) {
@@ -23,8 +23,8 @@ function updt_staff($prm_post) {
 }
 
 function build_key_value_arr_and_hidden($prm_value_arr) {
-//     $key_arr = array(HIDDEN . 'id', HIDDEN . 'last_name', HIDDEN . 'first_name', HIDDEN . 'last_name_kana', HIDDEN . 'first_name_kana', HIDDEN . 'sex'
-//         , HIDDEN . 'birth_year', HIDDEN . 'birth_month', HIDDEN . 'birth_day', HIDDEN . 'privilege');
+//     $key_arr = array(PREV . 'id', PREV . 'last_name', PREV . 'first_name', PREV . 'last_name_kana', PREV . 'first_name_kana', PREV . 'sex'
+//         , PREV . 'birth_year', PREV . 'birth_month', PREV . 'birth_day', PREV . 'privilege');
     $key_arr = array('id', 'last_name', 'first_name', 'last_name_kana', 'first_name_kana', 'sex'
         , 'birth_year', 'birth_month', 'birth_day', 'privilege');
 
@@ -33,7 +33,7 @@ function build_key_value_arr_and_hidden($prm_value_arr) {
 
     foreach ($key_arr as $value) {
         $key_value_arr[$value] = $prm_value_arr[$value];
-        $hidden .= '<input type="hidden" name="' . HIDDEN . $value . '" value="' . $prm_value_arr[$value] . '">' . LF;
+        $hidden .= '<input type="hidden" name="' . PREV . $value . '" value="' . $prm_value_arr[$value] . '">' . LF;
     }
 
     return array('key_value_arr' => $key_value_arr, 'hidden' => $hidden);
