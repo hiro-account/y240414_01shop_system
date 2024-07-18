@@ -32,15 +32,61 @@ function get_content($prm_post)
     }
 
     $item_arr = array(
-        new Item(N_LAST_NAME, L_LAST_NAME, $prm_post[N_LAST_NAME], STR_EMPTY, NOT_ENTERED)                    // 0
-        , new Item(N_FIRST_NAME, L_FIRST_NAME, $prm_post[N_FIRST_NAME], STR_EMPTY, NOT_ENTERED)               // 1
-        , new Item(N_LAST_NAME_KANA, L_LAST_NAME . L_KANA, $prm_post[N_LAST_NAME_KANA], STR_EMPTY, NOT_ENTERED)           // 2
-        , new Item(N_FIRST_NAME_KANA, L_FIRST_NAME . L_KANA, $prm_post[N_FIRST_NAME_KANA], STR_EMPTY, NOT_ENTERED)         // 3
-        , new Item(N_SEX, L_SEX, $prm_post[N_SEX], NULL, NULL)                                   // 5
-        , new Item(N_BIRTH_YEAR, L_BIRTH_DATE . L_YEAR, $prm_post[N_BIRTH_YEAR], '0000', UNSELECTED)          // 6
-        , new Item(N_BIRTH_MONTH, L_BIRTH_DATE . L_MONTH, $prm_post[N_BIRTH_MONTH], '00', UNSELECTED)       // 7
-        , new Item(N_BIRTH_DAY, L_BIRTH_DATE . L_DAY, $prm_post[N_BIRTH_DAY], '00', UNSELECTED)           // 8
-        , new Item(N_PRIVILEGE, L_PRIVILEGE, NULL, $post_privilege, UNSELECTED)                      // 10
+        N_LAST_NAME => new Item(
+            N_LAST_NAME,
+            L_LAST_NAME,
+            $prm_post[N_LAST_NAME],
+            STR_EMPTY,
+            NOT_ENTERED
+        ), N_FIRST_NAME => new Item(
+            N_FIRST_NAME,
+            L_FIRST_NAME,
+            $prm_post[N_FIRST_NAME],
+            STR_EMPTY,
+            NOT_ENTERED
+        ), N_LAST_NAME_KANA => new Item(
+            N_LAST_NAME_KANA,
+            L_LAST_NAME . L_KANA,
+            $prm_post[N_LAST_NAME_KANA],
+            STR_EMPTY,
+            NOT_ENTERED
+        ), N_FIRST_NAME_KANA => new Item(
+            N_FIRST_NAME_KANA,
+            L_FIRST_NAME . L_KANA,
+            $prm_post[N_FIRST_NAME_KANA],
+            STR_EMPTY,
+            NOT_ENTERED
+        ), N_SEX => new Item(
+            N_SEX,
+            L_SEX,
+            $prm_post[N_SEX],
+            NULL,
+            NULL
+        ), N_BIRTH_YEAR => new Item(
+            N_BIRTH_YEAR,
+            L_BIRTH_DATE . L_YEAR,
+            $prm_post[N_BIRTH_YEAR],
+            '0000',
+            UNSELECTED
+        ), N_BIRTH_MONTH => new Item(
+            N_BIRTH_MONTH,
+            L_BIRTH_DATE . L_MONTH,
+            $prm_post[N_BIRTH_MONTH],
+            '00',
+            UNSELECTED
+        ), N_BIRTH_DAY => new Item(
+            N_BIRTH_DAY,
+            L_BIRTH_DATE . L_DAY,
+            $prm_post[N_BIRTH_DAY],
+            '00',
+            UNSELECTED
+        ), N_PRIVILEGE => new Item(
+            N_PRIVILEGE,
+            L_PRIVILEGE,
+            isset($prm_post[N_PRIVILEGE]) ? $prm_post[N_PRIVILEGE] : NULL,
+            NULL,
+            UNSELECTED
+        )
     );
 
     $empty_msgs = NULL;
@@ -82,7 +128,11 @@ function get_content($prm_post)
     $invalid_msg = NULL;
 
     // 生年月日の妥当性のチェック
-    if (!checkdate(intval($item_val_arr['slct_birth_month']), intval($item_val_arr['slct_birth_day']), intval($item_val_arr['slct_birth_year']))) {
+    if (!checkdate(
+        intval($item_arr[N_BIRTH_MONTH]->get_verified_value()),
+        intval($item_arr[N_BIRTH_DAY]->get_verified_value()),
+        intval($item_arr[N_BIRTH_YEAR]->get_verified_value())
+    )) {
         $invalid_msg .= add_p(L_BIRTH_DATE . 'が不正') . LF;
     }
 

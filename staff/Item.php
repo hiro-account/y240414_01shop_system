@@ -33,8 +33,8 @@ class Item {
         return $this->name;
     }
 
-    function get_value() {
-        return $this->default_value;
+    function get_verified_value() {
+        return $this->verified_value;
     }
 
     function convert_sp_char_and_trim() {
