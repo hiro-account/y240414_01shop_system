@@ -51,6 +51,15 @@ class Item {
         }
     }
 
+    function check_tmp_mtd() {
+        if (strcmp($this->verified_value, $this->prev_value) !== I_0) {
+            return $this->name;
+        }
+    }
+
+
+
+
 }
 
 

@@ -24,72 +24,77 @@ function get_content($prm_post)
         , 'rdo_privilege' => L_PRIVILEGE                     // 10
     );
 
-
-    $post_privilege = NULL;
-
-    if (isset($prm_post[N_PRIVILEGE])) {
-        $post_privilege = $prm_post[N_PRIVILEGE];
-    }
+    $from = isset($prm_post[N_ID]) ? FROM_UPDATE : FROM_CREATE;
 
     $item_arr = array(
-        N_LAST_NAME => new Item(
+        N_LAST_NAME => new Item(// 氏
             N_LAST_NAME,
             L_LAST_NAME,
             $prm_post[N_LAST_NAME],
             STR_EMPTY,
-            NOT_ENTERED
-        ), N_FIRST_NAME => new Item(
+            NOT_ENTERED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_LAST_NAME] : NULL
+        ), N_FIRST_NAME => new Item(// 名
             N_FIRST_NAME,
             L_FIRST_NAME,
             $prm_post[N_FIRST_NAME],
             STR_EMPTY,
-            NOT_ENTERED
-        ), N_LAST_NAME_KANA => new Item(
+            NOT_ENTERED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_FIRST_NAME] : NULL
+        ), N_LAST_NAME_KANA => new Item(// 氏(カナ)
             N_LAST_NAME_KANA,
             L_LAST_NAME . L_KANA,
             $prm_post[N_LAST_NAME_KANA],
             STR_EMPTY,
-            NOT_ENTERED
-        ), N_FIRST_NAME_KANA => new Item(
+            NOT_ENTERED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_LAST_NAME_KANA] : NULL
+        ), N_FIRST_NAME_KANA => new Item(// 名(カナ)
             N_FIRST_NAME_KANA,
             L_FIRST_NAME . L_KANA,
             $prm_post[N_FIRST_NAME_KANA],
             STR_EMPTY,
-            NOT_ENTERED
-        ), N_SEX => new Item(
+            NOT_ENTERED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : NULL
+        ), N_SEX => new Item(// 性別
             N_SEX,
             L_SEX,
             $prm_post[N_SEX],
             NULL,
-            NULL
-        ), N_BIRTH_YEAR => new Item(
+            NULL,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_SEX] : NULL
+        ), N_BIRTH_YEAR => new Item(// 生年月日の年
             N_BIRTH_YEAR,
             L_BIRTH_DATE . L_YEAR,
             $prm_post[N_BIRTH_YEAR],
             '0000',
-            UNSELECTED
-        ), N_BIRTH_MONTH => new Item(
+            UNSELECTED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_BIRTH_YEAR] : NULL
+        ), N_BIRTH_MONTH => new Item(// 生年月日の月
             N_BIRTH_MONTH,
             L_BIRTH_DATE . L_MONTH,
             $prm_post[N_BIRTH_MONTH],
             '00',
-            UNSELECTED
-        ), N_BIRTH_DAY => new Item(
+            UNSELECTED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_BIRTH_MONTH] : NULL
+        ), N_BIRTH_DAY => new Item(// 生年月日の日
             N_BIRTH_DAY,
             L_BIRTH_DATE . L_DAY,
             $prm_post[N_BIRTH_DAY],
             '00',
-            UNSELECTED
-        ), N_PRIVILEGE => new Item(
+            UNSELECTED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_BIRTH_DAY] : NULL
+        ), N_PRIVILEGE => new Item(// 権限
             N_PRIVILEGE,
             L_PRIVILEGE,
             isset($prm_post[N_PRIVILEGE]) ? $prm_post[N_PRIVILEGE] : NULL,
             NULL,
-            UNSELECTED
+            UNSELECTED,
+            strcmp($from, FROM_UPDATE) === I_0 ? $prm_post[N_PREV . N_PRIVILEGE] : NULL
         )
     );
 
     $empty_msgs = NULL;
+    $tmp_arr = array();
 
     foreach ($item_arr as $value) {
         $value->convert_sp_char_and_trim();
@@ -98,9 +103,12 @@ function get_content($prm_post)
         if (isset($err_msg)) {
             $empty_msgs .= add_p($err_msg) . LF;
         }
+
+        $tmp_arr[] = $value->check_tmp_mtd();
+
     }
 
-    // var_dump($empty_msgs);
+    var_dump($tmp_arr);
 
 
     $sex_arr = array('-', '男', '女');

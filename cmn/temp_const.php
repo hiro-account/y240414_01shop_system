@@ -30,6 +30,14 @@ const N_BIRTH_MONTH = 'birth_month';
 const N_BIRTH_DAY = 'birth_day';
 const N_PRIVILEGE = 'privilege';
 
+const N_ID = 'id';
+
+const N_PREV = 'prev_';
+
+//----------------------------------------
+
+const FROM_CREATE = 'from_create';
+const FROM_UPDATE = 'from_update';
 
 
 
