@@ -94,7 +94,7 @@ function get_content($prm_post)
     );
 
     $empty_msgs = NULL;
-    $tmp_arr = array();
+    $changed_item_arr = array();
 
     foreach ($item_arr as $value) {
         $value->convert_sp_char_and_trim();
@@ -104,11 +104,14 @@ function get_content($prm_post)
             $empty_msgs .= add_p($err_msg) . LF;
         }
 
-        $tmp_arr[] = $value->check_tmp_mtd();
+        $is_value_changed = $value->check_value_changed();
 
+        if (isset($is_value_changed)) {
+            $changed_item_arr[] = $is_value_changed;
+        }
     }
 
-    var_dump($tmp_arr);
+    var_dump($changed_item_arr);
 
 
     $sex_arr = array('-', '男', '女');
