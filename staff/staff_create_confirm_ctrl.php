@@ -116,19 +116,10 @@ function get_content($prm_post)
 
     $sex_arr = array('-', '男', '女');
     $privilege_arr = array('O' => '一般', 'A' => '管理者');
-    //
-    // $separated_arr = separate_post_data($prm_post);
 
-    // $create_or_update = count($separated_arr['hidden']) > 0 ? '更新' : '登録';
-    // $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
-    $html_h2 = "<h2>スタッフ登録</h2>";
+    $create_or_update = strcmp($from, FROM_UPDATE) === I_0 ? '更新' : '登録';
+    $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
 
-    // 入力値のサニタイズと空白文字の除去
-    // $item_val_arr = convert_sp_char_and_trim_rtn_arr($separated_arr['input']);
-
-    // 入力値、選択値のチェック：ST ----------
-    // 未入力、未選択の項目のチェック
-    // $empty_msg = check_unenter_unslct_item($item_key_nm_arr, $item_val_arr, array('slct_sex', 'sex', 'birth_date'));
 
     if (isset($empty_msgs)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
