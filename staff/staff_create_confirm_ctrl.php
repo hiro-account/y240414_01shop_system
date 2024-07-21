@@ -147,44 +147,73 @@ function get_content($prm_post)
     $html_id = NULL;
     $form_action = NULL;
 
-    if (count($separated_arr['hidden']) > 0) {
-        // スタッフ更新からの遷移である場合
+    // if (count($separated_arr['hidden']) > 0) {
+    //     // スタッフ更新からの遷移である場合
+    //     //TODO:下記処理の概要記載
+    //     $removed_arr = array();
+
+    //     foreach ($separated_arr['input'] as $key => $value) {
+    //         $pos = strpos($key, '_');
+
+    //         if (!$pos) {
+    //             $removed_arr[$key] = $value;
+    //         } else {
+    //             $removed_arr[substr($key, $pos + I_1)] = $value;
+    //         }
+    //     }
+
+    //     $cnt = I_0;
+
+    //     foreach ($separated_arr['hidden'] as $key => $value) {
+    //         $pos = strpos($key, '_');
+    //         $removed_value = $removed_arr[substr($key, $pos + I_1)];
+
+    //         if (strcmp($removed_value, $value) === I_0) {
+    //             $cnt++;
+    //         }
+    //     }
+
+    //     if (count($separated_arr['hidden']) === $cnt) {
+    //         return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
+    //     }
+
+    //     $html_id = LF . '<tr><td>スタッフID</td><td>：' . $separated_arr['input']['id'] . '</td></tr>';
+    //     $form_action = './staff_update_done.php';
+    // } else {
+    //     // スタッフ登録からの遷移である場合
+    //     //TODO:下記処理の概要記載
+    //     $html_id = '';
+    //     $form_action = './staff_create_done.php';
+    // }
+
+
+    if (strcmp($from, FROM_UPDATE) === I_0) {
+         // スタッフ更新からの遷移である場合
         //TODO:下記処理の概要記載
-        $removed_arr = array();
-
-        foreach ($separated_arr['input'] as $key => $value) {
-            $pos = strpos($key, '_');
-
-            if (!$pos) {
-                $removed_arr[$key] = $value;
-            } else {
-                $removed_arr[substr($key, $pos + I_1)] = $value;
-            }
-        }
-
-        $cnt = I_0;
-
-        foreach ($separated_arr['hidden'] as $key => $value) {
-            $pos = strpos($key, '_');
-            $removed_value = $removed_arr[substr($key, $pos + I_1)];
-
-            if (strcmp($removed_value, $value) === I_0) {
-                $cnt++;
-            }
-        }
-
-        if (count($separated_arr['hidden']) === $cnt) {
+        if (count($changed_item_arr) === I_0) {
             return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
         }
 
+        foreach ($changed_item_arr as $value) {
+            
+        }
+
+
+
         $html_id = LF . '<tr><td>スタッフID</td><td>：' . $separated_arr['input']['id'] . '</td></tr>';
         $form_action = './staff_update_done.php';
-    } else {
+    } else if (strcmp($from, FROM_CREATE) === I_0) {
         // スタッフ登録からの遷移である場合
         //TODO:下記処理の概要記載
         $html_id = '';
         $form_action = './staff_create_done.php';
     }
+
+
+
+
+
+
 
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
