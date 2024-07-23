@@ -20,7 +20,7 @@ check_login($_SESSION);
 <form method="post" action="staff_create_confirm.php">
 <?= get_content(); ?>
 
-<div><input type="hidden" name="from" value="create"></div>
+<input type="hidden" name="from" value="create">
 <div class="m-t-1em"><input type="submit" value="確認"></div>
 </form>
 <ul class="lowlnk">

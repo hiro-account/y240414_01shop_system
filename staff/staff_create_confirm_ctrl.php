@@ -24,17 +24,21 @@ function get_content($prm_post)
         , 'rdo_privilege' => L_PRIVILEGE                     // 10
     );
 
-    //240722次回スタッフ更新にfromを持たせて判別から
-    // 遷移元(スタッフ更新orスタッフ登録の何れか)
-    // $from = isset($prm_post[N_ID]) ? FROM_UPDATE : FROM_CREATE;
+    // 遷移元
     $is_from_create = FALSE;
     $is_from_update = FALSE;
 
-    if (isset($prm_post[N_ID])) {
-        $is_from_create = TRUE;
-    } else {
+    $create_or_update = NULL;
+
+    if (strcmp($prm_post[FROM], UPDATE) === I_0) {
         $is_from_update = TRUE;
+        $create_or_update = '更新';
+    } else if (strcmp($prm_post[FROM], CREATE) === I_0) {
+        $is_from_create = TRUE;
+        $create_or_update = '登録';
     }
+
+    $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
 
     $item_arr = array(
         N_LAST_NAME => new Item(// 氏
@@ -120,29 +124,18 @@ function get_content($prm_post)
         $is_value_changed = $value->check_value_changed();
 
         if (isset($is_value_changed)) {
-            $changed_item_arr[] = $is_value_changed;
+            $changed_item_arr[$value->get_name()] = $value;
         }
     }
-
-    // var_dump($changed_item_arr);
-
-
-    $sex_arr = array('-', '男', '女');
-    $privilege_arr = array('O' => '一般', 'A' => '管理者');
-
-    $create_or_update = $is_from_update ? '更新' : '登録';
-    $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
-
 
     if (isset($empty_msgs)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
         return $html_h2 . LF . $empty_msgs;
     }
 
-    //TODO:パスワードのチェックを削除し生年月日のチェックだけとなったため、エラーメッセージ表示の処理の更新を検討
+    // 生年月日の妥当性のチェック
     $invalid_birthday_msg = NULL;
 
-    // 生年月日の妥当性のチェック
     if (!checkdate(
         intval($item_arr[N_BIRTH_MONTH]->get_verified_value()),
         intval($item_arr[N_BIRTH_DAY]->get_verified_value()),
@@ -156,7 +149,6 @@ function get_content($prm_post)
         return $html_h2 . LF . $invalid_birthday_msg;
     }
 
-    //TODO:下記に限らず変数名整理
     $html_id = NULL;
     $form_action = NULL;
 
@@ -166,6 +158,7 @@ function get_content($prm_post)
          // スタッフ更新からの遷移である場合
         //TODO:下記処理の概要記載
         if (count($changed_item_arr) === I_0) {
+            // 項目が一つも変更されていない場合
             return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
         }
 
@@ -193,6 +186,9 @@ function get_content($prm_post)
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
     // 画面表示項目
+    $sex_arr = array('-', '男', '女');
+    $privilege_arr = array('O' => '一般', 'A' => '管理者');
+
     $cont_arr = array_slice($item_val_arr, I_0, 4);
     $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
     $cont_arr['birth_date'] =

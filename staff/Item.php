@@ -29,8 +29,12 @@ class Item {
         $this->prev_value = $prm_prev_value;
     }
 
-    function get_physical_name() {
+    function get_name() {
         return $this->name;
+    }
+
+    function get_label() {
+        return $this->label;
     }
 
     function get_verified_value() {

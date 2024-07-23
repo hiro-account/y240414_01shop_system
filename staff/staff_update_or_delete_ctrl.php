@@ -45,7 +45,8 @@ function get_content_for_updt($prm_message, $prm_joined_str) {
 <h2>スタッフ更新</h2>
 <form method="post" action="./staff_create_confirm.php">
 {$prm_message}
-{$prm_joined_str}<div class="m-t-1em"><input type="submit" value="確認"></div>
+{$prm_joined_str}<input type="hidden" name="from" value="update">
+<div class="m-t-1em"><input type="submit" value="確認"></div>
 </form>
 <ul class="lowlnk">
 <li><a href="./staff_top.php">スタッフ管理へ</a></li>

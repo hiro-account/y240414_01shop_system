@@ -39,6 +39,12 @@ const N_PREV = 'prev_';
 const FROM_CREATE = 'from_create';
 const FROM_UPDATE = 'from_update';
 
+//----------------------------------------
+
+// const FROM = 'from';
+const CREATE = 'create';
+const UPDATE = 'update';
+
 
 
 ?>
