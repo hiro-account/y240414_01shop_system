@@ -61,7 +61,13 @@ class Item {
         }
     }
 
-
+    function is_value_changed() {
+        if (strcmp($this->verified_value, $this->prev_value) === I_0) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
 
 
 }

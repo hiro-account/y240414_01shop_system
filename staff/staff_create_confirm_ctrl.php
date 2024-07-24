@@ -109,6 +109,7 @@ function get_content($prm_post)
 
     $empty_msgs = NULL;
     $changed_item_arr = array();
+    $temp_hidden = NULL;
 
     foreach ($item_arr as $value) {
         // 値のサニタイズと前後スペースの除去
@@ -126,6 +127,11 @@ function get_content($prm_post)
         if (isset($is_value_changed)) {
             $changed_item_arr[$value->get_name()] = $value;
         }
+
+        if ($value->is_value_changed()) {
+            $temp_hidden .= '<input type="hidden" name="' . $value->get_name() . '" value="' . $value->get_verified_value() . '">' . LF;
+        }
+
     }
 
     if (isset($empty_msgs)) {
@@ -152,23 +158,15 @@ function get_content($prm_post)
     $html_id = NULL;
     $form_action = NULL;
 
-
-
     if ($is_from_update) {
          // スタッフ更新からの遷移である場合
         //TODO:下記処理の概要記載
-        if (count($changed_item_arr) === I_0) {
+        if (!isset($temp_hidden)) {
             // 項目が一つも変更されていない場合
             return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
         }
 
-        foreach ($changed_item_arr as $value) {
-            
-        }
-
-
-
-        $html_id = LF . '<tr><td>スタッフID</td><td>：' . $separated_arr['input']['id'] . '</td></tr>';
+        $html_id = LF . '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>';
         $form_action = './staff_update_done.php';
     } else if ($is_from_create) {
         // スタッフ登録からの遷移である場合
@@ -177,7 +175,7 @@ function get_content($prm_post)
         $form_action = './staff_create_done.php';
     }
 
-
+    //TODO:24/07/25登録の場合の$temp_hiddenの値確認から
 
 
 
