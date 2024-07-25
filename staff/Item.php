@@ -69,6 +69,14 @@ class Item {
         }
     }
 
+    function build_input_type_hidden() {
+        return '<input type="hidden" name="' . $this->name . '" value="' . $this->verified_value . '">';
+    }
+
+    function build_tr_td_label_value() {
+        return '<tr><td>' . $this->label . '</td><td>：' . $this->verified_value . '</td></tr>';
+    }
+
 
 }
 

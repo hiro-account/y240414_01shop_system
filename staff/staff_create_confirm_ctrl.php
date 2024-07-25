@@ -109,7 +109,8 @@ function get_content($prm_post)
 
     $empty_msgs = NULL;
     $changed_item_arr = array();
-    $temp_hidden = NULL;
+    $input_hidden = NULL;
+    $table_ = NULL;
 
     foreach ($item_arr as $value) {
         // 値のサニタイズと前後スペースの除去
@@ -122,15 +123,20 @@ function get_content($prm_post)
         }
 
         // 未変更の項目の確認(スタッフ更新の場合)
-        $is_value_changed = $value->check_value_changed();
+        // $is_value_changed = $value->check_value_changed();
 
-        if (isset($is_value_changed)) {
-            $changed_item_arr[$value->get_name()] = $value;
-        }
+        // if (isset($is_value_changed)) {
+        //     $changed_item_arr[$value->get_name()] = $value;
+        // }
+
+        //TODO:24/07/26性別、生年月日のフォーマットから
 
         if ($value->is_value_changed()) {
-            $temp_hidden .= '<input type="hidden" name="' . $value->get_name() . '" value="' . $value->get_verified_value() . '">' . LF;
+            // $input_hidden .= '<input type="hidden" name="' . $value->get_name() . '" value="' . $value->get_verified_value() . '">' . LF;
+            $input_hidden .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
         }
+
+        $table_ .= build_tr_td_label_value($value->get_label(), $value->get_verified_value()) . LF;
 
     }
 
@@ -155,27 +161,26 @@ function get_content($prm_post)
         return $html_h2 . LF . $invalid_birthday_msg;
     }
 
-    $html_id = NULL;
+    $tr_id = NULL;
     $form_action = NULL;
 
     if ($is_from_update) {
          // スタッフ更新からの遷移である場合
         //TODO:下記処理の概要記載
-        if (!isset($temp_hidden)) {
+        if (!isset($input_hidden)) {
             // 項目が一つも変更されていない場合
             return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
         }
 
-        $html_id = LF . '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>';
+        $tr_id = LF . '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>';
         $form_action = './staff_update_done.php';
     } else if ($is_from_create) {
         // スタッフ登録からの遷移である場合
         //TODO:下記処理の概要記載
-        $html_id = '';
+        $tr_id = '';
         $form_action = './staff_create_done.php';
     }
 
-    //TODO:24/07/25登録の場合の$temp_hiddenの値確認から
 
 
 
@@ -196,7 +201,7 @@ function get_content($prm_post)
     $cont_arr['rdo_privilege'] = $privilege_arr[$item_val_arr['rdo_privilege']];
     //     $cont_arr['password'] = '非表示';
     //     $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
-    $tbl_elem = '<table>' . $html_id
+    $tbl_elem = '<table>' . $tr_id
         . build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year', 'slct_birth_month', 'slct_birth_day'))
         . '</table>';
 
@@ -275,3 +280,15 @@ function build_hdn_elem($prm_content_arr)
 
     return $hdn_elem;
 }
+
+function build_input_type_hidden($prm_name, $prm_value) {
+    return '<input type="hidden" name="' . $prm_name . '" value="' . $prm_value . '">';
+}
+
+
+function build_tr_td_label_value($prm_label, $prm_value) {
+    return '<tr><td>' . $prm_label . '</td><td>：' . $prm_value . '</td></tr>';
+}
+
+
+
