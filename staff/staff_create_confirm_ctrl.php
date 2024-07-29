@@ -24,6 +24,9 @@ function get_content($prm_post)
         , 'rdo_privilege' => L_PRIVILEGE                     // 10
     );
 
+    $sex_arr = array('-', '男', '女');
+    $privilege_arr = array('O' => '一般', 'A' => '管理者');
+
     // 遷移元
     $is_from_create = FALSE;
     $is_from_update = FALSE;
@@ -111,6 +114,8 @@ function get_content($prm_post)
     $changed_item_arr = array();
     $input_hidden = NULL;
     $table_ = NULL;
+    $y_m_d_arr = array();
+    $fmted_ymd = NULL;
 
     foreach ($item_arr as $value) {
         // 値のサニタイズと前後スペースの除去
@@ -135,6 +140,50 @@ function get_content($prm_post)
             // $input_hidden .= '<input type="hidden" name="' . $value->get_name() . '" value="' . $value->get_verified_value() . '">' . LF;
             $input_hidden .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
         }
+
+        // $tmp_a = NULL;
+        // $verified_value = $value->get_verified_value();
+
+        // switch ($value->get_label()) {
+        //     case N_SEX:
+        //         $tmp_a = $sex_arr[intval($verified_value)];
+
+        //         break;
+            
+        //     case N_BIRTH_YEAR:
+        //         $y_m_d_arr[N_BIRTH_YEAR] = $verified_value;
+
+        //         break;
+
+        //     case N_BIRTH_MONTH:
+        //         $y_m_d_arr[N_BIRTH_MONTH] = $verified_value;
+    
+        //         break;
+
+        //     case N_BIRTH_DAY:
+        //         $y_m_d_arr[N_BIRTH_DAY] = $verified_value;
+        
+        //         break;
+        
+        //     case N_PRIVILEGE:
+        //         # code...
+        //         break;
+                
+     
+                
+
+        //     default:
+        //         $tmp_a = $verified_value;
+
+        //         break;
+        // }
+
+        list($ymd, $privilege, $other) = build_table_elem($value);
+        
+        if (isset($ymd)) {
+            $fmted_ymd .= $ymd;
+        } 
+
 
         $table_ .= build_tr_td_label_value($value->get_label(), $value->get_verified_value()) . LF;
 
@@ -189,8 +238,8 @@ function get_content($prm_post)
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
     // 画面表示項目
-    $sex_arr = array('-', '男', '女');
-    $privilege_arr = array('O' => '一般', 'A' => '管理者');
+    // $sex_arr = array('-', '男', '女');
+    // $privilege_arr = array('O' => '一般', 'A' => '管理者');
 
     $cont_arr = array_slice($item_val_arr, I_0, 4);
     $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
@@ -290,5 +339,49 @@ function build_tr_td_label_value($prm_label, $prm_value) {
     return '<tr><td>' . $prm_label . '</td><td>：' . $prm_value . '</td></tr>';
 }
 
+function build_table_elem(Item $prm_item) {
+    // $elem_0 = NULL;
+    // $elem_1 = NULL;
+    // $elem_2 = NULL;
+    $tmp_arr = array(NULL, NULL, NULL);
 
+    $value = $prm_item->get_verified_value();
+
+    switch ($prm_item->get_name()) {
+        case N_SEX:
+            $tmp_arr[I_2]  = NULL;
+            //TODO:定数作る
+            break;
+        
+        case N_BIRTH_YEAR:
+            // $y_m_d_arr[N_BIRTH_YEAR] = $value;
+            $tmp_arr[I_0] = $value . '年';
+                
+            break;
+    
+        case N_BIRTH_MONTH:
+            // $y_m_d_arr[N_BIRTH_MONTH] = $value;
+            $tmp_arr[I_0] = $value . '月';
+                    //TODO:9以下の場合
+            break;
+        
+        case N_BIRTH_DAY:
+            // $y_m_d_arr[N_BIRTH_DAY] = $value;
+            $tmp_arr[I_0] = $value . '日';
+                        
+            break;
+        
+        case N_PRIVILEGE:
+            $tmp_arr[I_1] = NULL;
+
+            break;
+
+        default:
+        $tmp_arr[I_2] = $value;
+            
+            break;
+    }
+
+    return $tmp_arr;
+}
 
