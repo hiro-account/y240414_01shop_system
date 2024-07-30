@@ -50,63 +50,72 @@ function get_content($prm_post)
             $prm_post[N_LAST_NAME],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME] : NULL,
+            FALSE
         ), N_FIRST_NAME => new Item(// 名
             N_FIRST_NAME,
             L_FIRST_NAME,
             $prm_post[N_FIRST_NAME],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME] : NULL,
+            FALSE
         ), N_LAST_NAME_KANA => new Item(// 氏(カナ)
             N_LAST_NAME_KANA,
             L_LAST_NAME . L_KANA,
             $prm_post[N_LAST_NAME_KANA],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME_KANA] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME_KANA] : NULL,
+            FALSE
         ), N_FIRST_NAME_KANA => new Item(// 名(カナ)
             N_FIRST_NAME_KANA,
             L_FIRST_NAME . L_KANA,
             $prm_post[N_FIRST_NAME_KANA],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : NULL,
+            FALSE
         ), N_SEX => new Item(// 性別
             N_SEX,
             L_SEX,
             $prm_post[N_SEX],
             NULL,
             NULL,
-            $is_from_update ? $prm_post[N_PREV . N_SEX] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_SEX] : NULL,
+            TRUE
         ), N_BIRTH_YEAR => new Item(// 生年月日の年
             N_BIRTH_YEAR,
             L_BIRTH_DATE . L_YEAR,
             $prm_post[N_BIRTH_YEAR],
             '0000',
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_YEAR] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_BIRTH_YEAR] : NULL,
+            TRUE
         ), N_BIRTH_MONTH => new Item(// 生年月日の月
             N_BIRTH_MONTH,
             L_BIRTH_DATE . L_MONTH,
             $prm_post[N_BIRTH_MONTH],
             '00',
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_MONTH] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_BIRTH_MONTH] : NULL,
+            TRUE
         ), N_BIRTH_DAY => new Item(// 生年月日の日
             N_BIRTH_DAY,
             L_BIRTH_DATE . L_DAY,
             $prm_post[N_BIRTH_DAY],
             '00',
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_DAY] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_BIRTH_DAY] : NULL,
+            TRUE
         ), N_PRIVILEGE => new Item(// 権限
             N_PRIVILEGE,
             L_PRIVILEGE,
             isset($prm_post[N_PRIVILEGE]) ? $prm_post[N_PRIVILEGE] : NULL,
             NULL,
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_PRIVILEGE] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_PRIVILEGE] : NULL,
+            TRUE
         )
     );
 
@@ -114,8 +123,9 @@ function get_content($prm_post)
     $changed_item_arr = array();
     $input_hidden = NULL;
     $table_ = NULL;
-    $y_m_d_arr = array();
+    $ymd_arr = array();
     $fmted_ymd = NULL;
+    $fmted_privilege = NULL;
 
     foreach ($item_arr as $value) {
         // 値のサニタイズと前後スペースの除去
@@ -183,6 +193,46 @@ function get_content($prm_post)
         if (isset($ymd)) {
             $fmted_ymd .= $ymd;
         } 
+
+
+        switch ($value->get_name()) {
+            case N_SEX:
+                $tmp_arr[I_2]  = NULL;
+                //TODO:定数作る
+                break;
+            
+            case N_BIRTH_YEAR:
+                $ymd_arr[N_BIRTH_YEAR] = $value . '年';
+                    
+                break;
+        
+            case N_BIRTH_MONTH:
+                $ymd_arr[N_BIRTH_MONTH] = $value . '月';
+                        //TODO:9以下の場合
+                break;
+            
+            case N_BIRTH_DAY:
+                $ymd_arr[N_BIRTH_MONTH] = $value . '日';
+                            
+                break;
+            
+            case N_PRIVILEGE:
+                $tmp_arr[I_1] = NULL;
+    
+                break;
+    
+            default:
+            $tmp_arr[I_2] = $value;
+                
+                break;
+        }
+    
+
+
+
+
+
+
 
 
         $table_ .= build_tr_td_label_value($value->get_label(), $value->get_verified_value()) . LF;
@@ -385,3 +435,45 @@ function build_table_elem(Item $prm_item) {
     return $tmp_arr;
 }
 
+function build_table_element(Item $prm_item) {
+    $tmp_arr = array(NULL, NULL, NULL);
+
+    $value = $prm_item->get_verified_value();
+
+    switch ($prm_item->get_name()) {
+        case N_SEX:
+            $tmp_arr[I_2]  = NULL;
+            //TODO:定数作る
+            break;
+        
+        case N_BIRTH_YEAR:
+            // $y_m_d_arr[N_BIRTH_YEAR] = $value;
+            $tmp_arr[I_0] = $value . '年';
+                
+            break;
+    
+        case N_BIRTH_MONTH:
+            // $y_m_d_arr[N_BIRTH_MONTH] = $value;
+            $tmp_arr[I_0] = $value . '月';
+                    //TODO:9以下の場合
+            break;
+        
+        case N_BIRTH_DAY:
+            // $y_m_d_arr[N_BIRTH_DAY] = $value;
+            $tmp_arr[I_0] = $value . '日';
+                        
+            break;
+        
+        case N_PRIVILEGE:
+            $tmp_arr[I_1] = NULL;
+
+            break;
+
+        default:
+        $tmp_arr[I_2] = $value;
+            
+            break;
+    }
+
+    return $tmp_arr;
+}

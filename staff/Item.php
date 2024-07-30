@@ -17,9 +17,11 @@ class Item {
     private $trimmed_value;
     /** チェック済の値 */
     private $verified_value;
+    /** 備考項目 */ //TODO:変数名変更
+    private $biko;
 
     function __construct($prm_name, $prm_label, $prm_default_value
-        , $prm_err_value, $prm_err_msg, $prm_prev_value = NULL) {
+        , $prm_err_value, $prm_err_msg, $prm_prev_value, $prm_biko) {
 
         $this->name = $prm_name;
         $this->label = $prm_label;
@@ -27,6 +29,7 @@ class Item {
         $this->err_value = $prm_err_value;
         $this->err_msg = $prm_err_msg;
         $this->prev_value = $prm_prev_value;
+        $this->biko = $prm_biko;
     }
 
     function get_name() {
@@ -39,6 +42,10 @@ class Item {
 
     function get_verified_value() {
         return $this->verified_value;
+    }
+
+    function get_biko() {
+        return $this->biko;
     }
 
     function convert_sp_char_and_trim() {
