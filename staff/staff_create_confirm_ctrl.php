@@ -194,48 +194,49 @@ function get_content($prm_post)
             $fmted_ymd .= $ymd;
         } 
 
+        $verified_value = $value->get_verified_value();
 
         switch ($value->get_name()) {
             case N_SEX:
-                $tmp_arr[I_2]  = NULL;
+                $verified_value = NULL;
                 //TODO:定数作る
                 break;
             
             case N_BIRTH_YEAR:
-                $ymd_arr[N_BIRTH_YEAR] = $value . '年';
+                $fmted_ymd = $value . '年';
                     
                 break;
         
             case N_BIRTH_MONTH:
-                $ymd_arr[N_BIRTH_MONTH] = $value . '月';
+                $fmted_ymd = $value . '月';
                         //TODO:9以下の場合
                 break;
             
             case N_BIRTH_DAY:
-                $ymd_arr[N_BIRTH_MONTH] = $value . '日';
+                $fmted_ymd = $value . '日';
                             
                 break;
             
             case N_PRIVILEGE:
-                $tmp_arr[I_1] = NULL;
+                $fmted_privilege = NULL;
     
                 break;
     
             default:
-            $tmp_arr[I_2] = $value;
+            $verified_value = $value;
                 
                 break;
         }
     
 
 
+//TODO:半角スペースだけの行のそれの削除
 
 
 
 
 
-
-        $table_ .= build_tr_td_label_value($value->get_label(), $value->get_verified_value()) . LF;
+        $table_ .= build_tr_td_label_value($value->get_label(), $verified_value) . LF;
 
     }
 
