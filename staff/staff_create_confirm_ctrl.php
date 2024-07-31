@@ -6,6 +6,12 @@ require_once($to_cmn . 'temp_const.php');
 require_once($to_cmn . 'sortedFunc.php');
 require_once './Item.php';
 
+define('SEXES', ['0' => '-', '1' => '男', '2' => '女']);
+define('PRIVILEGES', ['O' => '一般', 'A' => '管理者']);
+
+
+
+
 //TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post)
 {
@@ -24,8 +30,8 @@ function get_content($prm_post)
         , 'rdo_privilege' => L_PRIVILEGE                     // 10
     );
 
-    $sex_arr = array('-', '男', '女');
-    $privilege_arr = array('O' => '一般', 'A' => '管理者');
+    // $sex_arr = array('-', '男', '女');
+    // $privilege_arr = array('O' => '一般', 'A' => '管理者');
 
     // 遷移元
     $is_from_create = FALSE;
@@ -159,7 +165,7 @@ function get_content($prm_post)
         //         $tmp_a = $sex_arr[intval($verified_value)];
 
         //         break;
-            
+
         //     case N_BIRTH_YEAR:
         //         $y_m_d_arr[N_BIRTH_YEAR] = $verified_value;
 
@@ -167,20 +173,20 @@ function get_content($prm_post)
 
         //     case N_BIRTH_MONTH:
         //         $y_m_d_arr[N_BIRTH_MONTH] = $verified_value;
-    
+
         //         break;
 
         //     case N_BIRTH_DAY:
         //         $y_m_d_arr[N_BIRTH_DAY] = $verified_value;
-        
+
         //         break;
-        
+
         //     case N_PRIVILEGE:
         //         # code...
         //         break;
-                
-     
-                
+
+
+
 
         //     default:
         //         $tmp_a = $verified_value;
@@ -189,54 +195,55 @@ function get_content($prm_post)
         // }
 
         list($ymd, $privilege, $other) = build_table_elem($value);
-        
+
         if (isset($ymd)) {
             $fmted_ymd .= $ymd;
-        } 
+        }
 
         $verified_value = $value->get_verified_value();
+        $fmted_value = NULL;
 
         switch ($value->get_name()) {
             case N_SEX:
-                $verified_value = NULL;
+                $fmted_value = SEXES[$verified_value];
                 //TODO:定数作る
                 break;
-            
+
             case N_BIRTH_YEAR:
-                $fmted_ymd = $value . '年';
-                    
+                $fmted_ymd = $verified_value . '年';
+
                 break;
-        
+
             case N_BIRTH_MONTH:
-                $fmted_ymd = $value . '月';
+                $fmted_ymd = $verified_value . '月';
                         //TODO:9以下の場合
                 break;
-            
+
             case N_BIRTH_DAY:
-                $fmted_ymd = $value . '日';
-                            
+                $fmted_ymd = $verified_value . '日';
+
                 break;
-            
+
             case N_PRIVILEGE:
-                $fmted_privilege = NULL;
-    
+                $fmted_privilege = PRIVILEGES[$verified_value];
+
                 break;
-    
+
             default:
-            $verified_value = $value;
-                
+                $fmted_value = $verified_value;
+
                 break;
         }
-    
+
+        if (isset($fmted_value)) {
+            $table_ .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
+        }
 
 
-//TODO:半角スペースだけの行のそれの削除
 
 
 
 
-
-        $table_ .= build_tr_td_label_value($value->get_label(), $verified_value) . LF;
 
     }
 
@@ -403,25 +410,25 @@ function build_table_elem(Item $prm_item) {
             $tmp_arr[I_2]  = NULL;
             //TODO:定数作る
             break;
-        
+
         case N_BIRTH_YEAR:
             // $y_m_d_arr[N_BIRTH_YEAR] = $value;
             $tmp_arr[I_0] = $value . '年';
-                
+
             break;
-    
+
         case N_BIRTH_MONTH:
             // $y_m_d_arr[N_BIRTH_MONTH] = $value;
             $tmp_arr[I_0] = $value . '月';
                     //TODO:9以下の場合
             break;
-        
+
         case N_BIRTH_DAY:
             // $y_m_d_arr[N_BIRTH_DAY] = $value;
             $tmp_arr[I_0] = $value . '日';
-                        
+
             break;
-        
+
         case N_PRIVILEGE:
             $tmp_arr[I_1] = NULL;
 
@@ -429,7 +436,7 @@ function build_table_elem(Item $prm_item) {
 
         default:
         $tmp_arr[I_2] = $value;
-            
+
             break;
     }
 
@@ -446,25 +453,25 @@ function build_table_element(Item $prm_item) {
             $tmp_arr[I_2]  = NULL;
             //TODO:定数作る
             break;
-        
+
         case N_BIRTH_YEAR:
             // $y_m_d_arr[N_BIRTH_YEAR] = $value;
             $tmp_arr[I_0] = $value . '年';
-                
+
             break;
-    
+
         case N_BIRTH_MONTH:
             // $y_m_d_arr[N_BIRTH_MONTH] = $value;
             $tmp_arr[I_0] = $value . '月';
                     //TODO:9以下の場合
             break;
-        
+
         case N_BIRTH_DAY:
             // $y_m_d_arr[N_BIRTH_DAY] = $value;
             $tmp_arr[I_0] = $value . '日';
-                        
+
             break;
-        
+
         case N_PRIVILEGE:
             $tmp_arr[I_1] = NULL;
 
@@ -472,9 +479,16 @@ function build_table_element(Item $prm_item) {
 
         default:
         $tmp_arr[I_2] = $value;
-            
+
             break;
     }
 
     return $tmp_arr;
 }
+
+function zero_to_empty($prm_temp) {
+    return preg_replace('/^0+/', '', $prm_temp);
+}
+
+
+
