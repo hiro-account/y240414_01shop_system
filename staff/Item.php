@@ -17,6 +17,8 @@ class Item {
     private $trimmed_value;
     /** チェック済の値 */
     private $verified_value;
+    /** 書式設定済の値 */
+    private $formated_value;
     /** 備考項目 */ //TODO:変数名変更
     private $biko;
 
@@ -42,6 +44,14 @@ class Item {
 
     function get_verified_value() {
         return $this->verified_value;
+    }
+
+    function get_formated_value() {
+        return $this->formated_value;
+    }
+
+    function set_formated_value($prm_formated_value) {
+        $this->formated_value = $prm_formated_value;
     }
 
     function get_biko() {

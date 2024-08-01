@@ -57,7 +57,7 @@ function get_content($prm_post)
             STR_EMPTY,
             NOT_ENTERED,
             $is_from_update ? $prm_post[N_PREV . N_LAST_NAME] : NULL,
-            FALSE
+            TRUE
         ), N_FIRST_NAME => new Item(// 名
             N_FIRST_NAME,
             L_FIRST_NAME,
@@ -65,7 +65,7 @@ function get_content($prm_post)
             STR_EMPTY,
             NOT_ENTERED,
             $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME] : NULL,
-            FALSE
+            TRUE
         ), N_LAST_NAME_KANA => new Item(// 氏(カナ)
             N_LAST_NAME_KANA,
             L_LAST_NAME . L_KANA,
@@ -73,7 +73,7 @@ function get_content($prm_post)
             STR_EMPTY,
             NOT_ENTERED,
             $is_from_update ? $prm_post[N_PREV . N_LAST_NAME_KANA] : NULL,
-            FALSE
+            TRUE
         ), N_FIRST_NAME_KANA => new Item(// 名(カナ)
             N_FIRST_NAME_KANA,
             L_FIRST_NAME . L_KANA,
@@ -81,7 +81,7 @@ function get_content($prm_post)
             STR_EMPTY,
             NOT_ENTERED,
             $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : NULL,
-            FALSE
+            TRUE
         ), N_SEX => new Item(// 性別
             N_SEX,
             L_SEX,
@@ -89,7 +89,7 @@ function get_content($prm_post)
             NULL,
             NULL,
             $is_from_update ? $prm_post[N_PREV . N_SEX] : NULL,
-            TRUE
+            FALSE
         ), N_BIRTH_YEAR => new Item(// 生年月日の年
             N_BIRTH_YEAR,
             L_BIRTH_DATE . L_YEAR,
@@ -97,7 +97,7 @@ function get_content($prm_post)
             '0000',
             UNSELECTED,
             $is_from_update ? $prm_post[N_PREV . N_BIRTH_YEAR] : NULL,
-            TRUE
+            FALSE
         ), N_BIRTH_MONTH => new Item(// 生年月日の月
             N_BIRTH_MONTH,
             L_BIRTH_DATE . L_MONTH,
@@ -105,7 +105,7 @@ function get_content($prm_post)
             '00',
             UNSELECTED,
             $is_from_update ? $prm_post[N_PREV . N_BIRTH_MONTH] : NULL,
-            TRUE
+            FALSE
         ), N_BIRTH_DAY => new Item(// 生年月日の日
             N_BIRTH_DAY,
             L_BIRTH_DATE . L_DAY,
@@ -113,7 +113,7 @@ function get_content($prm_post)
             '00',
             UNSELECTED,
             $is_from_update ? $prm_post[N_PREV . N_BIRTH_DAY] : NULL,
-            TRUE
+            FALSE
         ), N_PRIVILEGE => new Item(// 権限
             N_PRIVILEGE,
             L_PRIVILEGE,
@@ -121,7 +121,7 @@ function get_content($prm_post)
             NULL,
             UNSELECTED,
             $is_from_update ? $prm_post[N_PREV . N_PRIVILEGE] : NULL,
-            TRUE
+            FALSE
         )
     );
 
@@ -206,45 +206,45 @@ function get_content($prm_post)
         switch ($value->get_name()) {
             case N_SEX:
                 $fmted_value = SEXES[$verified_value];
-                //TODO:定数作る
+                $value->set_formated_value(SEXES[$verified_value]);
+
                 break;
 
             case N_BIRTH_YEAR:
                 $fmted_ymd = $verified_value . '年';
+                $value->set_formated_value($verified_value . '年');
 
                 break;
 
             case N_BIRTH_MONTH:
-                $fmted_ymd = $verified_value . '月';
+                $fmted_ymd .= $verified_value . '月';
+                $value->set_formated_value($verified_value . '月');
                         //TODO:9以下の場合
                 break;
 
             case N_BIRTH_DAY:
-                $fmted_ymd = $verified_value . '日';
+                $fmted_ymd .= $verified_value . '日';
+                $value->set_formated_value($verified_value . '日');
 
                 break;
 
             case N_PRIVILEGE:
                 $fmted_privilege = PRIVILEGES[$verified_value];
+                $value->set_formated_value(PRIVILEGES[$verified_value]);
 
                 break;
 
             default:
                 $fmted_value = $verified_value;
+                $value->set_formated_value($verified_value);
+
 
                 break;
         }
 
-        if (isset($fmted_value)) {
-            $table_ .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
+        if ($value->get_biko()) {
+            $table_ .= build_tr_td_label_value($value->get_label(), $value->get_formated_value()) . LF;
         }
-
-
-
-
-
-
-
     }
 
     if (isset($empty_msgs)) {
@@ -294,6 +294,16 @@ function get_content($prm_post)
 
 
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
+
+    $table_ .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
+
+    $privilege = $item_arr[N_PRIVILEGE];
+    $table_ .= build_tr_td_label_value($privilege->get_label(), $privilege->get_formated_value()) . LF;
+
+
+
+
+
 
     // 画面表示項目
     // $sex_arr = array('-', '男', '女');
