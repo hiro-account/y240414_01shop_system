@@ -20,10 +20,10 @@ class Item {
     /** 書式設定済の値 */
     private $formated_value;
     /** 備考項目 */ //TODO:変数名変更
-    private $biko;
+    private $general;
 
     function __construct($prm_name, $prm_label, $prm_default_value
-        , $prm_err_value, $prm_err_msg, $prm_prev_value, $prm_biko) {
+        , $prm_err_value, $prm_err_msg, $prm_prev_value, $prm_general) {
 
         $this->name = $prm_name;
         $this->label = $prm_label;
@@ -31,7 +31,7 @@ class Item {
         $this->err_value = $prm_err_value;
         $this->err_msg = $prm_err_msg;
         $this->prev_value = $prm_prev_value;
-        $this->biko = $prm_biko;
+        $this->general = $prm_general;
     }
 
     function get_name() {
@@ -54,8 +54,8 @@ class Item {
         $this->formated_value = $prm_formated_value;
     }
 
-    function get_biko() {
-        return $this->biko;
+    function get_general() {
+        return $this->general;
     }
 
     function convert_sp_char_and_trim() {

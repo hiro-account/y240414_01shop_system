@@ -143,61 +143,9 @@ function get_content($prm_post)
             $empty_msgs .= add_p($err_msg) . LF;
         }
 
-        // 未変更の項目の確認(スタッフ更新の場合)
-        // $is_value_changed = $value->check_value_changed();
-
-        // if (isset($is_value_changed)) {
-        //     $changed_item_arr[$value->get_name()] = $value;
-        // }
-
-        //TODO:24/07/26性別、生年月日のフォーマットから
-
         if ($value->is_value_changed()) {
             // $input_hidden .= '<input type="hidden" name="' . $value->get_name() . '" value="' . $value->get_verified_value() . '">' . LF;
             $input_hidden .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
-        }
-
-        // $tmp_a = NULL;
-        // $verified_value = $value->get_verified_value();
-
-        // switch ($value->get_label()) {
-        //     case N_SEX:
-        //         $tmp_a = $sex_arr[intval($verified_value)];
-
-        //         break;
-
-        //     case N_BIRTH_YEAR:
-        //         $y_m_d_arr[N_BIRTH_YEAR] = $verified_value;
-
-        //         break;
-
-        //     case N_BIRTH_MONTH:
-        //         $y_m_d_arr[N_BIRTH_MONTH] = $verified_value;
-
-        //         break;
-
-        //     case N_BIRTH_DAY:
-        //         $y_m_d_arr[N_BIRTH_DAY] = $verified_value;
-
-        //         break;
-
-        //     case N_PRIVILEGE:
-        //         # code...
-        //         break;
-
-
-
-
-        //     default:
-        //         $tmp_a = $verified_value;
-
-        //         break;
-        // }
-
-        list($ymd, $privilege, $other) = build_table_elem($value);
-
-        if (isset($ymd)) {
-            $fmted_ymd .= $ymd;
         }
 
         $verified_value = $value->get_verified_value();
@@ -212,38 +160,32 @@ function get_content($prm_post)
 
             case N_BIRTH_YEAR:
                 $fmted_ymd = $verified_value . '年';
-                $value->set_formated_value($verified_value . '年');
 
                 break;
 
             case N_BIRTH_MONTH:
-                $fmted_ymd .= $verified_value . '月';
-                $value->set_formated_value($verified_value . '月');
-                        //TODO:9以下の場合
+                $fmted_ymd .= zero_to_empty($verified_value) . '月';
+
                 break;
 
             case N_BIRTH_DAY:
-                $fmted_ymd .= $verified_value . '日';
-                $value->set_formated_value($verified_value . '日');
+                $fmted_ymd .= zero_to_empty($verified_value) . '日';
 
                 break;
 
             case N_PRIVILEGE:
                 $fmted_privilege = PRIVILEGES[$verified_value];
-                $value->set_formated_value(PRIVILEGES[$verified_value]);
 
                 break;
 
             default:
                 $fmted_value = $verified_value;
-                $value->set_formated_value($verified_value);
-
 
                 break;
         }
 
-        if ($value->get_biko()) {
-            $table_ .= build_tr_td_label_value($value->get_label(), $value->get_formated_value()) . LF;
+        if (isset($fmted_value)) {
+            $table_ .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
         }
     }
 
@@ -298,7 +240,7 @@ function get_content($prm_post)
     $table_ .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
 
     $privilege = $item_arr[N_PRIVILEGE];
-    $table_ .= build_tr_td_label_value($privilege->get_label(), $privilege->get_formated_value()) . LF;
+    $table_ .= build_tr_td_label_value($privilege->get_label(), $fmted_privilege) . LF;
 
 
 
