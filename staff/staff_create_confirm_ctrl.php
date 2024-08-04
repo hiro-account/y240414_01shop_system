@@ -6,33 +6,14 @@ require_once($to_cmn . 'temp_const.php');
 require_once($to_cmn . 'sortedFunc.php');
 require_once './Item.php';
 
+// 性別
 define('SEXES', ['0' => '-', '1' => '男', '2' => '女']);
+// 権限
 define('PRIVILEGES', ['O' => '一般', 'A' => '管理者']);
-
-
-
 
 //TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post)
 {
-    //TODO:配列の要素、配置位置要整理
-    $item_key_nm_arr = array(
-        'txt_last_name' => L_LAST_NAME                    // 0
-        , 'txt_first_name' => L_FIRST_NAME                // 1
-        , 'txt_last_name_kana' => L_LAST_NAME . L_KANA      // 2
-        , 'txt_first_name_kana' => L_FIRST_NAME . L_KANA    // 3
-        , 'slct_sex' => L_SEX                             // 4
-        , 'sex' => L_SEX                                  // 5
-        , 'slct_birth_year' => L_BIRTH_DATE . L_YEAR        // 6
-        , 'slct_birth_month' => L_BIRTH_DATE . L_MONTH      // 7
-        , 'slct_birth_day' => L_BIRTH_DATE . L_DAY          // 8
-        , 'birth_date' => L_BIRTH_DATE                    // 9
-        , 'rdo_privilege' => L_PRIVILEGE                     // 10
-    );
-
-    // $sex_arr = array('-', '男', '女');
-    // $privilege_arr = array('O' => '一般', 'A' => '管理者');
-
     // 遷移元
     $is_from_create = FALSE;
     $is_from_update = FALSE;
@@ -126,12 +107,10 @@ function get_content($prm_post)
     );
 
     $empty_msgs = NULL;
-    $changed_item_arr = array();
-    $input_hidden = NULL;
-    $table_ = NULL;
-    $ymd_arr = array();
+    $hdn_elem = NULL;
     $fmted_ymd = NULL;
     $fmted_privilege = NULL;
+    $tbl_elem = NULL;
 
     foreach ($item_arr as $value) {
         // 値のサニタイズと前後スペースの除去
@@ -144,12 +123,11 @@ function get_content($prm_post)
         }
 
         if ($value->is_value_changed()) {
-            // $input_hidden .= '<input type="hidden" name="' . $value->get_name() . '" value="' . $value->get_verified_value() . '">' . LF;
-            $input_hidden .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
+            $hdn_elem .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
         }
 
-        $verified_value = $value->get_verified_value();
         $fmted_value = NULL;
+        $verified_value = $value->get_verified_value();
 
         switch ($value->get_name()) {
             case N_SEX:
@@ -185,7 +163,7 @@ function get_content($prm_post)
         }
 
         if (isset($fmted_value)) {
-            $table_ .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
+            $tbl_elem .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
         }
     }
 
@@ -216,7 +194,7 @@ function get_content($prm_post)
     if ($is_from_update) {
          // スタッフ更新からの遷移である場合
         //TODO:下記処理の概要記載
-        if (!isset($input_hidden)) {
+        if (!isset($hdn_elem)) {
             // 項目が一つも変更されていない場合
             return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
         }
@@ -230,50 +208,20 @@ function get_content($prm_post)
         $form_action = './staff_create_done.php';
     }
 
-
-
-
-
-
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
-    $table_ .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
-
-    $privilege = $item_arr[N_PRIVILEGE];
-    $table_ .= build_tr_td_label_value($privilege->get_label(), $fmted_privilege) . LF;
-
-
-
-
-
-
-    // 画面表示項目
-    // $sex_arr = array('-', '男', '女');
-    // $privilege_arr = array('O' => '一般', 'A' => '管理者');
-
-    $cont_arr = array_slice($item_val_arr, I_0, 4);
-    $cont_arr['sex'] = $sex_arr[intval($item_val_arr['slct_sex'])];
-    $cont_arr['birth_date'] =
-        $item_val_arr['slct_birth_year'] . '年'
-        . process_month_and_day($item_val_arr['slct_birth_month']) . '月'
-        . process_month_and_day($item_val_arr['slct_birth_day']) . '日';
-    $cont_arr['rdo_privilege'] = $privilege_arr[$item_val_arr['rdo_privilege']];
-    //     $cont_arr['password'] = '非表示';
-    //     $tbl_elem = build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year','slct_birth_month','slct_birth_day'/*, 'txt_password_1', 'txt_password_2'*/));
-    $tbl_elem = '<table>' . $tr_id
-        . build_tbl_elem($item_key_nm_arr, $cont_arr, array('slct_sex', 'slct_birth_year', 'slct_birth_month', 'slct_birth_day'))
-        . '</table>';
-
-
+    $tbl_elem .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
+    $tbl_elem .= build_tr_td_label_value($item_arr[N_PRIVILEGE]->get_label(), $fmted_privilege) . LF;
 
 
     // hidden項目
-    $hdn_elem = build_hdn_elem($item_val_arr);
+    // $hdn_elem = build_hdn_elem($item_val_arr);
 
     return <<<EOE
 {$html_h2}
 <p>下記の内容で問題なければ実行ボタンを押す</p>
-{$tbl_elem}
+<table>
+{$tbl_elem}</table>
 <form method="post" action="{$form_action}">
 {$hdn_elem}<p><input type="submit" value="実行"></p>
 </form>
