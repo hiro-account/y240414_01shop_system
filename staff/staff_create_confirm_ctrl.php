@@ -20,12 +20,21 @@ function get_content($prm_post)
 
     $create_or_update = NULL;
 
+    $table_elem = NULL;
+    $form_action = NULL;
+
     if (strcmp($prm_post[FROM], UPDATE) === I_0) {
         $is_from_update = TRUE;
         $create_or_update = '更新';
+        $table_elem = '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>' . LF;
+        $form_action = './staff_update_done.php';
+
+
     } else if (strcmp($prm_post[FROM], CREATE) === I_0) {
         $is_from_create = TRUE;
         $create_or_update = '登録';
+        $form_action = './staff_create_done.php';
+
     }
 
     $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
@@ -107,10 +116,9 @@ function get_content($prm_post)
     );
 
     $empty_msgs = NULL;
-    $hdn_elem = NULL;
+    $hidden_elem = NULL;
     $fmted_ymd = NULL;
     $fmted_privilege = NULL;
-    $tbl_elem = NULL;
 
     foreach ($item_arr as $value) {
         // 値のサニタイズと前後スペースの除去
@@ -123,7 +131,7 @@ function get_content($prm_post)
         }
 
         if ($value->is_value_changed()) {
-            $hdn_elem .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
+            $hidden_elem .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
         }
 
         $fmted_value = NULL;
@@ -163,7 +171,7 @@ function get_content($prm_post)
         }
 
         if (isset($fmted_value)) {
-            $tbl_elem .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
+            $table_elem .= build_tr_td_label_value($value->get_label(), $fmted_value) . LF;
         }
     }
 
@@ -188,42 +196,27 @@ function get_content($prm_post)
         return $html_h2 . LF . $invalid_birthday_msg;
     }
 
-    $tr_id = NULL;
-    $form_action = NULL;
-
-    if ($is_from_update) {
-         // スタッフ更新からの遷移である場合
-        //TODO:下記処理の概要記載
-        if (!isset($hdn_elem)) {
-            // 項目が一つも変更されていない場合
-            return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
-        }
-
-        $tr_id = LF . '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>';
-        $form_action = './staff_update_done.php';
-    } else if ($is_from_create) {
-        // スタッフ登録からの遷移である場合
-        //TODO:下記処理の概要記載
-        $tr_id = '';
-        $form_action = './staff_create_done.php';
+    if ($is_from_update && !isset($hidden_elem)) {
+         // スタッフ更新からの遷移であり、かつ、項目が一つも変更されていない場合
+         return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
     }
 
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
-    $tbl_elem .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
-    $tbl_elem .= build_tr_td_label_value($item_arr[N_PRIVILEGE]->get_label(), $fmted_privilege) . LF;
+    $table_elem .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
+    $table_elem .= build_tr_td_label_value($item_arr[N_PRIVILEGE]->get_label(), $fmted_privilege) . LF;
 
 
     // hidden項目
-    // $hdn_elem = build_hdn_elem($item_val_arr);
+    // $hidden_elem = build_hdn_elem($item_val_arr);
 
     return <<<EOE
 {$html_h2}
 <p>下記の内容で問題なければ実行ボタンを押す</p>
 <table>
-{$tbl_elem}</table>
+{$table_elem}</table>
 <form method="post" action="{$form_action}">
-{$hdn_elem}<p><input type="submit" value="実行"></p>
+{$hidden_elem}<p><input type="submit" value="実行"></p>
 </form>
 
 EOE;
@@ -261,31 +254,31 @@ function separate_post_data($prm_post_data)
 
 function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_key_arr = NULL)
 {
-    //     $tbl_elem = '<table>' . LF;
-    $tbl_elem = LF;
+    //     $table_elem = '<table>' . LF;
+    $table_elem = LF;
 
     foreach ($prm_item_key_name_arr as $key => $val) {
         if (isset($prm_continue_key_arr) && in_array($key, $prm_continue_key_arr)) {
             continue;
         }
 
-        $tbl_elem .= '<tr><td>' . $val . '</td><td>：' . $prm_content_arr[$key] . '</td></tr>' . LF;
+        $table_elem .= '<tr><td>' . $val . '</td><td>：' . $prm_content_arr[$key] . '</td></tr>' . LF;
     }
 
-    //    $tbl_elem .= '</table>';
+    //    $table_elem .= '</table>';
 
-    return $tbl_elem;
+    return $table_elem;
 }
 
 function build_hdn_elem($prm_content_arr)
 {
-    $hdn_elem = NULL;
+    $hidden_elem = NULL;
 
     foreach ($prm_content_arr as $key => $val) {
-        $hdn_elem .= '<input type="hidden" name="' . $key . '" value="' . $val . '">' . LF;
+        $hidden_elem .= '<input type="hidden" name="' . $key . '" value="' . $val . '">' . LF;
     }
 
-    return $hdn_elem;
+    return $hidden_elem;
 }
 
 function build_input_type_hidden($prm_name, $prm_value) {
