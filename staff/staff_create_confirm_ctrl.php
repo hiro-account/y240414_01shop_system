@@ -15,29 +15,27 @@ define('PRIVILEGES', ['O' => '一般', 'A' => '管理者']);
 function get_content($prm_post)
 {
     // 遷移元
-    $is_from_create = FALSE;
+    // $is_from_create = FALSE;
     $is_from_update = FALSE;
-
-    $create_or_update = NULL;
-
+    $h2_content = NULL;
     $table_elem = NULL;
     $form_action = NULL;
+    $hidden_id = NULL;
 
     if (strcmp($prm_post[FROM], UPDATE) === I_0) {
         $is_from_update = TRUE;
-        $create_or_update = '更新';
+        $h2_content = '更新';
         $table_elem = '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>' . LF;
         $form_action = './staff_update_done.php';
-
-
+        $hidden_id = '<input type="hidden" name="id" value="'  . $prm_post['id'] . '">' . LF;
     } else if (strcmp($prm_post[FROM], CREATE) === I_0) {
-        $is_from_create = TRUE;
-        $create_or_update = '登録';
+        // $is_from_create = TRUE;
+        $h2_content = '登録';
         $form_action = './staff_create_done.php';
-
+        $hidden_id = STR_EMPTY;
     }
 
-    $html_h2 = "<h2>スタッフ{$create_or_update}</h2>";
+    $h2 = "<h2>スタッフ{$h2_content}</h2>";
 
     $item_arr = array(
         N_LAST_NAME => new Item(// 氏
@@ -116,7 +114,7 @@ function get_content($prm_post)
     );
 
     $empty_msgs = NULL;
-    $hidden_elem = NULL;
+    $hidden_elems = NULL;
     $fmted_ymd = NULL;
     $fmted_privilege = NULL;
 
@@ -131,7 +129,7 @@ function get_content($prm_post)
         }
 
         if ($value->is_value_changed()) {
-            $hidden_elem .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
+            $hidden_elems .= build_input_type_hidden($value->get_name(), $value->get_verified_value()) . LF;
         }
 
         $fmted_value = NULL;
@@ -160,7 +158,9 @@ function get_content($prm_post)
                 break;
 
             case N_PRIVILEGE:
-                $fmted_privilege = PRIVILEGES[$verified_value];
+                if (isset(PRIVILEGES[$verified_value])) {
+                    $fmted_privilege = PRIVILEGES[$verified_value];
+                }
 
                 break;
 
@@ -177,28 +177,21 @@ function get_content($prm_post)
 
     if (isset($empty_msgs)) {
         // 未入力、未選択の項目がある場合、エラーメッセージを表示する
-        return $html_h2 . LF . $empty_msgs;
+        return $h2 . LF . $empty_msgs;
     }
 
     // 生年月日の妥当性のチェック
-    $invalid_birthday_msg = NULL;
-
     if (!checkdate(
         intval($item_arr[N_BIRTH_MONTH]->get_verified_value()),
         intval($item_arr[N_BIRTH_DAY]->get_verified_value()),
         intval($item_arr[N_BIRTH_YEAR]->get_verified_value())
     )) {
-        $invalid_birthday_msg .= add_p(L_BIRTH_DATE . 'が不正') . LF;
+        return $h2 . LF . add_p(L_BIRTH_DATE . 'が不正') . LF;
     }
 
-    if (isset($invalid_birthday_msg)) {
-        // 生年月日に不備がある場合、エラーメッセージを表示する
-        return $html_h2 . LF . $invalid_birthday_msg;
-    }
-
-    if ($is_from_update && !isset($hidden_elem)) {
+    if ($is_from_update && !isset($hidden_elems)) {
          // スタッフ更新からの遷移であり、かつ、項目が一つも変更されていない場合
-         return $html_h2 . LF . add_p('項目が一つも変更されていない') . LF;
+         return $h2 . LF . add_p('項目が一つも変更されていない') . LF;
     }
 
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
@@ -206,17 +199,13 @@ function get_content($prm_post)
     $table_elem .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
     $table_elem .= build_tr_td_label_value($item_arr[N_PRIVILEGE]->get_label(), $fmted_privilege) . LF;
 
-
-    // hidden項目
-    // $hidden_elem = build_hdn_elem($item_val_arr);
-
     return <<<EOE
-{$html_h2}
+{$h2}
 <p>下記の内容で問題なければ実行ボタンを押す</p>
 <table>
 {$table_elem}</table>
 <form method="post" action="{$form_action}">
-{$hidden_elem}<p><input type="submit" value="実行"></p>
+{$hidden_id}{$hidden_elems}<p><input type="submit" value="実行"></p>
 </form>
 
 EOE;
@@ -272,13 +261,13 @@ function build_tbl_elem($prm_item_key_name_arr, $prm_content_arr, $prm_continue_
 
 function build_hdn_elem($prm_content_arr)
 {
-    $hidden_elem = NULL;
+    $hidden_elems = NULL;
 
     foreach ($prm_content_arr as $key => $val) {
-        $hidden_elem .= '<input type="hidden" name="' . $key . '" value="' . $val . '">' . LF;
+        $hidden_elems .= '<input type="hidden" name="' . $key . '" value="' . $val . '">' . LF;
     }
 
-    return $hidden_elem;
+    return $hidden_elems;
 }
 
 function build_input_type_hidden($prm_name, $prm_value) {
