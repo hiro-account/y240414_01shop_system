@@ -23,7 +23,7 @@ class Item {
     private $general;
 
     function __construct($prm_name, $prm_label, $prm_default_value
-        , $prm_err_value, $prm_err_msg, $prm_prev_value, $prm_general) {
+        , $prm_err_value, $prm_err_msg, $prm_prev_value, $prm_general = NULL) {
 
         $this->name = $prm_name;
         $this->label = $prm_label;
