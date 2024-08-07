@@ -9,6 +9,11 @@ function get_content($prm_post) {
     // mysqliのコンストラクタの例外用設定
     mysqli_report(MYSQLI_REPORT_STRICT);
 
+    
+
+
+
+
     //TODO:トランザクションの実装
     try {
         $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
