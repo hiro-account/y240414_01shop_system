@@ -2,17 +2,45 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
+require_once $to_cmn . 'query.php';
 
 const CREATE_FAILED = '<p>登録失敗（システム障害発生）</p>';
 
+const QUERY_FOR_M_STAFF =<<<EOQ
+INSERT INTO m_staff_for_dev (
+  last_name
+  , first_name
+  , last_name_kana
+  , first_name_kana
+  , sex
+  , birth_year
+  , birth_month
+  , birth_day
+  , creator_id
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+EOQ;
+
 function get_content($prm_post) {
+    $arr = array(
+        $prm_post['last_name']
+        , $prm_post['first_name']
+        , $prm_post['last_name_kana']
+        , $prm_post['first_name_kana']
+        , $prm_post['sex']
+        , $prm_post['birth_year']
+        , $prm_post['birth_month']
+        , $prm_post['birth_day']
+        , $prm_post['privilege']
+    );
+
+    $result_array = execute_query(QUERY_FOR_M_STAFF, $arr);
+
+
+
+
+
     // mysqliのコンストラクタの例外用設定
     mysqli_report(MYSQLI_REPORT_STRICT);
-
-    
-
-
-
 
     //TODO:トランザクションの実装
     try {
