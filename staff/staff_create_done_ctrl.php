@@ -16,7 +16,7 @@ INSERT INTO m_staff_for_dev (
   , birth_year
   , birth_month
   , birth_day
-  , creator_id_
+  , creator_id
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 EOQ;
 
@@ -30,8 +30,17 @@ function get_content($prm_post) {
         , $prm_post['birth_year']
         , $prm_post['birth_month']
         , $prm_post['birth_day']
+        , $_SESSION[STAFF_ID]
         // , $prm_post['privilege']
     );
+
+    //TODO:トランザクションの実装
+    // スタッフの登録前のスタッフマスタのidの最大値を読み出し
+    $bf_staff_max_id = read_max_id('m_staff_for_dev');
+
+    if (isset($bf_staff_max_id[EXCEPTION])) {
+        return $bf_staff_max_id[EXCEPTION];
+    }
 
     $result_array = execute_query(QUERY_FOR_M_STAFF, $arr);
 
@@ -39,11 +48,26 @@ function get_content($prm_post) {
         return $result_array[EXCEPTION];
     }
 
+    $af_staff_max_id = read_max_id('m_staff_for_dev');
+
+    $bf = intval($bf_staff_max_id[STMT]->fetch());
+    $af = intval($af_staff_max_id[STMT]->fetch());
+
+
+
+
+    if ($af !== $bf + I_1) {
+        return '';
+    }
+
+
+
+
+
 
     // mysqliのコンストラクタの例外用設定
     mysqli_report(MYSQLI_REPORT_STRICT);
 
-    //TODO:トランザクションの実装
     try {
         $mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
 
@@ -53,8 +77,6 @@ function get_content($prm_post) {
             $mysqli->set_charset('utf8');
         }
 
-        // スタッフの登録前のスタッフマスタのidの最大値を読み出し
-        $bf_staff_max_id = read_max_id($mysqli, 'm_staff_for_dev');
 
         $sql_for_m_staff = 'INSERT INTO m_staff_for_dev '
             . '(last_name, first_name, last_name_kana, first_name_kana, sex, birth_year, birth_month, birth_day, creator_id) '
@@ -144,15 +166,8 @@ function get_content($prm_post) {
     return add_p('登録完了');
 }
 
-function read_max_id($prm_mysqli, $prm_tbl) {
-    if ($result = $prm_mysqli->query('SELECT MAX(id) AS max_id FROM ' . $prm_tbl)) {
-        $max_id = $result->fetch_assoc()['max_id'];
-        $result->close();
-
-        return intval($max_id);
-    }
-
-    return -1;
+function read_max_id($prm_tbl) {
+    return execute_query('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
 }
 
 
