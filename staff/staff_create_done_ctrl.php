@@ -16,7 +16,7 @@ INSERT INTO m_staff_for_dev (
   , birth_year
   , birth_month
   , birth_day
-  , creator_id
+  , creator_id_
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 EOQ;
 
@@ -30,13 +30,14 @@ function get_content($prm_post) {
         , $prm_post['birth_year']
         , $prm_post['birth_month']
         , $prm_post['birth_day']
-        , $prm_post['privilege']
+        // , $prm_post['privilege']
     );
 
     $result_array = execute_query(QUERY_FOR_M_STAFF, $arr);
 
-
-
+    if (isset($result_array[EXCEPTION])) {
+        return $result_array[EXCEPTION];
+    }
 
 
     // mysqliのコンストラクタの例外用設定
