@@ -37,6 +37,8 @@ function get_content($prm_post) {
     //TODO:トランザクションの実装
     // スタッフの登録前のスタッフマスタのidの最大値を読み出し
     $bf_staff_max_id = read_max_id('m_staff_for_dev');
+    $temp_id = $bf_staff_max_id[STMT]->fetch()['max_id'];
+
 
     if (isset($bf_staff_max_id[EXCEPTION])) {
         return $bf_staff_max_id[EXCEPTION];
