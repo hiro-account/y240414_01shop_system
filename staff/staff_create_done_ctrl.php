@@ -2,9 +2,15 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
-require_once $to_cmn . 'query.php';
+// require_once $to_cmn . 'query.php';
+require_once $to_cmn . 'CmnPdo_.php';
+
+const EX_ERR = -128;
 
 const CREATE_FAILED = '<p>登録失敗（システム障害発生）</p>';
+
+const M_STAFF = 'm_staff_for_dev';
+
 
 const QUERY_FOR_M_STAFF =<<<EOQ
 INSERT INTO m_staff_for_dev (
@@ -36,36 +42,25 @@ function get_content($prm_post) {
 
     //TODO:トランザクションの実装
     // スタッフの登録前のスタッフマスタのidの最大値を読み出し
-    $bf_staff_max_id = read_max_id('m_staff_for_dev');
-    $temp_id = $bf_staff_max_id[STMT]->fetch()['max_id'];
+    $bf_staff_max_id = read_max_id(M_STAFF);
 
-
-    if (isset($bf_staff_max_id[EXCEPTION])) {
-        return $bf_staff_max_id[EXCEPTION];
+    if ($bf_staff_max_id === EX_ERR) {
+        return CREATE_FAILED;
     }
 
-    $result_array = execute_query(QUERY_FOR_M_STAFF, $arr);
-
-    if (isset($result_array[EXCEPTION])) {
-        return $result_array[EXCEPTION];
+    try {
+        $cmn_pdo = new CmnPdo();
+        $stmt = $cmn_pdo->prepare(QUERY_FOR_M_STAFF);
+        $stmt->execute($arr);
+    } catch (Exception $e) {
+        return CREATE_FAILED;
     }
 
-    $af_staff_max_id = read_max_id('m_staff_for_dev');
+    $af_staff_max_id = read_max_id(M_STAFF);
 
-    $bf = intval($bf_staff_max_id[STMT]->fetch());
-    $af = intval($af_staff_max_id[STMT]->fetch());
-
-
-
-
-    if ($af !== $bf + I_1) {
-        return '';
+    if ($af_staff_max_id !== $bf_staff_max_id + I_1) {
+        return CREATE_FAILED;
     }
-
-
-
-
-
 
     // mysqliのコンストラクタの例外用設定
     mysqli_report(MYSQLI_REPORT_STRICT);
@@ -169,7 +164,20 @@ function get_content($prm_post) {
 }
 
 function read_max_id($prm_tbl) {
-    return execute_query('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
+    // return execute_query('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
+
+    try {
+        $cmn_pdo = new CmnPdo();
+        // $stmt = $cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ?');
+        // $stmt->execute(array($prm_tbl));
+        $stmt = $cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
+        $stmt->execute();
+        $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $mixed['max_id'];
+    } catch (Exception $e) {
+        return EX_ERR;
+    }
 }
 
 

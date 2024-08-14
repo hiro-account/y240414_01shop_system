@@ -2,8 +2,8 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
-// require_once $to_cmn . 'CmnPdo.php';
-require_once $to_cmn . 'query.php';
+require_once $to_cmn . 'CmnPdo_.php';
+// require_once $to_cmn . 'query.php';
 
 //TODO:定数移動
 const READ_FAILED = '<p>スタッフ一覧読み出し失敗（システム障害発生）</p>';
@@ -23,22 +23,48 @@ function get_content() {
     $first_staff_id = NULL;
     $last_staff_id = NULL;
 
-//     $cmn_pdo = new CmnPdo();
-//     $cmn_pdo->prepare(QUERY);
-//     $result_array = $cmn_pdo->execute(NULL);
-    $result_array = execute_query(QUERY);
+    // $result_array = execute_query(QUERY);
 
-    if (isset($result_array[EXCEPTION])) {
-        return READ_FAILED . LF;
-    }
+    // if (isset($result_array[EXCEPTION])) {
+    //     return READ_FAILED . LF;
+    // }
 
-    foreach ($result_array[STMT] as $value) {
-        $last_staff_id = $value['id'];
-        $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $value['last_name'] . $value['first_name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
+    // while (TRUE) {
+    //     $mixed = $result_array[STMT]->fetch(PDO::FETCH_ASSOC);
 
-        if (! isset($first_staff_id)) {
-            $first_staff_id = $last_staff_id;
+    //     if ($mixed == FALSE) {
+    //         break;
+    //     }
+
+    //     $last_staff_id = $mixed['id'];
+    //     $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
+
+    //     if (!isset($first_staff_id)) {
+    //         $first_staff_id = $last_staff_id;
+    //     }
+    // }
+
+    try {
+        $cmn_pdo = new CmnPdo();
+        $stmt = $cmn_pdo->prepare(QUERY);
+        $stmt->execute();
+
+        while (TRUE) {
+            $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($mixed == FALSE) {
+                break;
+            }
+
+            $last_staff_id = $mixed['id'];
+            $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
+
+            if (!isset($first_staff_id)) {
+                $first_staff_id = $last_staff_id;
+            }
         }
+    } catch (Exception $e) {
+        return READ_FAILED . LF;
     }
 
     if (!isset($staff_list)) {
