@@ -41,26 +41,37 @@ function get_content($prm_post) {
     );
 
     //TODO:トランザクションの実装
-    // スタッフの登録前のスタッフマスタのidの最大値を読み出し
-    $bf_staff_max_id = read_max_id(M_STAFF);
-
-    if ($bf_staff_max_id === EX_ERR) {
-        return CREATE_FAILED;
-    }
-
     try {
+        //TODO:生成したPDOを利用する
+        // スタッフの登録前のスタッフマスタのidの最大値を読み出し
+        $bf_staff_max_id = read_max_id(M_STAFF);
+
+        // スタッフの登録
         $cmn_pdo = new CmnPdo();
         $stmt = $cmn_pdo->prepare(QUERY_FOR_M_STAFF);
         $stmt->execute($arr);
+
+        // スタッフの登録後のスタッフマスタのidの最大値を読み出し
+        $af_staff_max_id = read_max_id(M_STAFF);
+
+        // 登録後のidの最大値＝登録前のidの最大値＋1であるはず
+        if ($af_staff_max_id !== $bf_staff_max_id + I_1) {
+            return CREATE_FAILED;
+        }
+
+        // 権限テーブルに登録後のidの最大値をidとして権限を登録する
+
+
+
+
+
+
+
+
     } catch (Exception $e) {
         return CREATE_FAILED;
     }
 
-    $af_staff_max_id = read_max_id(M_STAFF);
-
-    if ($af_staff_max_id !== $bf_staff_max_id + I_1) {
-        return CREATE_FAILED;
-    }
 
     // mysqliのコンストラクタの例外用設定
     mysqli_report(MYSQLI_REPORT_STRICT);
@@ -164,22 +175,12 @@ function get_content($prm_post) {
 }
 
 function read_max_id($prm_tbl) {
-    // return execute_query('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
+    $cmn_pdo = new CmnPdo();
+    $stmt = $cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
+    $stmt->execute();
+    $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    try {
-        $cmn_pdo = new CmnPdo();
-        // $stmt = $cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ?');
-        // $stmt->execute(array($prm_tbl));
-        $stmt = $cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
-        $stmt->execute();
-        $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $mixed['max_id'];
-    } catch (Exception $e) {
-        return EX_ERR;
-    }
+    return $mixed['max_id'];
 }
-
-
 
 ?>
