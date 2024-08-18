@@ -1,8 +1,8 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once '../cmn/func.php';
-// require_once $to_cmn . 'CmnPdo.php';
-require_once $to_cmn . 'query.php';
+require_once $to_cmn . 'CmnPdo.php';
+// require_once $to_cmn . 'query.php';
 
 //TODO:定数移動および定数んび改行コードを含めるべきか
 const READ_FAILED = '<p>ログイン失敗（システム障害発生）</p>' . LF;
@@ -11,10 +11,10 @@ const WRONG_ID_OR_PASSWORD = '<p>スタッフIDとパスワードのどちらか
 const QUERY =<<<EOQ
 SELECT m.id AS id, pa.current AS current, pa.temporary AS temporary, pr.privilege AS privilege
 FROM m_staff_for_dev AS m
-INNER JOIN t_password_for_dev AS pa ON m.id=pa.id
-INNER JOIN t_privilege_for_dev AS pr ON m.id=pr.id
-INNER JOIN t_logical_delete_for_dev AS d ON m.id=d.id
-WHERE d.flag=FALSE AND m.id=
+INNER JOIN t_password_for_dev AS pa ON m.id = pa.id
+INNER JOIN t_privilege_for_dev AS pr ON m.id = pr.id
+INNER JOIN t_logical_delete_for_dev AS d ON m.id = d.id
+WHERE d.flag=FALSE AND m.id = ?
 EOQ;
 
 function get_content($prm_post) {
@@ -31,6 +31,29 @@ function get_content($prm_post) {
 //     $cmn_pdo = new CmnPdo();
 //     $cmn_pdo->prepare(QUERY . $prm_post[STAFF_ID]);
 //     $result_array = $cmn_pdo->execute();
+
+    try {
+        $cmn_pdo = new CmnPdo();
+        $stmt = $cmn_pdo->prepare(QUERY);
+        $temp = $stmt->execute(array($prm_post[STAFF_ID]));
+    } catch (Exception $e) {
+        // システム障害が発生した場合
+        return READ_FAILED;
+    }
+
+    $staff_arr = array();
+
+    while (TRUE) {
+        $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($mixed == FALSE) {
+            break;
+        }
+
+        $staff_arr[] = $mixed;
+    }
+
+
     $result_array = execute_query(QUERY . $prm_post[STAFF_ID]);
 
     if (isset($result_array[EXCEPTION])) {

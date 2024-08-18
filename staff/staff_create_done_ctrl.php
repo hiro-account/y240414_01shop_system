@@ -3,14 +3,14 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 // require_once $to_cmn . 'query.php';
-// require_once $to_cmn . 'CmnPdo_.php';
+require_once $to_cmn . 'CmnPdo.php';
 
 const EX_ERR = -128;
 
 const CREATE_FAILED = '<p>登録失敗（システム障害発生）</p>';
 
 const M_STAFF = 'm_staff_for_dev';
-
+const T_PRIVILEGE = 't_privilege_for_dev';
 
 const QUERY_FOR_M_STAFF =<<<EOQ
 INSERT INTO m_staff_for_dev (
@@ -40,7 +40,7 @@ function get_content($prm_post) {
         // , $prm_post['privilege']
     );
 
-    //TODO:トランザクションの実装
+    //TODO:トランザクションの実装。各idのチェック処理不要であれば削除
     try {
         // スタッフの登録
         $cmn_pdo = new CmnPdo();
@@ -61,10 +61,13 @@ function get_content($prm_post) {
         }
 
         // 権限テーブルに登録後のidの最大値をidとして権限を登録する
-        $stmt_for_t_privilege = $cmn_pdo->prepare('INSERT INTO t_privilege_for_dev (id, privilege, creator_id) VALUES (?, ?, ?)')
-        // $stmt_for_t_privilege->execute()
+        $stmt_for_t_privilege = $cmn_pdo->prepare('INSERT INTO ' . T_PRIVILEGE . ' (id, privilege, creator_id) VALUES (?, ?, ?)');
+        $stmt_for_t_privilege->execute(array($af_staff_max_id, $_POST['rdo_privilege'], $_SESSION[STAFF_ID]));
 
 
+
+        // 権限の登録後の権限テーブルのidの最大値＝スタッフマスタのidの最大値であるはず
+        $af_privilege_max_id = read_max_id($cmn_pdo, T_PRIVILEGE);
 
 
 
