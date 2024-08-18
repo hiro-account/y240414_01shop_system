@@ -3,8 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'sortedFunc.php');
-require_once $to_cmn . 'CmnMySqlI.php';
-require_once $to_cmn . 'query.php';
+require_once $to_cmn . 'CmnPdo.php';
 
 const READ_FAILED = '<p>スタッフ詳細読み出し失敗（システム障害発生）</p>' . LF;
 
@@ -32,9 +31,9 @@ SELECT
   , s.updated_date AS updated_date
   , pa.temporary AS temporary
 FROM
-  m_staff_for_dev AS s INNER JOIN t_privilege_for_dev AS pr ON s.id=pr.id INNER JOIN t_password_for_dev AS pa ON s.id=pa.id
+  m_staff_for_dev AS s INNER JOIN t_privilege_for_dev AS pr ON s.id = pr.id INNER JOIN t_password_for_dev AS pa ON s.id = pa.id
 WHERE
-  s.id=
+  s.id =
 EOQ;
 
 function get_content($prm_post) {
@@ -47,6 +46,19 @@ function get_content($prm_post) {
             break;
         }
     }
+
+    try {
+        $cmn_pdo = new CmnPdo();
+        $stmt = $cmn_pdo->prepare(QUERY);
+
+
+    } catch (Exception $e) {
+        return READ_FAILED;
+    }
+
+
+
+
 
     $result_array = execute_query(QUERY . $staff_id);
 
