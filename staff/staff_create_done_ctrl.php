@@ -3,7 +3,7 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 // require_once $to_cmn . 'query.php';
-require_once $to_cmn . 'CmnPdo_.php';
+// require_once $to_cmn . 'CmnPdo_.php';
 
 const EX_ERR = -128;
 
@@ -42,17 +42,18 @@ function get_content($prm_post) {
 
     //TODO:トランザクションの実装
     try {
-        //TODO:生成したPDOを利用する
-        // スタッフの登録前のスタッフマスタのidの最大値を読み出し
-        $bf_staff_max_id = read_max_id(M_STAFF);
-
         // スタッフの登録
         $cmn_pdo = new CmnPdo();
-        $stmt = $cmn_pdo->prepare(QUERY_FOR_M_STAFF);
-        $stmt->execute($arr);
+
+        //TODO:生成したPDOを利用する
+        // スタッフの登録前のスタッフマスタのidの最大値を読み出し
+        $bf_staff_max_id = read_max_id($cmn_pdo, M_STAFF);
+
+        $stmt_for_m_staff = $cmn_pdo->prepare(QUERY_FOR_M_STAFF);
+        $stmt_for_m_staff->execute($arr);
 
         // スタッフの登録後のスタッフマスタのidの最大値を読み出し
-        $af_staff_max_id = read_max_id(M_STAFF);
+        $af_staff_max_id = read_max_id($cmn_pdo, M_STAFF);
 
         // 登録後のidの最大値＝登録前のidの最大値＋1であるはず
         if ($af_staff_max_id !== $bf_staff_max_id + I_1) {
@@ -60,8 +61,8 @@ function get_content($prm_post) {
         }
 
         // 権限テーブルに登録後のidの最大値をidとして権限を登録する
-
-
+        $stmt_for_t_privilege = $cmn_pdo->prepare('INSERT INTO t_privilege_for_dev (id, privilege, creator_id) VALUES (?, ?, ?)')
+        // $stmt_for_t_privilege->execute()
 
 
 
@@ -174,9 +175,9 @@ function get_content($prm_post) {
     return add_p('登録完了');
 }
 
-function read_max_id($prm_tbl) {
-    $cmn_pdo = new CmnPdo();
-    $stmt = $cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
+function read_max_id(CmnPdo $prm_cmn_pdo, $prm_tbl) {
+//    $cmn_pdo = new CmnPdo();
+    $stmt = $prm_cmn_pdo->prepare('SELECT MAX(id) AS max_id FROM ' . $prm_tbl);
     $stmt->execute();
     $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
 
