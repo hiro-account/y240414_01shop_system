@@ -33,7 +33,7 @@ SELECT
 FROM
   m_staff_for_dev AS s INNER JOIN t_privilege_for_dev AS pr ON s.id = pr.id INNER JOIN t_password_for_dev AS pa ON s.id = pa.id
 WHERE
-  s.id =
+  s.id = ?
 EOQ;
 
 function get_content($prm_post) {
@@ -47,26 +47,49 @@ function get_content($prm_post) {
         }
     }
 
+    $mixed_arr = array();
+
     try {
         $cmn_pdo = new CmnPdo();
         $stmt = $cmn_pdo->prepare(QUERY);
+        $exe_result = $stmt->execute(array($staff_id));
 
+        while (TRUE) {
+            $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            if ($mixed == FALSE) {
+                break;
+            }
+
+            $mixed_arr[] = $mixed;
+        }
     } catch (Exception $e) {
         return READ_FAILED;
     }
 
-
-
-
-
-    $result_array = execute_query(QUERY . $staff_id);
-
-    if (isset($result_array[EXCEPTION])) {
+    if (!$exe_result) {
+        //
         return READ_FAILED;
     }
 
-    $select_result = $result_array[STMT]->fetch();
+    //TODO:下記不要か
+    if (count($mixed_arr) !== I_1) {
+        // 戻り値が一件以外の場合
+        return READ_FAILED;
+    }
+
+    $mixed_0 = $mixed_arr[I_0];
+
+
+
+
+    // $result_array = execute_query(QUERY . $staff_id);
+
+    // if (isset($result_array[EXCEPTION])) {
+    //     return READ_FAILED;
+    // }
+
+    // $select_result = $result_array[STMT]->fetch();
 
     $column_arr = array(
         'id' => 'スタッフID'
@@ -89,7 +112,7 @@ function get_content($prm_post) {
     $row = NULL;
 $hidden = NULL;
     foreach ($column_arr as $key => $value) {
-//         $select_result_value = $select_result[$key];
+//         $select_result_value = $mixed_0[$key];
         $processedValue = NULL;
         $hidden_name = NULL;
         $hidden_value = NULL;
@@ -100,30 +123,30 @@ $hidden = NULL;
 
         switch ($key) {
             case 'sex':
-                $processedValue = $sex_arr[$select_result[$key]];
+                $processedValue = $sex_arr[$mixed_0[$key]];
 
                 $hidden_name = $key;
-                $hidden_value = $select_result[$key];
+                $hidden_value = $mixed_0[$key];
                 break;
 
             case 'birthday':
-                $b_y = $select_result['birth_year'];
-                $b_m = $select_result['birth_month'];
-                $b_d = $select_result['birth_day'];
+                $b_y = $mixed_0['birth_year'];
+                $b_m = $mixed_0['birth_month'];
+                $b_d = $mixed_0['birth_day'];
 
                 $processedValue = $b_y . '年' . process_month_and_day($b_m) . '月' . process_month_and_day($b_d) . '日（'
                     . get_age($b_y . $b_m . $b_d) . '歳）';
                 break;
 
             case 'privilege':
-                $processedValue = $privilege_arr[$select_result[$key]];
+                $processedValue = $privilege_arr[$mixed_0[$key]];
 
                 $hidden_name = $key;
-                $hidden_value = $select_result[$key];
+                $hidden_value = $mixed_0[$key];
                 break;
 
             case 'temporary':
-                if (!isset($select_result[$key])) {
+                if (!isset($mixed_0[$key])) {
                     continue 2;
                 }
 
@@ -131,10 +154,10 @@ $hidden = NULL;
                 break;
 
             default:
-                $processedValue = $select_result[$key];
+                $processedValue = $mixed_0[$key];
 
                 $hidden_name = $key;
-                $hidden_value = $select_result[$key];
+                $hidden_value = $mixed_0[$key];
                 break;
         }
 
@@ -146,7 +169,7 @@ $hidden = NULL;
     }
 
     foreach (array('birth_year', 'birth_month', 'birth_day') as $value) {
-        $hidden .= HTML_TYPE_HIDDEN . $value . HTML_VALUE . $select_result[$value] . HTML_CLOSE . LF;
+        $hidden .= HTML_TYPE_HIDDEN . $value . HTML_VALUE . $mixed_0[$value] . HTML_CLOSE . LF;
     }
 
     return <<<EOC

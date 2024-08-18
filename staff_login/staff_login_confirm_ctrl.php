@@ -33,7 +33,7 @@ function get_content($prm_post) {
     try {
         $cmn_pdo = new CmnPdo();
         $stmt = $cmn_pdo->prepare(QUERY);
-        $temp = $stmt->execute(array($prm_post[STAFF_ID])); //TODO:変数名変更
+        $exe_result = $stmt->execute(array($prm_post[STAFF_ID])); //TODO:変数名変更
 
         while (TRUE) {
             $mixed = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -49,7 +49,7 @@ function get_content($prm_post) {
         return READ_FAILED;
     }
 
-    if (!$temp) {
+    if (!$exe_result) {
         //
         return READ_FAILED;
     }
