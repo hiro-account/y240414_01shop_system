@@ -135,7 +135,7 @@ $hidden = NULL;
                 $b_d = $mixed_0['birth_day'];
 
                 $processedValue = $b_y . '年' . process_month_and_day($b_m) . '月' . process_month_and_day($b_d) . '日（'
-                    . get_age($b_y . $b_m . $b_d) . '歳）';
+                    . get_age($b_y . sprintf('%02d', $b_m) . sprintf('%02d', $b_d)) . '歳）';//TODO:sprintf削除検討
                 break;
 
             case 'privilege':

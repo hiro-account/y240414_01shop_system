@@ -1,3 +1,7 @@
+2024/08/20 8:30
+・次回：登録確認の際の下記の修正から
+Deprecated: strcmp(): Passing null to parameter #2 ($string2) of type string is deprecated in C:\xampp\htdocs\z_docs\y240414_01shop_system\staff\Item.php on line 82
+
 2024/08/19 8:32
 ・次回：staff_detail_ctrl.phpの138行目の修正から
 
