@@ -42,35 +42,35 @@ function get_content($prm_post)
             $prm_post[N_LAST_NAME],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME] : STR_EMPTY
         ), N_FIRST_NAME => new Item(// 名
             N_FIRST_NAME,
             L_FIRST_NAME,
             $prm_post[N_FIRST_NAME],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME] : STR_EMPTY
         ), N_LAST_NAME_KANA => new Item(// 氏(カナ)
             N_LAST_NAME_KANA,
             L_LAST_NAME . L_KANA,
             $prm_post[N_LAST_NAME_KANA],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME_KANA] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME_KANA] : STR_EMPTY
         ), N_FIRST_NAME_KANA => new Item(// 名(カナ)
             N_FIRST_NAME_KANA,
             L_FIRST_NAME . L_KANA,
             $prm_post[N_FIRST_NAME_KANA],
             STR_EMPTY,
             NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : STR_EMPTY
         ), N_SEX => new Item(// 性別
             N_SEX,
             L_SEX,
             $prm_post[N_SEX],
             NULL,
             NULL,
-            $is_from_update ? $prm_post[N_PREV . N_SEX] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_SEX] : STR_EMPTY
         ), N_BIRTH_YEAR => new Item(// 生年月日の年
             N_BIRTH_YEAR,
             L_BIRTH_DATE . L_YEAR,
