@@ -35,6 +35,7 @@ function get_content($prm_post)
 
     $h2 = "<h2>スタッフ{$h2_content}</h2>";
 
+    //TODO:登録の場合のエラー値と前回の値について。strcmpでのnull警告回避のためそれにかえて空文字を設定したが問題ないか確認(24/08/22)
     $item_arr = array(
         N_LAST_NAME => new Item(// 氏
             N_LAST_NAME,
@@ -68,7 +69,7 @@ function get_content($prm_post)
             N_SEX,
             L_SEX,
             $prm_post[N_SEX],
-            NULL,
+            STR_EMPTY,
             NULL,
             $is_from_update ? $prm_post[N_PREV . N_SEX] : STR_EMPTY
         ), N_BIRTH_YEAR => new Item(// 生年月日の年
@@ -77,28 +78,28 @@ function get_content($prm_post)
             $prm_post[N_BIRTH_YEAR],
             '0000',
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_YEAR] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_BIRTH_YEAR] : STR_EMPTY
         ), N_BIRTH_MONTH => new Item(// 生年月日の月
             N_BIRTH_MONTH,
             L_BIRTH_DATE . L_MONTH,
             $prm_post[N_BIRTH_MONTH],
             '00',
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_MONTH] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_BIRTH_MONTH] : STR_EMPTY
         ), N_BIRTH_DAY => new Item(// 生年月日の日
             N_BIRTH_DAY,
             L_BIRTH_DATE . L_DAY,
             $prm_post[N_BIRTH_DAY],
             '00',
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_DAY] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_BIRTH_DAY] : STR_EMPTY
         ), N_PRIVILEGE => new Item(// 権限
             N_PRIVILEGE,
             L_PRIVILEGE,
             isset($prm_post[N_PRIVILEGE]) ? $prm_post[N_PRIVILEGE] : NULL,
-            NULL,
+            STR_EMPTY,
             UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_PRIVILEGE] : NULL
+            $is_from_update ? $prm_post[N_PREV . N_PRIVILEGE] : STR_EMPTY
         )
     );
 
