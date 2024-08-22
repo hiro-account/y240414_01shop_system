@@ -23,7 +23,8 @@ function get_content($prm_post) {
     // 未入力の項目のチェック
     $empty_msg_arr = check_unenter_item(array(STAFF_ID => 'スタッフID', STAFF_PASS => 'パスワード'), $item_val_arr);
 
-    if (strlen($empty_msg_arr) > I_0) {
+    // if (strlen($empty_msg_arr) > I_0) {
+    if (isset($empty_msg_arr)) {
         // 未入力の項目がある場合
         return $empty_msg_arr;
     }
@@ -65,8 +66,8 @@ function get_content($prm_post) {
     if (is_bf_change_temp_pswd($mixed_0['current'], $mixed_0['temporary']) && strcmp($prm_post[STAFF_PASS], $mixed_0['temporary']) === I_0) {
         // 仮パスワードでログインを試みた(初回ログインの)場合
         header('Location: ./staff_first_login.php?staff_id=' . $prm_post[STAFF_ID]);
-    } else if(!password_verify($prm_post[STAFF_PASS], $mixed_0['current'])) {
-        // パスワードが合致しない場合
+    } else if(!isset($mixed_0['current']) || !password_verify($prm_post[STAFF_PASS], $mixed_0['current'])) {
+        // 仮パスワードがnullの場合、または、パスワードが合致しない場合
         return WRONG_ID_OR_PASSWORD;
     } else {
         session_start();

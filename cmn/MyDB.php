@@ -55,21 +55,6 @@ class MyDB {
                 'result' => $data,
                 'error' => '');
         }
-
-
-
-
-
-
-
-
     }
-
-
 }
-
-
-
-
-
 ?>
