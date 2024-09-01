@@ -1,3 +1,14 @@
+2024/08/30 7:03
+〇
+id mediumint(9)
+sex tinyint(4)
+updater_id mediumint(9)
+	
+2024/08/27 8:25
+〇要更新
+・スタッフ更新処理
+staff_update_done_ctrl.php(staff_update_done.phpから遷移)
+
 2024/08/22 8:34
 ・次回：登録実行の際の下記の修正から
 Warning: Undefined array key "rdo_privilege" in C:\xampp\htdocs\z_docs\y240414_01shop_system\staff\staff_create_done_ctrl.php on line 69

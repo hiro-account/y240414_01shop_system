@@ -2,7 +2,6 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
-// require_once $to_cmn . 'query.php';
 require_once $to_cmn . 'CmnPdo.php';
 
 const EX_ERR = -128;

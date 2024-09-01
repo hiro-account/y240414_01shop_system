@@ -3,7 +3,6 @@ $to_cmn = dirname(__FILE__) . '/../cmn/';
 // require_once($to_cmn . 'const.php');
 require_once($to_cmn . 'func.php');
 require_once $to_cmn . 'CmnPdo.php';
-// require_once $to_cmn . 'query.php';
 
 //TODO:定数移動
 const READ_FAILED = '<p>スタッフ一覧読み出し失敗（システム障害発生）</p>';

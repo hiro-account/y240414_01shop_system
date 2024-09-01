@@ -5,6 +5,9 @@ const I_1 = 1;
 const I_2 = 2;
 const I_3 = 3;
 
+const HF_S_QUOT = '\'';
+const HF_SLASH = '/';
+
 const STAFF_LOGIN = 'スタッフログイン';
 const STAFF_ADD = 'スタッフ登録';
 
