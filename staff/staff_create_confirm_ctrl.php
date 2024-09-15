@@ -116,6 +116,8 @@ function get_content($prm_post)
 
         if (isset($err_msg)) {
             $empty_msgs .= add_p($err_msg) . LF;
+
+            continue;
         }
 
         if ($value->is_value_changed()) {

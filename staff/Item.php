@@ -59,7 +59,11 @@ class Item {
     }
 
     function convert_sp_char_and_trim() {
-        $this->trimmed_value = trim(htmlspecialchars($this->default_value));
+        if (is_null($this->default_value)) {
+            $this->trimmed_value = STR_EMPTY;
+        } else {
+            $this->trimmed_value = trim(htmlspecialchars($this->default_value));
+        }
     }
 
     function check_unenter_unslct_value() {
@@ -67,8 +71,6 @@ class Item {
             return $this->label . $this->err_msg;
         } else {
             $this->verified_value = $this->trimmed_value;
-
-            return NULL;
         }
     }
 
@@ -93,9 +95,5 @@ class Item {
     function build_tr_td_label_value() {
         return '<tr><td>' . $this->label . '</td><td>：' . $this->verified_value . '</td></tr>';
     }
-
-
 }
-
-
 ?>

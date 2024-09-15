@@ -5,6 +5,7 @@ require_once '../cmn/func.php';
 require_once '../cmn/const.php';
 require_once '../cmn/temp_const.php';
 require_once $to_cmn . 'query.php';
+require_once $to_cmn . 'CmnPdo.php';
 
 const NW = '新しい';
 const UPDATE_FAILED = '<p>パスワード変更失敗（システム障害発生）</p>' . LF;
@@ -45,16 +46,23 @@ function get_content($prm_post) {
         return $invalid_msg . add_div(A_HISTORY_BACK) . LF;
     }
 
-    $result_array = execute_query(
-        'UPDATE t_password_for_dev SET current=?, temporary=NULL, updater_id=? WHERE id=?'
-        , array(
+    try {
+        $cmn_pdo = new CmnPdo();
+        $stmt = $cmn_pdo->prepare(
+            'UPDATE t_password_for_dev
+            SET current = ?, temporary = NULL, updater_id= ?  WHERE id = ?'
+        );
+        $result = $stmt->execute(array(
             password_hash($item_val_arr['txt_new_password_1'], PASSWORD_DEFAULT)
             , $item_val_arr['staff_id']
             , $item_val_arr['staff_id']
-        )
-    );
+        ));
 
-    if (isset($result_array[EXCEPTION])) {
+        //TODO:例外発生時の処理とまとめることができないか
+        if (!$result) {
+            return UPDATE_FAILED . add_div('<a href="./staff_login.html">スタッフログインへ</a>') . LF;
+        }
+    } catch (Exception $e) {
         return UPDATE_FAILED . add_div('<a href="./staff_login.html">スタッフログインへ</a>') . LF;
     }
 

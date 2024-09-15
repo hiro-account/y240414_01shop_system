@@ -3,7 +3,7 @@
 function get_content($prm_staff_privilege) {
     $content = <<<EOC
 <ul>
-<li><a href="">商品管理</a></li>
+<li><a href="../commodity/commodity_top.php">商品管理(Under construction)</a></li>
 
 EOC;
 
@@ -12,7 +12,5 @@ EOC;
     }
 
     return $content . '</ul>' . LF;
-
-
 }
 ?>

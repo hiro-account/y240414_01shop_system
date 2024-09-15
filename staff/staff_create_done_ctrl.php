@@ -6,6 +6,7 @@ require_once $to_cmn . 'CmnPdo.php';
 
 const EX_ERR = -128;
 
+//TODO:下記共通化検討
 const CREATE_FAILED = '<p>登録失敗（システム障害発生）</p>';
 
 const M_STAFF = 'm_staff_for_dev';

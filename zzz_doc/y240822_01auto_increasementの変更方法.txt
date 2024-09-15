@@ -1,4 +1,0 @@
-SHOW TABLE STATUS LIKE 'm_staff_for_dev'
-でAUTO_INCREASEMENTの次回値を参照し、
-ALTER TABLE テーブル名 AUTO_INCREMENT = 値;
-でそれを変更する

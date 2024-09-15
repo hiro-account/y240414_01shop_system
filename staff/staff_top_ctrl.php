@@ -22,27 +22,6 @@ function get_content() {
     $first_staff_id = NULL;
     $last_staff_id = NULL;
 
-    // $result_array = execute_query(QUERY);
-
-    // if (isset($result_array[EXCEPTION])) {
-    //     return READ_FAILED . LF;
-    // }
-
-    // while (TRUE) {
-    //     $mixed = $result_array[STMT]->fetch(PDO::FETCH_ASSOC);
-
-    //     if ($mixed == FALSE) {
-    //         break;
-    //     }
-
-    //     $last_staff_id = $mixed['id'];
-    //     $staff_list .= '<tr><td>' . $last_staff_id . '</td><td>' . $mixed['last_name'] . $mixed['first_name'] . '</td><td class="t-a-c"><input type="submit" name="staff_id_' . $last_staff_id . '" value="表示"></td></tr>' . LF;
-
-    //     if (!isset($first_staff_id)) {
-    //         $first_staff_id = $last_staff_id;
-    //     }
-    // }
-
     try {
         $cmn_pdo = new CmnPdo();
         $stmt = $cmn_pdo->prepare(QUERY);

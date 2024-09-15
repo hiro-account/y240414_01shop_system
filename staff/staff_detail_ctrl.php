@@ -28,7 +28,8 @@ SELECT
   , s.creator_id AS creator_id
   , s.created_date AS created_date
   , s.updater_id AS updater_id
-  , s.updated_date AS updated_date
+  , s.updated_date AS s_updated_date
+  , pr.updated_date AS pr_updated_date
   , pa.temporary AS temporary
 FROM
   m_staff_for_dev AS s INNER JOIN t_privilege_for_dev AS pr ON s.id = pr.id INNER JOIN t_password_for_dev AS pa ON s.id = pa.id
@@ -80,17 +81,6 @@ function get_content($prm_post) {
 
     $mixed_0 = $mixed_arr[I_0];
 
-
-
-
-    // $result_array = execute_query(QUERY . $staff_id);
-
-    // if (isset($result_array[EXCEPTION])) {
-    //     return READ_FAILED;
-    // }
-
-    // $select_result = $result_array[STMT]->fetch();
-
     $column_arr = array(
         'id' => 'スタッフID'
         , 'last_name' => '氏'
@@ -113,7 +103,7 @@ function get_content($prm_post) {
 $hidden = NULL;
     foreach ($column_arr as $key => $value) {
 //         $select_result_value = $mixed_0[$key];
-        $processedValue = NULL;
+        $processed_value = NULL;
         $hidden_name = NULL;
         $hidden_value = NULL;
 
@@ -123,7 +113,7 @@ $hidden = NULL;
 
         switch ($key) {
             case 'sex':
-                $processedValue = $sex_arr[$mixed_0[$key]];
+                $processed_value = $sex_arr[$mixed_0[$key]];
 
                 $hidden_name = $key;
                 $hidden_value = $mixed_0[$key];
@@ -134,15 +124,28 @@ $hidden = NULL;
                 $b_m = $mixed_0['birth_month'];
                 $b_d = $mixed_0['birth_day'];
 
-                $processedValue = $b_y . '年' . process_month_and_day($b_m) . '月' . process_month_and_day($b_d) . '日（'
+                $processed_value = $b_y . '年' . process_month_and_day($b_m) . '月' . process_month_and_day($b_d) . '日（'
                     . get_age($b_y . sprintf('%02d', $b_m) . sprintf('%02d', $b_d)) . '歳）';//TODO:sprintf削除検討
                 break;
 
             case 'privilege':
-                $processedValue = $privilege_arr[$mixed_0[$key]];
+                $processed_value = $privilege_arr[$mixed_0[$key]];
 
                 $hidden_name = $key;
                 $hidden_value = $mixed_0[$key];
+                break;
+
+            case 'updated_date':
+                $s_updt_value = $mixed_0['s_' . $key];
+                $pr_updt_value = $mixed_0['pr_' . $key];
+
+                $s_date_time = new DateTime($s_updt_value);
+                $pr_date_time = new DateTime($pr_updt_value);
+
+                $processed_value = $s_date_time < $pr_date_time ? $pr_updt_value : $s_updt_value;
+
+                $hidden_name = $key;
+                $hidden_value = $processed_value;
                 break;
 
             case 'temporary':
@@ -150,18 +153,18 @@ $hidden = NULL;
                     continue 2;
                 }
 
-                $processedValue = '仮パスワード変更前';
+                $processed_value = '仮パスワード変更前';
                 break;
 
             default:
-                $processedValue = $mixed_0[$key];
+                $processed_value = $mixed_0[$key];
 
                 $hidden_name = $key;
                 $hidden_value = $mixed_0[$key];
                 break;
         }
 
-        $row .= '<tr><td>' . $value . '</td><td>：' . $processedValue . '</td></tr>' . LF;
+        $row .= '<tr><td>' . $value . '</td><td>：' . $processed_value . '</td></tr>' . LF;
 
         if (isset($hidden_name) && isset($hidden_value)) {
             $hidden .= HTML_TYPE_HIDDEN . $hidden_name . HTML_VALUE . $hidden_value . HTML_CLOSE . LF;

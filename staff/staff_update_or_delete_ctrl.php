@@ -4,15 +4,15 @@ require_once($to_cmn . 'func.php');
 require_once($to_cmn . 'const.php');
 require_once './staff_func.php';
 require_once  $to_cmn . 'query.php';
+require_once $to_cmn . 'CmnPdo.php';
 
 const PREV = 'prev_';
-
 
 function get_content($prm_post) {
     if (isset($prm_post['staff_update'])) {
         return updt_staff($prm_post);
     } else if (isset($prm_post['staff_delete'])) {
-        return del_staff($prm_post['staff_id']);
+        return del_staff($prm_post['id']);
     }
 }
 
@@ -59,15 +59,21 @@ EOC;
 function del_staff($prm_staff_id) {
     $msg = NULL;
 
-    $result_array = execute_query('UPDATE t_logical_delete_for_dev SET flag=1 WHERE id=' . $prm_staff_id);
+    try {
+        $cmn_pdo = new CmnPdo();
+        $stmt = $cmn_pdo->prepare('UPDATE t_logical_delete_for_dev SET flag = 1 WHERE id = ?');
+        $result = $stmt->execute(array($prm_staff_id));
 
-    if (isset($result_array[EXCEPTION])) {
+        if (!$result) {
+            $msg = '削除失敗（システム障害発生）';
+        } else {
+            $msg = '削除完了';
+        }
+    } catch (Exception $e) {
         $msg = '削除失敗（システム障害発生）';
-    } else {
-        $msg = '削除完了';
+    } finally {
+        return get_content_for_del($msg);
     }
-
-    return get_content_for_del($msg);
 }
 
 function get_content_for_del($prm_message) {

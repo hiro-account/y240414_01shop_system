@@ -7,6 +7,3 @@ function confirmDelete() {
         return confirm("このスタッフを削除するか？");
     }
 }
-
-
-

@@ -17,4 +17,9 @@
 6月5日,要素 (element) は、開始タグ (Start-tag)・内容 (Content)・終了タグ (End-tag) の3つから構成される
 ,初回ログイン→パスワード変更
 6月11日,○t_privilegeテーブルのデータの例 ・管理：A(Administrator) ・一般：O(Ordinary)※他にはGeneralも一般の意を持つ
-7月2日,●共用に必要な変更 ○staff_create_confirm.php ・見出し ・更新確認から戻る際のフォーム再送信確認 javascript: history.back(); フォームを再送信しますか？
+7月2日,●共用に必要な変更 ○staff_create_confirm.php ・見出し ・更新確認から戻る際のフォーム再送信確認 javascript: history.back()
+,○スタッフ登録とスタッフ更新の共通化の整理 ・スタッフ登録時 staff_create.php(staff_create_ctrl.phpがget_tbl_elem()でtableを返す) ↓ staff_create_confirm.php(staff_create_confirm_ctrl.phpが各項目の確認を行う) ↓ staff_create_done.php(staff_create_done_ctrl.phpで登録)  ・スタッフ更新時 staff_update_or_delete.php(staff_update_or_delete_ctrl.phpがget_tbl_elem()でtableを返す) ↓ staff_create_confirm.php(staff_create_confirm_ctrl.php)
+7月9日,・記述位置、名称など、定数、変数の整理 ・staff_create_done_ctrl.phpのDB接続置換
+7月10日,・定数、変数にLFを含めるか否か
+7月11日,・ボトムリンク整理
+8月7日,・require、リテラルの整理

@@ -2,16 +2,10 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once $to_cmn . 'func.php';
 require_once $to_cmn . 'query.php';
-// const QUERY =<<<EOQ
-// UPDATE
+require_once $to_cmn . 'CmnPdo.php';
 
-
-
-// EOQ;
-
-const QUERY = 'UPDATE m_staff_for_dev SET ';
-
-
+const UPDATE_FAILED = '<p>更新失敗（システム障害発生）</p>';
+const I_M2 = -2;
 
 function get_content($prm_post) {
     $sql_part = NULL;
@@ -33,42 +27,53 @@ function get_content($prm_post) {
                 break;
         }
 
-        if (isset($val)) {
+        if (!is_null($val)) {
             $sql_part .= $key . ' = ' . $val . ', ';
         }
-
     }
-
-    // var_dump(substr($sql_part, I_0, -3));
-
-    $temp = 'UPDATE m_staff_for_dev SET '
-            . substr($sql_part, I_0, -3)
-            . ' updater_id = ' . $_SESSION[STAFF_ID]
-            . ' WHERE id = ' . $prm_post['id'];
-
-    var_dump($temp);
 
     try {
         $cmn_pdo = new CmnPdo();
 
-        $m_staff_stmt = $cmn_pdo->prepare($temp);
-        $m_staff_result = $m_staff_stmt->execute();
+        if (!is_null($sql_part)) {
+            $temp_q = 'UPDATE m_staff_for_dev SET '
+                . substr($sql_part, I_0, I_M2)
+                . ', updater_id = ' . $_SESSION[STAFF_ID]
+                . ' WHERE id = ' . $prm_post['id'];
+            $m_staff_stmt = $cmn_pdo->prepare(
+                // 'UPDATE m_staff_for_dev SET '
+                // . substr($sql_part, I_0, I_M2)
+                // . ', updater_id = ' . $_SESSION[STAFF_ID]
+                // . ' WHERE id = ' . $prm_post['id']
+                $temp_q
+            );
 
-        if (!$m_staff_result) {
-            return CREATE_FAILED;
+            $m_staff_result = $m_staff_stmt->execute();
+
+            if (!$m_staff_result) {
+                return UPDATE_FAILED;
+            }
         }
 
+        if (isset($prm_post['privilege'])) {
+            $t_privilege_stmt
+                = $cmn_pdo->prepare(
+                    'UPDATE t_privilege_for_dev SET privilege = ?, updater_id = ? WHERE id = ?'
+                );
 
+            $t_privilege_result
+                = $t_privilege_stmt->execute(
+                    array($prm_post['privilege'], $_SESSION[STAFF_ID], $prm_post['id'])
+                );
 
-
-
+            if (!$t_privilege_result) {
+                return UPDATE_FAILED;
+            }
+        }
     } catch (Exception $e) {
-        
+        return UPDATE_FAILED;
     }
 
-
-
-
+    return add_p('更新完了');
 }
-
 ?>
