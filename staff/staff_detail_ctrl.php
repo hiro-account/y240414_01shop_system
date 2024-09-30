@@ -1,17 +1,20 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
-// require_once($to_cmn . 'const.php');
-require_once($to_cmn . 'func.php');
-require_once($to_cmn . 'sortedFunc.php');
+require_once $to_cmn . 'func.php';
 require_once $to_cmn . 'CmnPdo.php';
 
-const READ_FAILED = '<p>スタッフ詳細読み出し失敗（システム障害発生）</p>' . LF;
+const BIRTHDAY = 'birthday';
 
-const HTML_TYPE_HIDDEN = '<input type="hidden" name="';
+const UPDATED_DATE = 'updated_date';
+
+const S_NICHIJI = '日時';
+
+const S_YOMIDASHI_SHIPPAI = TS_P . S_STAFF . '詳細' . S_YOMIDASHI . S_SHIPPAI . S_SYSTEM_SHOGAI_HASSEI . TE_P . LF;
+
+//TODO:下記三定数他ファイルとの共通化検討
+const HTML_TYPE_HIDDEN = '<input type="' . HIDDEN . '" name="';
 const HTML_VALUE = '" value="';
 const HTML_CLOSE = '">';
-
-// const HIDDEN = 'hidden_';
 
 const QUERY =<<<EOQ
 SELECT
@@ -65,42 +68,39 @@ function get_content($prm_post) {
             $mixed_arr[] = $mixed;
         }
     } catch (Exception $e) {
-        return READ_FAILED;
+        return S_YOMIDASHI_SHIPPAI;
     }
 
     if (!$exe_result) {
         //
-        return READ_FAILED;
+        return S_YOMIDASHI_SHIPPAI;
     }
 
     //TODO:下記不要か
     if (count($mixed_arr) !== I_1) {
         // 戻り値が一件以外の場合
-        return READ_FAILED;
+        return S_YOMIDASHI_SHIPPAI;
     }
 
     $mixed_0 = $mixed_arr[I_0];
 
     $column_arr = array(
-        'id' => 'スタッフID'
-        , 'last_name' => '氏'
-        , 'first_name' => '名'
-        , 'last_name_kana' => '氏（カナ）'
-        , 'first_name_kana' => '名（カナ）'
-        , 'sex' => '性別'
-        , 'birthday' => '生年月日'
-        , 'privilege' => '権限'
-        , 'created_date' => '登録日時'
-        , 'updated_date' => '更新日時'
-        , 'temporary' => '備考'
+        ID => S_STAFF . U_ID
+        , LAST_NAME => S_SHI
+        , FIRST_NAME => S_MEI
+        , LAST_NAME. KANA => S_SHI . S_KANA
+        , FIRST_NAME . KANA => S_MEI . S_KANA
+        , SEX => S_SEIBETSU
+        , BIRTHDAY => S_SEINENGAPPI
+        , PRIVILEGE => S_KENGEN
+        , 'created_date' => S_TOROKU . S_NICHIJI
+        , UPDATED_DATE => S_KOSHIN . S_NICHIJI
+        , TEMPORARY => '備考'
     );
 
-    //TODO:選択肢と共通化
-    $sex_arr = array('0' => '-', '1' => '男', '2' => '女', '3' => '未選択');
-    $privilege_arr = array('O' => '一般', 'A' => '管理者');
-
     $row = NULL;
-$hidden = NULL;
+    $hidden = NULL;
+
     foreach ($column_arr as $key => $value) {
 //         $select_result_value = $mixed_0[$key];
         $processed_value = NULL;
@@ -112,30 +112,31 @@ $hidden = NULL;
         $b_d = null;
 
         switch ($key) {
-            case 'sex':
-                $processed_value = $sex_arr[$mixed_0[$key]];
+            case SEX:
+                $processed_value = S_SEIBETSU_ARR[$mixed_0[$key]];
 
                 $hidden_name = $key;
                 $hidden_value = $mixed_0[$key];
                 break;
 
-            case 'birthday':
-                $b_y = $mixed_0['birth_year'];
-                $b_m = $mixed_0['birth_month'];
-                $b_d = $mixed_0['birth_day'];
+            case BIRTHDAY:
+                $b_y = $mixed_0[BIRTH_YEAR];
+                $b_m = $mixed_0[BIRTH_MONTH];
+                $b_d = $mixed_0[BIRTH_DAY];
 
-                $processed_value = $b_y . '年' . process_month_and_day($b_m) . '月' . process_month_and_day($b_d) . '日（'
+                $processed_value = $b_y . S_NEN . process_month_and_day($b_m) . S_TSUKI . process_month_and_day($b_d) . S_HI . '（'
                     . get_age($b_y . sprintf('%02d', $b_m) . sprintf('%02d', $b_d)) . '歳）';//TODO:sprintf削除検討
                 break;
 
-            case 'privilege':
-                $processed_value = $privilege_arr[$mixed_0[$key]];
+            case PRIVILEGE:
+                $processed_value = S_KENGEN_ARR[$mixed_0[$key]];
 
                 $hidden_name = $key;
                 $hidden_value = $mixed_0[$key];
                 break;
 
-            case 'updated_date':
+            case UPDATED_DATE:
+                //TODO:「's_'」、「'pr_'」ともここにしか存在しないため、とりあえずこのままで可(09/28)
                 $s_updt_value = $mixed_0['s_' . $key];
                 $pr_updt_value = $mixed_0['pr_' . $key];
 
@@ -148,12 +149,13 @@ $hidden = NULL;
                 $hidden_value = $processed_value;
                 break;
 
-            case 'temporary':
+            case TEMPORARY:
                 if (!isset($mixed_0[$key])) {
                     continue 2;
                 }
 
-                $processed_value = '仮パスワード変更前';
+                //TODO:「'仮'」、「前」ともここにしか存在しないため、とりあえずこのままで可(09/28)
+                $processed_value = '仮'. S_PASSWORD . S_HENKO . '前';
                 break;
 
             default:
@@ -171,7 +173,7 @@ $hidden = NULL;
         }
     }
 
-    foreach (array('birth_year', 'birth_month', 'birth_day') as $value) {
+    foreach (array(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY) as $value) {
         $hidden .= HTML_TYPE_HIDDEN . $value . HTML_VALUE . $mixed_0[$value] . HTML_CLOSE . LF;
     }
 

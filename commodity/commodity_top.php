@@ -1,7 +1,6 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
-require_once($to_cmn . 'const.php');
-require_once($to_cmn . 'func.php');
+require_once $to_cmn . 'func.php';
 st_session();
 check_login($_SESSION);
 ?>

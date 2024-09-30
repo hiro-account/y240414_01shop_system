@@ -60,7 +60,7 @@ class Item {
 
     function convert_sp_char_and_trim() {
         if (is_null($this->default_value)) {
-            $this->trimmed_value = STR_EMPTY;
+            $this->trimmed_value = EMPTY_STR;
         } else {
             $this->trimmed_value = trim(htmlspecialchars($this->default_value));
         }
@@ -71,12 +71,6 @@ class Item {
             return $this->label . $this->err_msg;
         } else {
             $this->verified_value = $this->trimmed_value;
-        }
-    }
-
-    function check_value_changed() {
-        if (strcmp($this->verified_value, $this->prev_value) !== I_0) {
-            return $this->name;
         }
     }
 

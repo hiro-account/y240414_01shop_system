@@ -1,5 +1,5 @@
 <?php
-
+//TODO:'staff_id'→STAFF_IDへの置換を検討
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,9 +13,6 @@
 <h2>初回ログインパスワード変更</h2>
 <form method="post" action="./staff_first_login_confirm.php">
 <table>
-<!--<tr>
-<td>現在のパスワード</td><td><input type="password" name="txt_current_password" class="w-100"></td>
-</tr>-->
 <tr>
 <td>新しいパスワード</td><td><input type="password" name="txt_new_password_1" class="w-100"></td>
 </tr>

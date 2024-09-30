@@ -1,15 +1,13 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
-// require_once($to_cmn . 'const.php');
-require_once($to_cmn . 'func.php');
-require_once($to_cmn . 'temp_const.php');
-require_once($to_cmn . 'sortedFunc.php');
-require_once './Item.php';
+require_once $to_cmn . 'func.php';
+require_once 'Item.php';
 
-// 性別
-define('SEXES', ['0' => '-', '1' => '男', '2' => '女']);
-// 権限
-define('PRIVILEGES', ['O' => '一般', 'A' => '管理者']);
+const S_00 = '00';
+
+//TODO:一カ所からしか参照されていないため、直書き化検討(09/23)
+const CREATE = 'create';
+const UPDATE = 'update';
 
 //TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post)
@@ -23,83 +21,83 @@ function get_content($prm_post)
 
     if (strcmp($prm_post[FROM], UPDATE) === I_0) {
         $is_from_update = TRUE;
-        $h2_content = '更新';
-        $table_elem = '<tr><td>スタッフID</td><td>：' . $prm_post['id'] . '</td></tr>' . LF;
+        $h2_content = S_KOSHIN;
+        $table_elem = '<tr><td>' . S_STAFF . U_ID . '</td><td>：' . $prm_post[ID] . '</td></tr>' . LF;
         $form_action = './staff_update_done.php';
-        $hidden_id = build_input_type_hidden('id', $prm_post['id']) . LF;
+        $hidden_id = build_input_type_hidden(ID, $prm_post[ID]) . LF;
     } else if (strcmp($prm_post[FROM], CREATE) === I_0) {
-        $h2_content = '登録';
+        $h2_content = S_TOROKU;
         $form_action = './staff_create_done.php';
-        $hidden_id = STR_EMPTY;
+        $hidden_id = EMPTY_STR;
     }
 
-    $h2 = "<h2>スタッフ{$h2_content}</h2>";
+    $h2 = '<h2>' . S_STAFF . $h2_content . '</h2>';
 
     //TODO:登録の場合のエラー値と前回の値について。strcmpでのnull警告回避のためそれにかえて空文字を設定したが問題ないか確認(24/08/22)
     $item_arr = array(
-        N_LAST_NAME => new Item(// 氏
-            N_LAST_NAME,
-            L_LAST_NAME,
-            $prm_post[N_LAST_NAME],
-            STR_EMPTY,
-            NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME] : STR_EMPTY
-        ), N_FIRST_NAME => new Item(// 名
-            N_FIRST_NAME,
-            L_FIRST_NAME,
-            $prm_post[N_FIRST_NAME],
-            STR_EMPTY,
-            NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME] : STR_EMPTY
-        ), N_LAST_NAME_KANA => new Item(// 氏(カナ)
-            N_LAST_NAME_KANA,
-            L_LAST_NAME . L_KANA,
-            $prm_post[N_LAST_NAME_KANA],
-            STR_EMPTY,
-            NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_LAST_NAME_KANA] : STR_EMPTY
-        ), N_FIRST_NAME_KANA => new Item(// 名(カナ)
-            N_FIRST_NAME_KANA,
-            L_FIRST_NAME . L_KANA,
-            $prm_post[N_FIRST_NAME_KANA],
-            STR_EMPTY,
-            NOT_ENTERED,
-            $is_from_update ? $prm_post[N_PREV . N_FIRST_NAME_KANA] : STR_EMPTY
-        ), N_SEX => new Item(// 性別
-            N_SEX,
-            L_SEX,
-            $prm_post[N_SEX],
-            STR_EMPTY,
+        LAST_NAME => new Item(// 氏
+            LAST_NAME,
+            S_SHI,
+            $prm_post[LAST_NAME],
+            EMPTY_STR,
+            S_GA . S_MINYURYOKU,
+            $is_from_update ? $prm_post[PREV . LAST_NAME] : EMPTY_STR
+        ), FIRST_NAME => new Item(// 名
+            FIRST_NAME,
+            S_MEI,
+            $prm_post[FIRST_NAME],
+            EMPTY_STR,
+            S_GA . S_MINYURYOKU,
+            $is_from_update ? $prm_post[PREV . FIRST_NAME] : EMPTY_STR
+        ), LAST_NAME . KANA => new Item(// 氏(カナ)
+            LAST_NAME . KANA,
+            S_SHI . S_KANA,
+            $prm_post[LAST_NAME . KANA],
+            EMPTY_STR,
+            S_GA . S_MINYURYOKU,
+            $is_from_update ? $prm_post[PREV . LAST_NAME . KANA] : EMPTY_STR
+        ), FIRST_NAME . KANA => new Item(// 名(カナ)
+            FIRST_NAME . KANA,
+            S_MEI . S_KANA,
+            $prm_post[FIRST_NAME . KANA],
+            EMPTY_STR,
+            S_GA . S_MINYURYOKU,
+            $is_from_update ? $prm_post[PREV . FIRST_NAME . KANA] : EMPTY_STR
+        ), SEX => new Item(// 性別
+            SEX,
+            S_SEIBETSU,
+            $prm_post[SEX],
+            EMPTY_STR,
             NULL,
-            $is_from_update ? $prm_post[N_PREV . N_SEX] : STR_EMPTY
-        ), N_BIRTH_YEAR => new Item(// 生年月日の年
-            N_BIRTH_YEAR,
-            L_BIRTH_DATE . L_YEAR,
-            $prm_post[N_BIRTH_YEAR],
+            $is_from_update ? $prm_post[PREV . SEX] : EMPTY_STR
+        ), BIRTH_YEAR => new Item(// 生年月日の年
+            BIRTH_YEAR,
+            S_SEINENGAPPI . S_NO . S_NEN,
+            $prm_post[BIRTH_YEAR],
             '0000',
-            UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_YEAR] : STR_EMPTY
-        ), N_BIRTH_MONTH => new Item(// 生年月日の月
-            N_BIRTH_MONTH,
-            L_BIRTH_DATE . L_MONTH,
-            $prm_post[N_BIRTH_MONTH],
-            '00',
-            UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_MONTH] : STR_EMPTY
-        ), N_BIRTH_DAY => new Item(// 生年月日の日
-            N_BIRTH_DAY,
-            L_BIRTH_DATE . L_DAY,
-            $prm_post[N_BIRTH_DAY],
-            '00',
-            UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_BIRTH_DAY] : STR_EMPTY
-        ), N_PRIVILEGE => new Item(// 権限
-            N_PRIVILEGE,
-            L_PRIVILEGE,
-            isset($prm_post[N_PRIVILEGE]) ? $prm_post[N_PRIVILEGE] : NULL,
-            STR_EMPTY,
-            UNSELECTED,
-            $is_from_update ? $prm_post[N_PREV . N_PRIVILEGE] : STR_EMPTY
+            S_GA . S_MISENTAKU,
+            $is_from_update ? $prm_post[PREV . BIRTH_YEAR] : EMPTY_STR
+        ), BIRTH_MONTH => new Item(// 生年月日の月
+            BIRTH_MONTH,
+            S_SEINENGAPPI . S_NO . S_TSUKI,
+            $prm_post[BIRTH_MONTH],
+            S_00,
+            S_GA . S_MISENTAKU,
+            $is_from_update ? $prm_post[PREV . BIRTH_MONTH] : EMPTY_STR
+        ), BIRTH_DAY => new Item(// 生年月日の日
+            BIRTH_DAY,
+            S_SEINENGAPPI . S_NO . S_HI,
+            $prm_post[BIRTH_DAY],
+            S_00,
+            S_GA . S_MISENTAKU,
+            $is_from_update ? $prm_post[PREV . BIRTH_DAY] : EMPTY_STR
+        ), PRIVILEGE => new Item(// 権限
+            PRIVILEGE,
+            S_KENGEN,
+            isset($prm_post[PRIVILEGE]) ? $prm_post[PRIVILEGE] : NULL,
+            EMPTY_STR,
+            S_GA . S_MISENTAKU,
+            $is_from_update ? $prm_post[PREV . PRIVILEGE] : EMPTY_STR
         )
     );
 
@@ -128,30 +126,30 @@ function get_content($prm_post)
         $verified_value = $value->get_verified_value();
 
         switch ($value->get_name()) {
-            case N_SEX:
-                $fmted_value = SEXES[$verified_value];
-                $value->set_formated_value(SEXES[$verified_value]);
+            case SEX:
+                $fmted_value = S_SEIBETSU_ARR[$verified_value];
+                $value->set_formated_value(S_SEIBETSU_ARR[$verified_value]);
 
                 break;
 
-            case N_BIRTH_YEAR:
-                $fmted_ymd = $verified_value . '年';    //TODO:年月日の定数化
+            case BIRTH_YEAR:
+                $fmted_ymd = $verified_value . S_NEN;
 
                 break;
 
-            case N_BIRTH_MONTH:
-                $fmted_ymd .= zero_to_empty($verified_value) . '月';
+            case BIRTH_MONTH:
+                $fmted_ymd .= zero_to_empty($verified_value) . S_TSUKI;
 
                 break;
 
-            case N_BIRTH_DAY:
-                $fmted_ymd .= zero_to_empty($verified_value) . '日';
+            case BIRTH_DAY:
+                $fmted_ymd .= zero_to_empty($verified_value) . S_HI;
 
                 break;
 
-            case N_PRIVILEGE:
-                if (isset(PRIVILEGES[$verified_value])) {
-                    $fmted_privilege = PRIVILEGES[$verified_value];
+            case PRIVILEGE:
+                if (isset(S_KENGEN_ARR[$verified_value])) {
+                    $fmted_privilege = S_KENGEN_ARR[$verified_value];
                 }
 
                 break;
@@ -174,22 +172,22 @@ function get_content($prm_post)
 
     // 生年月日の妥当性のチェック
     if (!checkdate(
-        intval($item_arr[N_BIRTH_MONTH]->get_verified_value()),
-        intval($item_arr[N_BIRTH_DAY]->get_verified_value()),
-        intval($item_arr[N_BIRTH_YEAR]->get_verified_value())
+        intval($item_arr[BIRTH_MONTH]->get_verified_value()),
+        intval($item_arr[BIRTH_DAY]->get_verified_value()),
+        intval($item_arr[BIRTH_YEAR]->get_verified_value())
     )) {
-        return $h2 . LF . add_p(L_BIRTH_DATE . 'が不正') . LF;
+        return $h2 . LF . add_p(S_SEINENGAPPI . S_GA . S_FUSEI) . LF;
     }
 
     if ($is_from_update && !isset($hidden_elems)) {
          // スタッフ更新からの遷移であり、かつ、項目が一つも変更されていない場合
-         return $h2 . LF . add_p('項目が一つも変更されていない') . LF;
+         return $h2 . LF . add_p('項目が一つも' . S_HENKO . 'されていない') . LF;
     }
 
     // 入力値、選択値のチェック：ED 画面表示項目、hidden項目の設定 ST ----------
 
-    $table_elem .= build_tr_td_label_value(L_BIRTH_DATE, $fmted_ymd) . LF;
-    $table_elem .= build_tr_td_label_value($item_arr[N_PRIVILEGE]->get_label(), $fmted_privilege) . LF;
+    $table_elem .= build_tr_td_label_value(S_SEINENGAPPI, $fmted_ymd) . LF;
+    $table_elem .= build_tr_td_label_value($item_arr[PRIVILEGE]->get_label(), $fmted_privilege) . LF;
 
     return <<<EOE
 {$h2}
@@ -207,7 +205,7 @@ EOE;
  * 引数の先頭の'0'を削除して返す
  */
 function zero_to_empty($prm_str_num) {
-    return preg_replace('/^0+/', '', $prm_str_num);
+    return preg_replace('/^0+/', EMPTY_STR, $prm_str_num);
 }
 
 /**
@@ -223,3 +221,5 @@ function build_input_type_hidden($prm_name, $prm_value) {
 function build_tr_td_label_value($prm_label, $prm_value) {
     return '<tr><td>' . $prm_label . '</td><td>：' . $prm_value . '</td></tr>';
 }
+
+?>

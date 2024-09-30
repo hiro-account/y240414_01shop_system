@@ -1,6 +1,5 @@
 <?php
-$to_cmn = dirname(__FILE__) . '/../cmn_err/';
-require_once($to_cmn . 'err_ctrl.php');
+require_once 'staff_login_err_ctrl.php';
 $content_arr = get_content_arr_for_staff_login_err($_GET);
 ?>
 <!DOCTYPE html>
@@ -12,7 +11,7 @@ $content_arr = get_content_arr_for_staff_login_err($_GET);
 </head>
 <body>
 <h4>ショップシステム</h4>
-<?= $content_arr['H2_AND_ERR_MSG'] ?>
+<?= $content_arr[H2_AND_ERR_MSG] ?>
 <div><?= $content_arr[A] ?></div>
 </body>
 </html>

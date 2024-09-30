@@ -1,10 +1,8 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
-require_once($to_cmn . 'func.php');
+require_once $to_cmn . 'func.php';
 
-
-
-const CHECKED = ' checked';
+const P_CHECKED = ' checked';
 
 function get_tbl_elem($prm_staff_data_arr) {
     $id_content = NULL;
@@ -14,63 +12,63 @@ function get_tbl_elem($prm_staff_data_arr) {
         $id_content =<<<EOI
 
 <tr>
-<td>スタッフID</td><td class="p-l-5">{$prm_staff_data_arr['id']}</td>
+<td>スタッフID</td><td class="p-l-5">{$prm_staff_data_arr[ID]}</td>
 </tr>
 EOI;
         $staff_data_arr = $prm_staff_data_arr;
     } else {
-        $id_content = '';
+        $id_content = EMPTY_STR;
         $staff_data_arr = array(
-            'last_name' => ""
-            , 'first_name' => ""
-            , 'last_name_kana' => ""
-            , 'first_name_kana' => ""
-            , 'sex' => 0
-            , 'birth_year' => NULL
-           , 'birth_month' => NULL
-           , 'birth_day' => NULL
-           , 'privilege' => NULL
+            LAST_NAME => EMPTY_STR
+            , FIRST_NAME => EMPTY_STR
+            , LAST_NAME. KANA => EMPTY_STR
+            , FIRST_NAME . KANA => EMPTY_STR
+            , SEX => I_0
+            , BIRTH_YEAR => NULL
+           , BIRTH_MONTH => NULL
+           , BIRTH_DAY => NULL
+           , PRIVILEGE => NULL
         );
     }
 
-    $opt_sex = build_opt_sex($staff_data_arr['sex']);
-    $opt_year = build_opt_year($staff_data_arr['birth_year']);
-    $opt_month = build_opt_month_day(12, $staff_data_arr['birth_month']);
-    $opt_day = build_opt_month_day(31, $staff_data_arr['birth_day']);
+    $opt_sex = build_opt_sex($staff_data_arr[SEX]);
+    $opt_year = build_opt_year($staff_data_arr[BIRTH_YEAR]);
+    $opt_month = build_opt_month_day(12, $staff_data_arr[BIRTH_MONTH]);
+    $opt_day = build_opt_month_day(31, $staff_data_arr[BIRTH_DAY]);
 
     $privilege_checked_o = NULL;
     $privilege_checked_a = NULL;
 
-    switch ($staff_data_arr['privilege']) {
-        case 'O':
-            $privilege_checked_o = CHECKED;
-            $privilege_checked_a = '';
+    switch ($staff_data_arr[PRIVILEGE]) {
+        case PRIVILEGE_O:
+            $privilege_checked_o = P_CHECKED;
+            $privilege_checked_a = EMPTY_STR;
             break;
 
-        case 'A':
-            $privilege_checked_o = '';
-            $privilege_checked_a = CHECKED;
+        case PRIVILEGE_A:
+            $privilege_checked_o = EMPTY_STR;
+            $privilege_checked_a = P_CHECKED;
             break;
 
         default:
-            $privilege_checked_o = '';
-            $privilege_checked_a = '';
+            $privilege_checked_o = EMPTY_STR;
+            $privilege_checked_a = EMPTY_STR;
             break;
     }
 
     return <<<EOC
 <table>{$id_content}
 <tr>
-<td>氏</td><td><input type="text" name="last_name" value="{$staff_data_arr['last_name']}" class="w-100"></td>
+<td>氏</td><td><input type="text" name="last_name" value="{$staff_data_arr[LAST_NAME]}" class="w-100"></td>
 </tr>
 <tr>
-<td>名</td><td><input type="text" name="first_name" value="{$staff_data_arr['first_name']}" class="w-100"></td>
+<td>名</td><td><input type="text" name="first_name" value="{$staff_data_arr[FIRST_NAME]}" class="w-100"></td>
 </tr>
 <tr>
-<td>氏（カナ）</td><td><input type="text" name="last_name_kana" value="{$staff_data_arr['last_name_kana']}" class="w-100"></td>
+<td>氏（カナ）</td><td><input type="text" name="last_name_kana" value="{$staff_data_arr[LAST_NAME. KANA]}" class="w-100"></td>
 </tr>
 <tr>
-<td>名（カナ）</td><td><input type="text" name="first_name_kana" value="{$staff_data_arr['first_name_kana']}" class="w-100"></td>
+<td>名（カナ）</td><td><input type="text" name="first_name_kana" value="{$staff_data_arr[FIRST_NAME . KANA]}" class="w-100"></td>
 </tr>
 <tr>
 <td>性別</td><td><select name="sex">

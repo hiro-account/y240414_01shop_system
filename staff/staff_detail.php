@@ -1,11 +1,7 @@
 <?php
-$to_cmn = dirname(__FILE__) . '/../cmn/';
-// require_once($to_cmn . 'const.php');
-// require_once($to_cmn . 'func.php');
-require_once('./staff_detail_ctrl.php');
+require_once 'staff_detail_ctrl.php';
 st_session();
 check_login($_SESSION);
-// $content_arr = get_content_arr($_GET);
 ?>
 <!DOCTYPE html>
 <html>

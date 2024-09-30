@@ -1,7 +1,10 @@
 <?php
+$to_cmn = dirname(__FILE__) . '/../cmn/';
+require_once $to_cmn . 'const.php';
+
 $_SESSION = array();
 if (isset($_COOKIE[session_name()]) == true) {
-    setcookie(session_name(), '', time() - 42000, '/');
+    setcookie(session_name(), EMPTY_STR, time() - 42000, '/');
 }
 @session_destroy();
 ?>

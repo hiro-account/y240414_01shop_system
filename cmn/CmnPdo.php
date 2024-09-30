@@ -1,8 +1,9 @@
 <?php
+require_once 'const.php';
 
 const DSN = 'mysql:dbname=y240608_01;host=localhost;charset=utf8';
 const USERNAME = 'root';
-const PASSWD = '';
+const PASSWD = EMPTY_STR;
 const OPTIONS = NULL;
 
 class CmnPdo {

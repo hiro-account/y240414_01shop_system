@@ -1,14 +1,11 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
-// require_once($to_cmn . 'const.php');
-require_once($to_cmn . 'func.php');
+require_once $to_cmn . 'func.php';
 require_once $to_cmn . 'CmnPdo.php';
 
-const EX_ERR = -128;
+const S_TOROKU_SHIPPAI = TS_P . S_TOROKU . S_SHIPPAI . S_SYSTEM_SHOGAI_HASSEI . TE_P;
 
-//TODO:下記共通化検討
-const CREATE_FAILED = '<p>登録失敗（システム障害発生）</p>';
-
+//TODO:下記二定数他ファイルとの共通化検討
 const M_STAFF = 'm_staff_for_dev';
 const T_PRIVILEGE = 't_privilege_for_dev';
 
@@ -26,18 +23,19 @@ INSERT INTO m_staff_for_dev (
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 EOQ;
 
+//TODO:以下テーブル名カラム名他ファイルとの共通化検討
 function get_content($prm_post) {
     $post_arr = array(
-        $prm_post['last_name']
-        , $prm_post['first_name']
-        , $prm_post['last_name_kana']
-        , $prm_post['first_name_kana']
-        , $prm_post['sex']
-        , $prm_post['birth_year']
-        , $prm_post['birth_month']
-        , $prm_post['birth_day']
+        $prm_post[LAST_NAME]
+        , $prm_post[FIRST_NAME]
+        , $prm_post[LAST_NAME. KANA]
+        , $prm_post[FIRST_NAME . KANA]
+        , $prm_post[SEX]
+        , $prm_post[BIRTH_YEAR]
+        , $prm_post[BIRTH_MONTH]
+        , $prm_post[BIRTH_DAY]
         , $_SESSION[STAFF_ID]
-        // , $prm_post['privilege']
+        // , $prm_post[PRIVILEGE]
     );
 
     //TODO:トランザクションの実装。各idのチェック処理不要であれば削除
@@ -49,7 +47,7 @@ function get_content($prm_post) {
         $m_staff_result = $m_staff_stmt->execute($post_arr);
 
         if (!$m_staff_result) {
-            return CREATE_FAILED;
+            return S_TOROKU_SHIPPAI;
         }
 
         // スタッフの登録後のスタッフマスタのidの最大値を読み出し
@@ -57,10 +55,10 @@ function get_content($prm_post) {
 
         // 権限テーブルに登録後のidの最大値をidとして権限を登録する
         $t_privilege_stmt = $cmn_pdo->prepare('INSERT INTO ' . T_PRIVILEGE . ' (id, privilege, creator_id) VALUES (?, ?, ?)');
-        $t_privilege_result = $t_privilege_stmt->execute(array($staff_max_id, $_POST['privilege'], $_SESSION[STAFF_ID]));
+        $t_privilege_result = $t_privilege_stmt->execute(array($staff_max_id, $_POST[PRIVILEGE], $_SESSION[STAFF_ID]));
 
         if (!$t_privilege_result) {
-            return CREATE_FAILED;
+            return S_TOROKU_SHIPPAI;
         }
 
         // 仮パスワードを作る
@@ -71,7 +69,7 @@ function get_content($prm_post) {
         $t_password_result = $t_password_stmt->execute(array($staff_max_id, $pswd, $_SESSION[STAFF_ID]));
 
         if (!$t_password_result) {
-            return CREATE_FAILED;
+            return S_TOROKU_SHIPPAI;
         }
 
         // 削除ステータステーブルに登録後のidの最大値をidとして登録する
@@ -79,13 +77,13 @@ function get_content($prm_post) {
         $t_lgcl_del_result = $t_lgcl_del_stmt->execute(array($staff_max_id, $_SESSION[STAFF_ID]));
 
         if (!$t_lgcl_del_result) {
-            return CREATE_FAILED;
+            return S_TOROKU_SHIPPAI;
         }
     } catch (Exception $e) {
-        return CREATE_FAILED;
+        return S_TOROKU_SHIPPAI;
     }
 
-    return add_p('登録完了');
+    return add_p(S_TOROKU . S_KANRYO);
 }
 
 function read_max_id(CmnPdo $prm_cmn_pdo, $prm_tbl) {

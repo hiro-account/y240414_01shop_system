@@ -1,4 +1,5 @@
 <?php
+require_once 'const.php';
 
 class MyDB {
     private $mysqli;
@@ -8,7 +9,7 @@ class MyDB {
     // コンストラクタ
     function __construct() {
         // DB接続
-        $this->mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
+        $this->mysqli = new mysqli('localhost', 'root', EMPTY_STR, 'y240608_01');
 
         if ($this->mysqli->connect_error) {
         } else {
@@ -28,8 +29,8 @@ class MyDB {
             $error = $this->mysqli->errno . ':' . $this->mysqli->error;
 
             return array ('status' => FALSE,
-                'count' => 0,
-                'result' => '',
+                'count' => I_0,
+                'result' => EMPTY_STR,
                 'error' => $error);
         }
 
@@ -37,8 +38,8 @@ class MyDB {
             // SELECT文以外
             return array ('status' => TRUE,
                 'count' => $this->mysqli->affected_rows,
-                'result' => '',
-                'error' => '');
+                'result' => EMPTY_STR,
+                'error' => EMPTY_STR);
         } else {
             // SELECT文
             $num_rows = $result->num_rows;
@@ -53,7 +54,7 @@ class MyDB {
             return array('status' => TRUE,
                 'count' => $num_rows,
                 'result' => $data,
-                'error' => '');
+                'error' => EMPTY_STR);
         }
     }
 }

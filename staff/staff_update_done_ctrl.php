@@ -1,10 +1,9 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once $to_cmn . 'func.php';
-require_once $to_cmn . 'query.php';
 require_once $to_cmn . 'CmnPdo.php';
 
-const UPDATE_FAILED = '<p>更新失敗（システム障害発生）</p>';
+const UPDATE_FAILED = TS_P . S_KOSHIN . S_SHIPPAI . S_SYSTEM_SHOGAI_HASSEI . TE_P;
 const I_M2 = -2;
 
 function get_content($prm_post) {
@@ -14,11 +13,11 @@ function get_content($prm_post) {
         $val = NULL;
 
         switch ($key) {
-            case 'id':
-            case 'privilege':
+            case ID:
+            case PRIVILEGE:
                 break;
 
-            case 'sex':
+            case SEX:
                 $val = $value;
                 break;
 
@@ -36,16 +35,11 @@ function get_content($prm_post) {
         $cmn_pdo = new CmnPdo();
 
         if (!is_null($sql_part)) {
-            $temp_q = 'UPDATE m_staff_for_dev SET '
+            $m_staff_stmt = $cmn_pdo->prepare(
+                'UPDATE m_staff_for_dev SET '
                 . substr($sql_part, I_0, I_M2)
                 . ', updater_id = ' . $_SESSION[STAFF_ID]
-                . ' WHERE id = ' . $prm_post['id'];
-            $m_staff_stmt = $cmn_pdo->prepare(
-                // 'UPDATE m_staff_for_dev SET '
-                // . substr($sql_part, I_0, I_M2)
-                // . ', updater_id = ' . $_SESSION[STAFF_ID]
-                // . ' WHERE id = ' . $prm_post['id']
-                $temp_q
+                . ' WHERE id = ' . $prm_post[ID]
             );
 
             $m_staff_result = $m_staff_stmt->execute();
@@ -55,7 +49,7 @@ function get_content($prm_post) {
             }
         }
 
-        if (isset($prm_post['privilege'])) {
+        if (isset($prm_post[PRIVILEGE])) {
             $t_privilege_stmt
                 = $cmn_pdo->prepare(
                     'UPDATE t_privilege_for_dev SET privilege = ?, updater_id = ? WHERE id = ?'
@@ -63,7 +57,7 @@ function get_content($prm_post) {
 
             $t_privilege_result
                 = $t_privilege_stmt->execute(
-                    array($prm_post['privilege'], $_SESSION[STAFF_ID], $prm_post['id'])
+                    array($prm_post[PRIVILEGE], $_SESSION[STAFF_ID], $prm_post[ID])
                 );
 
             if (!$t_privilege_result) {
@@ -74,6 +68,6 @@ function get_content($prm_post) {
         return UPDATE_FAILED;
     }
 
-    return add_p('更新完了');
+    return add_p(S_KOSHIN . S_KANRYO);
 }
 ?>

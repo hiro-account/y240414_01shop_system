@@ -1,42 +1,40 @@
 <?php
 $to_cmn = dirname(__FILE__) . '/../cmn/';
-require_once($to_cmn . 'func.php');
-require_once($to_cmn . 'const.php');
-require_once './staff_func.php';
-require_once  $to_cmn . 'query.php';
+require_once $to_cmn . 'func.php';
 require_once $to_cmn . 'CmnPdo.php';
+require_once 'staff_func.php';
 
-const PREV = 'prev_';
+const K_V_ARR = 'key_value_arr';
+
+const S_SAKUJO = '削除';
 
 function get_content($prm_post) {
     if (isset($prm_post['staff_update'])) {
         return updt_staff($prm_post);
     } else if (isset($prm_post['staff_delete'])) {
-        return del_staff($prm_post['id']);
+        return del_staff($prm_post[ID]);
     }
 }
 
 function updt_staff($prm_post) {
     $staff_data_arr = build_key_value_arr_and_hidden($prm_post);
 
-    return get_content_for_updt(get_tbl_elem($staff_data_arr['key_value_arr']), $staff_data_arr['hidden']);
+    return get_content_for_updt(get_tbl_elem($staff_data_arr[K_V_ARR]), $staff_data_arr[HIDDEN]);
 }
 
 function build_key_value_arr_and_hidden($prm_value_arr) {
-//     $key_arr = array(PREV . 'id', PREV . 'last_name', PREV . 'first_name', PREV . 'last_name_kana', PREV . 'first_name_kana', PREV . 'sex'
-//         , PREV . 'birth_year', PREV . 'birth_month', PREV . 'birth_day', PREV . 'privilege');
-    $key_arr = array('id', 'last_name', 'first_name', 'last_name_kana', 'first_name_kana', 'sex'
-        , 'birth_year', 'birth_month', 'birth_day', 'privilege');
+    $key_arr = array(ID, LAST_NAME, FIRST_NAME, LAST_NAME. KANA, FIRST_NAME . KANA, SEX
+        , BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY, PRIVILEGE);
 
     $key_value_arr = array();
-    $hidden = '<input type="hidden" name="id" value="' . $prm_value_arr['id'] . '">' . LF;
+    $hidden = '<input type="' . HIDDEN . '" name="id" value="' . $prm_value_arr[ID] . '">' . LF;
 
     foreach ($key_arr as $value) {
         $key_value_arr[$value] = $prm_value_arr[$value];
-        $hidden .= '<input type="hidden" name="' . PREV . $value . '" value="' . $prm_value_arr[$value] . '">' . LF;
+        $hidden .= '<input type="' . HIDDEN . '" name="' . PREV . $value . '" value="' . $prm_value_arr[$value] . '">' . LF;
     }
 
-    return array('key_value_arr' => $key_value_arr, 'hidden' => $hidden);
+    return array(K_V_ARR => $key_value_arr, HIDDEN => $hidden);
 }
 
 function get_content_for_updt($prm_message, $prm_joined_str) {
@@ -65,12 +63,12 @@ function del_staff($prm_staff_id) {
         $result = $stmt->execute(array($prm_staff_id));
 
         if (!$result) {
-            $msg = '削除失敗（システム障害発生）';
+            $msg = S_SAKUJO . S_SHIPPAI . S_SYSTEM_SHOGAI_HASSEI;
         } else {
-            $msg = '削除完了';
+            $msg = S_SAKUJO . S_KANRYO;
         }
     } catch (Exception $e) {
-        $msg = '削除失敗（システム障害発生）';
+        $msg = S_SAKUJO . S_SHIPPAI . S_SYSTEM_SHOGAI_HASSEI;
     } finally {
         return get_content_for_del($msg);
     }

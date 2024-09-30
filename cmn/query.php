@@ -11,5 +11,4 @@ function execute_query($prm_query, $prm_arr = NULL) {
 
     return $cmn_pdo->execute($prm_arr);
 }
-
 ?>

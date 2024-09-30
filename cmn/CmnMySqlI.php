@@ -1,11 +1,13 @@
 <?php
+require_once 'const.php';
+
 class CmnMySqlI {
     private $mysqli;
 
     // コンストラクタ
     function __construct() {
         // DB接続
-        $this->mysqli = new mysqli('localhost', 'root', '', 'y240608_01');
+        $this->mysqli = new mysqli('localhost', 'root', EMPTY_STR, 'y240608_01');
 
         if ($this->mysqli->connect_error) {
         } else {
@@ -31,7 +33,7 @@ class CmnMySqlI {
         if ($mixed === FALSE) {
             $errno = $this->mysqli->errno;
             $error = $this->mysqli->error;
-            $rows = 0;
+            $rows = I_0;
         } elseif ($mixed === TRUE) {
             // SELECT文以外
             $rows = $this->mysqli->affected_rows;

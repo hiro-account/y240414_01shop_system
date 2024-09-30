@@ -1,8 +1,5 @@
 <?php
-require_once './staff_first_login_confirm_ctrl.php';
-// st_session();
-// check_login($_SESSION);
-// $content_arr = get_content_arr($_GET);
+require_once 'staff_first_login_confirm_ctrl.php';
 ?>
 <!DOCTYPE html>
 <html>
