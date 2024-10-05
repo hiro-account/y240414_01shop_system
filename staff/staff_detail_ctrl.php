@@ -186,4 +186,20 @@ function get_content($prm_post) {
 
 EOC;
 }
+
+function get_age($prm_birth_date) {
+    date_default_timezone_set('Asia/Tokyo');
+    $current_date = intval(date('Ymd'));
+    $birth_date = intval($prm_birth_date);
+
+    return floor(($current_date - $birth_date) / 10000);
+}
+
+
+
+
+
+
+
+
 ?>

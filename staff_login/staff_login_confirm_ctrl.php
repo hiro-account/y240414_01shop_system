@@ -78,4 +78,32 @@ function get_content($prm_post) {
         header(LOCATION . '../system/system_top.php');
     }
 }
+
+/**
+ * 未入力の項目の有無をチェックする
+ *
+ * @return string 未入力の項目ありの場合エラーメッセージ、なしの場合NULL
+ */
+
+
+function check_unenter_item($prm_item_key_nm_arr, $prm_target_arr) {
+    $err_msg = NULL;
+
+    foreach ($prm_item_key_nm_arr as $key => $val) {
+        if (strlen($prm_target_arr[$key]) === I_0) {
+            $err_msg .= add_p($val . S_GA . S_MINYURYOKU) . LF;
+        }
+    }
+
+    return $err_msg;
+}
+
+/**
+ * 仮パスワードから正式なパスワードへの変更前か変更後かを判定する
+ *
+ * @return bool 仮パスワード変更前true、変更後false
+ */
+function is_bf_change_temp_pswd($prm_crnt_pswd, $prm_temp_pswd) {
+    return !isset($prm_crnt_pswd) && isset($prm_temp_pswd);
+}
 ?>

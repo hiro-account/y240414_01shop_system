@@ -1,5 +1,6 @@
 <?php
-//TODO:'staff_id'→STAFF_IDへの置換を検討
+$to_cmn = dirname(__FILE__) . '/../cmn/';
+require_once $to_cmn . 'const.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,7 @@
 <td>新しいパスワード（確認）</td><td><input type="password" name="txt_new_password_2" class="w-100"></td>
 </tr>
 </table>
-<input type="hidden" name="staff_id" value="<?= $_GET['staff_id'] ?>">
+<input type="hidden" name="staff_id" value="<?= $_GET[STAFF_ID] ?>">
 <input type="submit" value="変更" class="m-t-1em">
 </form>
 </body>

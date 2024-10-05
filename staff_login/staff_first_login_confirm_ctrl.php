@@ -66,4 +66,42 @@ function get_content($prm_post) {
 
     return add_p(S_PASSWORD . 'を' . S_HENKO . 'した') . LF . '<div class="m-t-1em"><a href="./staff_login.html">' . S_STAFF . S_LOGIN . 'へ</a></div>' . LF;
 }
+
+/**
+ * 未入力、未選択の項目の有無をチェックする
+ *
+ * @return string 未入力、未選択の項目ありの場合エラーメッセージ、なしの場合NULL
+ */
+function check_unenter_unslct_item($prm_item_key_nm_arr, $prm_target_arr, $prm_unchk_key_nm_arr = NULL) {
+    $err_msg = NULL;
+
+    foreach ($prm_item_key_nm_arr as $key => $val) {
+        if (isset( $prm_unchk_key_nm_arr) && in_array($key, $prm_unchk_key_nm_arr)) {
+            continue;
+        }else if (strpos($key, 'txt_') === I_0 && strlen($prm_target_arr[$key]) === I_0) {
+            $err_msg .= add_p($val . S_GA . S_MINYURYOKU) . LF;
+        } else if (strpos($key, 'slct_') === I_0 && intval($prm_target_arr[$key]) === I_0
+            || strpos($key, 'rdo_') === I_0 && !isset($prm_target_arr[$key])) {
+            $err_msg .= add_p($val . S_GA . S_MISENTAKU) . LF;
+        }
+    }
+
+    return $err_msg;
+}
+
+function chk_alphanumeric($item_key_nm_arr, $target_arr) {
+    $err_msg = NULL;
+
+    foreach ($item_key_nm_arr as $key => $val) {
+        if (! preg_match("/^[a-zA-Z0-9]+$/", $target_arr[$key])) {
+            $err_msg .= add_p($val . 'に英数字以外が入力された') . LF; // TODO:定数化検討
+        }
+    }
+
+    return $err_msg;
+}
+
+
+
+
 ?>

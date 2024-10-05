@@ -2,7 +2,6 @@
 $to_cmn = dirname(__FILE__) . '/../cmn/';
 require_once $to_cmn . 'func.php';
 require_once $to_cmn . 'CmnPdo.php';
-require_once 'staff_func.php';
 
 const K_V_ARR = 'key_value_arr';
 

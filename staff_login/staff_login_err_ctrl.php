@@ -4,7 +4,6 @@ require_once $to_cmn . 'func.php';
 
 const A = 'a';
 
-
 function get_content_arr_for_staff_login_err($prm_get) {
     $content_arr = array();
     $h2_and_err_msg = NULL;

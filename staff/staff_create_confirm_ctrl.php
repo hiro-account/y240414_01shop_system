@@ -5,11 +5,6 @@ require_once 'Item.php';
 
 const S_00 = '00';
 
-//TODO:一カ所からしか参照されていないため、直書き化検討(09/23)
-const CREATE = 'create';
-const UPDATE = 'update';
-
-//TODO:住所、電話番号、電子メールアドレスの追加
 function get_content($prm_post)
 {
     // 遷移元
@@ -19,13 +14,13 @@ function get_content($prm_post)
     $form_action = NULL;
     $hidden_id = NULL;
 
-    if (strcmp($prm_post[FROM], UPDATE) === I_0) {
+    if (strcmp($prm_post[FROM], 'update') === I_0) {
         $is_from_update = TRUE;
         $h2_content = S_KOSHIN;
         $table_elem = '<tr><td>' . S_STAFF . U_ID . '</td><td>：' . $prm_post[ID] . '</td></tr>' . LF;
         $form_action = './staff_update_done.php';
         $hidden_id = build_input_type_hidden(ID, $prm_post[ID]) . LF;
-    } else if (strcmp($prm_post[FROM], CREATE) === I_0) {
+    } else if (strcmp($prm_post[FROM], 'create') === I_0) {
         $h2_content = S_TOROKU;
         $form_action = './staff_create_done.php';
         $hidden_id = EMPTY_STR;
